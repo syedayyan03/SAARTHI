@@ -1,0 +1,51 @@
+{
+  "bounds": {
+    "N": {
+      "min": 12.76,
+      "max": 338.05
+    },
+    "P": {
+      "min": 10.24,
+      "max": 262.66
+    },
+    "K": {
+      "min": 10.89,
+      "max": 413.08
+    },
+    "temperature": {
+      "min": 5.0,
+      "max": 45.0
+    },
+    "humidity": {
+      "min": 20.0,
+      "max": 95.0
+    },
+    "ph": {
+      "min": 4.5,
+      "max": 8.5
+    },
+    "rainfall": {
+      "min": 18.0,
+      "max": 440.0
+    }
+  },
+  "weights": {
+    "N": 1.5,
+    "P": 1.5,
+    "K": 1.5,
+    "temperature": 2.0,
+    "humidity": 1.5,
+    "ph": 2.0,
+    "rainfall": 1.5
+  },
+  "features": [
+    "N",
+    "P",
+    "K",
+    "temperature",
+    "humidity",
+    "ph",
+    "rainfall"
+  ],
+  "best_model": "Random Forest"
+}

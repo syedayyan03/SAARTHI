@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>SAARTHI – Market Demand</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/png" href="img/saarthi-logo.png" />
+    <link rel="stylesheet" href="css/styles.css?v=1.1" />
+  </head>
+  <body class="dashboard-body">
+    <header class="top-bar">
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <a href="dashboard.html" class="back-circle-btn" aria-label="Go back to Dashboard">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </a>
+        <a href="dashboard.html" class="logo-link">
+          <div class="logo-area">
+            <img
+              src="img/saarthi-logo.png"
+              alt="SAARTHI – AI Based Crop Recommendation"
+              class="logo-img"
+            />
+            <div>
+              <div class="logo-title">SAARTHI</div>
+              <div id="dashLogoSubtitle" class="logo-subtitle">Market Demand Near You</div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="top-right">
+                <div id="profileMenu" class="profile-menu">
+          <button id="profileButton" class="profile-button">
+            <span id="profileInitials" class="profile-avatar">F</span>
+            <span id="profilePhoneShort" class="profile-phone">+91‑</span>
+            <span class="profile-caret">▾</span>
+          </button>
+          <div id="profileDropdown" class="profile-dropdown hidden">
+            <button id="profileBackDashboard" class="profile-dropdown-item">
+              Back to dashboard
+            </button>
+            <button id="profileLogoutBtn" class="profile-dropdown-item">
+              Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard-main">
+      <section class="dashboard-header">
+        <div>
+          <h1 id="marketPageTitle">Market Demand Near You</h1>
+          <p id="marketPageIntro" class="muted">
+            We use your location to show demand and approximate prices for key
+            crops in nearby markets.
+          </p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="wizard-step">
+          <label id="locLabel" class="field-label" for="locationInputMarket">Location</label>
+          <input
+            id="locationInputMarket"
+            class="field-input"
+            placeholder="Detecting location..."
+          />
+          <button id="detectLocationMarketBtn" class="btn btn-ghost" style="display: inline-flex; align-items: center; gap: 0.35rem;">
+            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> Detect location
+          </button>
+          
+          <!-- Crop Search Field -->
+          <div style="margin-top: 1.25rem;">
+            <label id="cropSearchLabel" class="field-label" for="cropSearchInput">Search Commodity (Optional)</label>
+            <input
+              id="cropSearchInput"
+              class="field-input"
+              placeholder="Search specific crop (e.g., Tomato, Cotton, Paddy, Onion)..."
+            />
+            <div id="popularTagsContainer" style="margin-top: 0.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem; font-size: 0.85rem; align-items: center;">
+              <span id="popularTagsLabel" class="muted" style="margin-right: 0.25rem;">Popular:</span>
+              <button type="button" class="crop-tag-btn" data-crop="Tomato" style="padding: 0.25rem 0.6rem; font-size: 0.8rem; border-radius: 20px; border: 1px solid var(--border-color, #ddd); background: var(--bg-card, #fff); cursor: pointer; color: var(--text-color, #333); transition: all 0.2s;">Tomato</button>
+              <button type="button" class="crop-tag-btn" data-crop="Cotton" style="padding: 0.25rem 0.6rem; font-size: 0.8rem; border-radius: 20px; border: 1px solid var(--border-color, #ddd); background: var(--bg-card, #fff); cursor: pointer; color: var(--text-color, #333); transition: all 0.2s;">Cotton</button>
+              <button type="button" class="crop-tag-btn" data-crop="Paddy" style="padding: 0.25rem 0.6rem; font-size: 0.8rem; border-radius: 20px; border: 1px solid var(--border-color, #ddd); background: var(--bg-card, #fff); cursor: pointer; color: var(--text-color, #333); transition: all 0.2s;">Paddy</button>
+              <button type="button" class="crop-tag-btn" data-crop="Onion" style="padding: 0.25rem 0.6rem; font-size: 0.8rem; border-radius: 20px; border: 1px solid var(--border-color, #ddd); background: var(--bg-card, #fff); cursor: pointer; color: var(--text-color, #333); transition: all 0.2s;">Onion</button>
+            </div>
+          </div>
+
+          <div class="wizard-actions">
+            <a href="dashboard.html" class="btn btn-outline" style="margin-right: auto;">
+              ← Back to Dashboard
+            </a>
+            <button id="loadMarketBtn" class="btn btn-primary">
+              Show Market Demand
+            </button>
+          </div>
+          <p id="locationMarketError" class="error-text"></p>
+        </div>
+
+        <div id="marketContent" class="section" style="padding-top: 1rem"></div>
+      </section>
+    </main>
+
+    <script src="js/market.js"></script>
+  </body>
+</html>
+

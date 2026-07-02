@@ -1,0 +1,8 @@
+node_modules/
+venv/
+.env
+__pycache__/
+
+models/best_model.pkl
+data/plantvillage/
+*.zip

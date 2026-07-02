@@ -1,0 +1,24 @@
+33: const cardDiseaseTitle = $("cardDiseaseTitle");
+34: const cardDiseaseText = $("cardDiseaseText");
+402: cardDiseaseTitle: "Disease Detector",
+403: cardDiseaseText:
+404: "Upload a crop or leaf photo to detect possible diseases in real-time.",
+435: cardDiseaseTitle: "వ్యాధి గుర్తింపు",
+436: cardDiseaseText:
+468: cardDiseaseTitle: "रोग पहचान",
+469: cardDiseaseText:
+502: cardDiseaseTitle: "रोग ओळख",
+503: cardDiseaseText:
+535: cardDiseaseTitle: "രോഗ നിർണ്ണയം (ഡെമോ)",
+536: cardDiseaseText:
+567: if (cardDiseaseTitle) cardDiseaseTitle.textContent = t.cardDiseaseTitle;
+568: if (cardDiseaseText) cardDiseaseText.textContent = t.cardDiseaseText;
+685: "On this page you can choose crop recommendation, market demand, chatbox, or disease detection. Then follow the steps on the screen.";
+731: const cardDiseaseDetector = $("cardDiseaseDetector");
+733: if (cardDiseaseDetector) {
+734: cardDiseaseDetector.addEventListener("click", () => {
+735: window.location.href = "disease.html";
+762: <li><strong>Seed Treatment:</strong> Treat seeds with Trichoderma (5g/kg) to prevent soil-borne diseases.</li>
+785: <li><strong>Disease Scan:</strong> If you spot brown spots, leaf curling, or yellowing, immediately upload a close-up photo to the <em>Disease Detector</em> tab.</li>
+800: <li><strong>Equipment:</strong> Clean and sanitize sickles or threshers to prevent disease carry-over.</li>
+1173: a4: "Check for pests and diseases regularly, and act if economic threshold passes.",

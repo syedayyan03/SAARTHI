@@ -1,0 +1,183 @@
+[
+  {
+    "id": "1771953129679",
+    "phone": "9618301301",
+    "passwordHash": "$2a$10$RZzvUVCxI8lUXESvSKVToOKB4m22PuYkBEZRuEG8nI/8to/7VkzC6",
+    "language": "en",
+    "createdAt": "2026-02-24T17:12:09.679Z"
+  },
+  {
+    "id": "1771955988444",
+    "phone": "6300854354",
+    "passwordHash": "$2a$10$sUoWMxtoFzQ62SuXrUBTE.MZshCEFr/pRD5QJsJGHDQCeGCCp963S",
+    "language": "en",
+    "createdAt": "2026-02-24T17:59:48.444Z"
+  },
+  {
+    "id": "1771957247356",
+    "phone": "9347092928",
+    "passwordHash": "$2a$10$hoGJaFiz5Xp/GTrNYIH4uuvz4bCuDdB.Q/UOIERP9gMMcZs5wCkqG",
+    "language": "en",
+    "createdAt": "2026-02-24T18:20:47.356Z"
+  },
+  {
+    "id": "1772106162451",
+    "phone": "9133206035",
+    "passwordHash": "$2a$10$hCzIUBqXOw37sIcVLwVtF.8L19oCi9B.heJbNF5i0bd0SIp2UptWq",
+    "language": "en",
+    "createdAt": "2026-02-26T11:42:42.451Z"
+  },
+  {
+    "id": "1772164227941",
+    "phone": "8074328382",
+    "name": "Syed Ayyan",
+    "passwordHash": "$2a$10$SEtFIN3NqvlpMJeacii1zOYn6.RI9/7RpqcSigH3oUx/6Mxn3aYOm",
+    "language": "en",
+    "createdAt": "2026-02-27T03:50:27.941Z",
+    "soil": "",
+    "water": "",
+    "acres": "",
+    "profilePic": "",
+    "picture": ""
+  },
+  {
+    "id": "1772183187364",
+    "phone": "9392676926",
+    "name": "",
+    "passwordHash": "$2a$10$B9IpQWXYTx7q/MDSCRXz2eNr07Kdnh.23KzUPVD.TgPqA2igNgQGu",
+    "language": "en",
+    "createdAt": "2026-02-27T09:06:27.364Z"
+  },
+  {
+    "id": "1772184652673",
+    "phone": "9963614564",
+    "name": "",
+    "passwordHash": "$2a$10$ZJbL..f.kHrtll3BHtLdeui7IesNYr.9c5sijW8AsEJi91KthtF0.",
+    "language": "en",
+    "createdAt": "2026-02-27T09:30:52.674Z"
+  },
+  {
+    "id": "1772442476583",
+    "phone": "9676806476",
+    "name": "",
+    "passwordHash": "$2a$10$GLy6U58kZjt.moDCJdT16OGhXfUZmRPGb0JMWVm34usQPDqLQ4m1u",
+    "language": "en",
+    "createdAt": "2026-03-02T09:07:56.583Z"
+  },
+  {
+    "id": "1780205756574",
+    "phone": "9010362840",
+    "name": "",
+    "passwordHash": "$2a$10$Awfpf7KZ6rcR3z0axNCK.u5lyzBMKWDiNG7w64aeQzm4hpakPPiMa",
+    "language": "te",
+    "createdAt": "2026-05-31T05:35:56.574Z"
+  },
+  {
+    "id": "1780942707162",
+    "phone": "9999988888",
+    "name": "",
+    "passwordHash": "$2a$10$3278dUg62r7/MftpkGAH5OIfBy35DaVnYY6R1fDi.eRPYzZBQGMb2",
+    "language": "en",
+    "createdAt": "2026-06-08T18:18:27.162Z"
+  },
+  {
+    "id": "1781116345777",
+    "phone": "9876543210",
+    "name": "",
+    "passwordHash": "$2a$10$oRtjoHAd.9bpRxVu4j62IeTa87lhyUNJpgbS9VPYXas.vmOhOVoqu",
+    "language": "en",
+    "createdAt": "2026-06-10T18:32:25.777Z"
+  },
+  {
+    "id": "1781175393705",
+    "phone": "9999911111",
+    "name": "",
+    "passwordHash": "$2a$10$7FoyT.F9R/dyU.Sa9Kr7XeLNrIU04X1iY.CZrE7k9Qo/hUgxg.862",
+    "language": "en",
+    "createdAt": "2026-06-11T10:56:33.705Z"
+  },
+  {
+    "id": "1781175968913",
+    "phone": "9999922222",
+    "name": "",
+    "passwordHash": "$2a$10$.Y/uWyfe8/YtWTdg/33DkOLApQSbLcHtW0UdKx5j0rMAFyGkJsL/S",
+    "language": "en",
+    "createdAt": "2026-06-11T11:06:08.913Z"
+  },
+  {
+    "id": "1781176254665",
+    "phone": "9999933333",
+    "name": "",
+    "passwordHash": "$2a$10$AxcIP7t9ftnulkM9xgYm7OjA5sgkBcqHNTc4Kb4OuQZqmuTj02gMC",
+    "language": "en",
+    "createdAt": "2026-06-11T11:10:54.665Z"
+  },
+  {
+    "id": "1781198481637",
+    "phone": "G316998539",
+    "email": "24h51a05n4@cmrcet.ac.in",
+    "name": "24H51A05N4-SURYAVAMSHI SRIDHAR B.Tech-CSE(2024-28)",
+    "passwordHash": "$2a$10$fYwtWOHlNYEf.tFOik2hq.RWpbROy06rvPTCTsHjZlAWfkB6rCSVi",
+    "language": "en",
+    "createdAt": "2026-06-11T17:21:21.637Z",
+    "picture": "https://lh3.googleusercontent.com/a/ACg8ocIZArlM7cgPi3QbsaZsq5FUQKDorfDhcZ0MsdBzjqObYhZvTg=s96-c"
+  },
+  {
+    "id": "1781199157975",
+    "phone": "9876543299",
+    "email": "testfarmer99@gmail.com",
+    "name": "Test Farmer 99",
+    "username": "testfarmer99",
+    "passwordHash": "$2a$10$PvyM1QLLErmkVZaTOmx9l.D0GnHn53VKpttA1D3ee5tcxECl91RlK",
+    "language": "en",
+    "createdAt": "2026-06-11T17:32:37.975Z"
+  },
+  {
+    "id": "1781199203955",
+    "phone": "G880166057",
+    "email": "googlenewuser@gmail.com",
+    "name": "Google New User",
+    "username": "google_new_user",
+    "passwordHash": "$2a$10$58ixLgNZKKktOPL9zDoLG.UiQgLPvu2eyhJX5wxcjDw3HDHXRog2m",
+    "language": "en",
+    "picture": "",
+    "createdAt": "2026-06-11T17:33:23.955Z"
+  },
+  {
+    "id": "1781200660504",
+    "phone": "G994306727",
+    "email": "suryavamshisridhar9@gmail.com",
+    "name": "Suryavamshi Sridhar",
+    "username": "sridhar_patil_18",
+    "passwordHash": "$2a$10$bqX6YVQlXkEQhRWE9r7Ao.oTtoqwGDYhwAym8Ka/uzCob3EJ/1jcm",
+    "language": "en",
+    "picture": "https://lh3.googleusercontent.com/a/ACg8ocKgc_BNsKozzU16PbK6J2AzF-7xsK6WoBNceEsUSGkrGsKWpQ=s96-c",
+    "createdAt": "2026-06-11T17:57:40.504Z"
+  },
+  {
+    "id": "1781539238689",
+    "phone": "G636132206",
+    "email": "syedayyan8382@gmail.com",
+    "name": "Syed Ayyan",
+    "username": "syedayyan354",
+    "passwordHash": "$2a$10$8cmZCEqtU8yLarsQazNBqe8WsgKzmeoATUlJlxKGAUPOy1jWoMhmK",
+    "language": "en",
+    "picture": "https://lh3.googleusercontent.com/a/ACg8ocLJaUlPksFzCP1KafSjTokGrpe3WyZkMhZtqj69DYZAIlCX1Q=s96-c",
+    "createdAt": "2026-06-15T16:00:38.689Z"
+  },
+  {
+    "id": "1782914104377",
+    "phone": "G195113900",
+    "email": "24h51a05n5@cmrcet.ac.in",
+    "name": "Syed Ayyan",
+    "username": "syedayyan03",
+    "passwordHash": "$2a$10$WhQ5ticTnybaIHVhvmXDCuHgs.kBB8/5RlYGbdbidPxKWwI1el8rW",
+    "language": "en",
+    "picture": "https://lh3.googleusercontent.com/a/ACg8ocLkTywsnxHItctKsm8Do2eA70ZOqDwHjsunQhKWs8d6Vvbtiw=s96-c",
+    "createdAt": "2026-07-01T13:55:04.377Z",
+    "soil": "",
+    "water": "",
+    "acres": "",
+    "profilePic": "https://lh3.googleusercontent.com/a/ACg8ocLkTywsnxHItctKsm8Do2eA70ZOqDwHjsunQhKWs8d6Vvbtiw=s96-c"
+  }
+]

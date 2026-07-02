@@ -1,0 +1,126 @@
+14: const profileInfo = $("profileInfo");
+25: const navProfile = $("navProfile");
+28: const profileTitle = $("profileTitle");
+35: const profileButton = $("profileButton");
+36: const profileDropdown = $("profileDropdown");
+37: const profileLogoutBtn = $("profileLogoutBtn");
+38: const profileViewBtn = $("profileViewBtn");
+39: const profileInitials = $("profileInitials");
+40: const profilePhoneShort = $("profilePhoneShort");
+48: const sidebarViewProfileBtn = $("sidebarViewProfileBtn");
+60: // Profile Modal
+61: const profileModal = $("profileModal");
+62: const closeProfileModalBtn = $("closeProfileModalBtn");
+63: const closeProfileModalBackdrop = $("closeProfileModalBackdrop");
+64: const profileNameInput = $("profileNameInput");
+65: const profilePhoneDisplay = $("profilePhoneDisplay");
+66: const profileSoilSelect = $("profileSoilSelect");
+67: const profileWaterSelect = $("profileWaterSelect");
+68: const profileAcresInput = $("profileAcresInput");
+69: const saveProfileBtn = $("saveProfileBtn");
+70: const profileSaveStatus = $("profileSaveStatus");
+71: const profilePicInput = $("profilePicInput");
+72: const profileModalAvatarImg = $("profileModalAvatarImg");
+108: if (profileInitials) {
+109: const savedPic = localStorage.getItem("farmerProfilePic");
+111: profileInitials.innerHTML = `<img src="${savedPic}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;" />`;
+112: if (profileModalAvatarImg) profileModalAvatarImg.src = savedPic;
+115: profileInitials.textContent = currentName
+120: if (profilePhoneShort) {
+122: profilePhoneShort.textContent = lastDigits ? `+91‑***${lastDigits}` : "+91‑";
+136: if (profileLogoutBtn) profileLogoutBtn.addEventListener("click", performLogout);
+139: if (profileButton && profileDropdown) {
+140: profileButton.addEventListener("click", (e) => {
+142: profileDropdown.classList.toggle("hidden");
+145: profileDropdown.classList.add("hidden");
+161: if (profileViewBtn) {
+162: profileViewBtn.addEventListener("click", () => {
+163: populateProfileFields();
+164: toggleModal(profileModal, true);
+167: if (closeProfileModalBtn) closeProfileModalBtn.onclick = () => toggleModal(profileModal, false);
+168: if (closeProfileModalBackdrop) closeProfileModalBackdrop.onclick = () => toggleModal(profileModal, false);
+170: function populateProfileFields() {
+172: if (profileNameInput) profileNameInput.value = currentName;
+173: if (profilePhoneDisplay) profilePhoneDisplay.value = farmerPhone;
+174: if (profileSoilSelect) profileSoilSelect.value = localStorage.getItem("farmerSoil") || "";
+175: if (profileWaterSelect) profileWaterSelect.value = localStorage.getItem("farmerWater") || "";
+176: if (profileAcresInput) profileAcresInput.value = localStorage.getItem("farmerAcres") || "";
+178: const savedPic = localStorage.getItem("farmerProfilePic");
+179: if (savedPic && profileModalAvatarImg) {
+180: profileModalAvatarImg.src = savedPic;
+181: } else if (profileModalAvatarImg) {
+182: profileModalAvatarImg.src = "img/saarthi-logo.png";
+186: if (profilePicInput) {
+187: profilePicInput.addEventListener("change", (e) => {
+188: const file = e.target.files[0];
+189: if (file) {
+193: localStorage.setItem("farmerProfilePic", base64Img);
+196: reader.readAsDataURL(file);
+201: if (saveProfileBtn) {
+202: saveProfileBtn.addEventListener("click", () => {
+203: const name = profileNameInput.value.trim();
+204: const soil = profileSoilSelect.value;
+205: const water = profileWaterSelect.value;
+206: const acres = profileAcresInput.value;
+209: profileSaveStatus.style.color = "red";
+210: profileSaveStatus.textContent = "Name is required.";
+225: profileSaveStatus.style.color = "green";
+226: profileSaveStatus.textContent = "Profile saved successfully!";
+228: profileSaveStatus.textContent = "";
+229: toggleModal(profileModal, false);
+244: if (sidebarViewProfileBtn) {
+245: sidebarViewProfileBtn.addEventListener("click", () => {
+247: populateProfileFields();
+248: toggleModal(profileModal, true);
+300: if (profileOldPasswordInput) profileOldPasswordInput.value = "";
+301: if (profileNewPasswordInput) profileNewPasswordInput.value = "";
+302: if (profileConfirmNewPasswordInput) profileConfirmNewPasswordInput.value = "";
+303: if (profilePasswordStatus) {
+304: profilePasswordStatus.textContent = "";
+305: profilePasswordStatus.style.color = "";
+391: navProfile: "Profile",
+408: profileTitle: "Profile (Basic Demo)",
+423: navProfile: "ప్రొఫైల్",
+441: profileTitle: "ప్రొఫైల్ (బేసిక్ డెమో)",
+456: navProfile: "प्रोफाइल",
+474: profileTitle: "प्रोफाइल (बेसिक डेमो)",
+490: navProfile: "प्रोफाइल",
+508: profileTitle: "प्रोफाइल (बेसिक डेमो)",
+523: navProfile: "പ്രൊഫൈൽ",
+541: profileTitle: "പ്രൊഫൈൽ (ബേസിക് ഡെമോ)",
+559: if (navProfile) navProfile.textContent = t.navProfile;
+571: if (profileTitle) profileTitle.textContent = t.profileTitle;
+586: if (profileInfo) {
+597: profileInfo.textContent = baseText;
+1556: // --- Profile Password Change (Old Password Verification) ---
+1557: const profileOldPasswordInput = document.getElementById("profileOldPasswordInput");
+1558: const profileNewPasswordInput = document.getElementById("profileNewPasswordInput");
+1559: const profileConfirmNewPasswordInput = document.getElementById("profileConfirmNewPasswordInput");
+1560: const profileChangePasswordBtn = document.getElementById("profileChangePasswordBtn");
+1561: const profilePasswordStatus = document.getElementById("profilePasswordStatus");
+1563: if (profileChangePasswordBtn) {
+1564: profileChangePasswordBtn.addEventListener("click", async () => {
+1565: if (!profilePasswordStatus) return;
+1566: profilePasswordStatus.textContent = "";
+1567: profilePasswordStatus.style.color = "";
+1569: const oldPassword = profileOldPasswordInput.value;
+1570: const newPassword = profileNewPasswordInput.value;
+1571: const confirmPassword = profileConfirmNewPasswordInput.value;
+1574: profilePasswordStatus.style.color = "red";
+1575: profilePasswordStatus.textContent = "All password fields are required.";
+1580: profilePasswordStatus.style.color = "red";
+1581: profilePasswordStatus.textContent = "New password must be at least 6 characters.";
+1586: profilePasswordStatus.style.color = "red";
+1587: profilePasswordStatus.textContent = "New passwords do not match.";
+1593: const res = await fetch("/api/profile/change-password", {
+1616: profilePasswordStatus.style.color = "red";
+1617: profilePasswordStatus.textContent = data.message || "Failed to change password.";
+1622: profilePasswordStatus.style.color = "red";
+1623: profilePasswordStatus.textContent = data.message || "Failed to change password.";
+1627: profilePasswordStatus.style.color = "green";
+1628: profilePasswordStatus.textContent = "Password updated successfully!";
+1631: profileOldPasswordInput.value = "";
+1632: profileNewPasswordInput.value = "";
+1633: profileConfirmNewPasswordInput.value = "";
+1635: profilePasswordStatus.style.color = "red";
+1636: profilePasswordStatus.textContent = "Error communicating with server.";

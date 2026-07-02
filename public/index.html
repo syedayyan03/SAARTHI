@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>SAARTHI – Crop Recommendation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="img/saarthi-logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css?v=1.1" />
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+
+<body>
+  <header class="top-bar">
+    <div class="logo-area">
+      <img src="img/saarthi-logo.png" alt="SAARTHI" class="logo-img" />
+      <div>
+        <div id="logoTitle" class="logo-title">SAARTHI</div>
+        <div id="logoSubtitle" class="logo-subtitle">
+          Crop Guidance for Every Farmer
+        </div>
+      </div>
+    </div>
+    <nav class="top-nav">
+      <a id="navFeatures" href="#features">Features</a>
+      <a id="navContact" href="#contact">Contact</a>
+    </nav>
+    <select id="topLanguageSelect" class="btn btn-outline"
+      style="margin-right: 10px; cursor: pointer; background-color: var(--surface-color); color: var(--text-color);">
+      <option value="en">English</option>
+      <option value="te">తెలుగు (Telugu)</option>
+      <option value="hi">हिन्दी (Hindi)</option>
+      <option value="mr">मराठी (Marathi)</option>
+      <option value="ml">മലയാളം (Malayalam)</option>
+    </select>
+    
+        <button id="topLoginBtn" class="btn btn-outline">Login</button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-text">
+        <h1 id="heroTitle">Right Crop. Right Time. Right Guidance.</h1>
+        <p id="heroIntro">
+          SAARTHI helps farmers choose the best crop for their land by
+          using soil type, water source, climate, market demand, and previous years
+          data – in simple local languages.
+        </p>
+        <ul class="hero-points">
+          <li id="heroPoint1">
+            Multi‑language support: Telugu, Hindi, English, Marathi, Malayalam
+          </li>
+          <li id="heroPoint2">Crop recommendation with budget estimation</li>
+          <li id="heroPoint3">Market demand near you</li>
+          <li id="heroPoint4">Chatbox guidance and disease detection</li>
+        </ul>
+        <button id="heroLoginBtn" class="btn btn-primary">
+          <span id="heroLoginText">Get Started – Login</span>
+        </button>
+      </div>
+      <div class="hero-card hero-image-card">
+        <img src="img/landing_hero.png" alt="SAARTHI Smart Farmer" class="hero-banner-img-landing" />
+        <div class="hero-card-body">
+          <h2 id="heroCardTitle">Farmer‑first Design</h2>
+          <p id="heroCardText">
+            Clean, simple screens with big buttons, clear colors, and optional
+            voice instructions so every farmer can use it comfortably.
+          </p>
+          <ul class="hero-card-features-list">
+            <li>
+              <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" class="feature-icon"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+              <span id="heroCardFeat1">Optional Voice Guidance</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" class="feature-icon"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="9" x2="15" y2="9"></line><line x1="9" y1="13" x2="15" y2="13"></line><line x1="9" y1="17" x2="13" y2="17"></line></svg>
+              <span id="heroCardFeat2">High-Contrast & Big Buttons</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" class="feature-icon"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+              <span id="heroCardFeat3">Offline-Ready Models</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" class="feature-icon"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+              <span id="heroCardFeat4">100% Mobile Responsive</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="section">
+      <h2 id="featuresTitle">Main Features</h2>
+      <div class="feature-grid">
+        <article class="feature-card premium-feature-card">
+          <div class="feature-card-image-wrapper">
+            <img src="img/crop_recommendation.png" alt="Crop Recommendation" class="feature-card-img" />
+          </div>
+          <div class="feature-card-body-wrapper">
+            <h3 id="feat1Title">Crop Recommendation</h3>
+            <p id="feat1Text">
+              Suggests 4–5 best crops and estimated budget based on your soil,
+              water source, acres, and local conditions.
+            </p>
+          </div>
+        </article>
+        <article class="feature-card premium-feature-card">
+          <div class="feature-card-image-wrapper">
+            <img src="img/market_demand.png" alt="Market Demand" class="feature-card-img" />
+          </div>
+          <div class="feature-card-body-wrapper">
+            <h3 id="feat2Title">Market Demand Near You</h3>
+            <p id="feat2Text">
+              Shows demand and price trends of important crops in nearby markets.
+            </p>
+          </div>
+        </article>
+        <article class="feature-card premium-feature-card">
+          <div class="feature-card-image-wrapper">
+            <img src="img/ai_chatbox.png" alt="SAARTHI AI Chatbox" class="feature-card-img" />
+          </div>
+          <div class="feature-card-body-wrapper">
+            <h3 id="feat3Title">Chatbox Guidance</h3>
+            <p id="feat3Text">
+              Gemini‑like conversational assistant for quick farming questions and
+              guidance (prototype version here).
+            </p>
+          </div>
+        </article>
+        <article class="feature-card premium-feature-card">
+          <div class="feature-card-image-wrapper">
+            <img src="img/disease_detector.png" alt="Disease Detector" class="feature-card-img" />
+          </div>
+          <div class="feature-card-body-wrapper">
+            <h3 id="feat4Title">Disease Detector</h3>
+            <p id="feat4Text">
+              Upload crop or leaf photos and get likely disease and precaution
+              suggestions (ML model integration planned).
+            </p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="contact" class="section">
+      <h2 id="contactTitle">Contact &amp; Team Details</h2>
+      <p id="contactIntro">
+        SAARTHI is a student-developed project by second-year's Computer Science students of CMRCET (CMR College of
+        Engineering & Technology). Our goal is to leverage technology to support farmers with intelligent crop
+        recommendations, market insights, and AI-powered assistance. This project is built as part of our academic
+        learning initiative to explore real-world problem solving in agriculture using web development and data-driven
+        solutions.
+      </p>
+      <div class="contact-grid">
+        <div>
+          <h4 id="teamTitle">Project Team</h4>
+          <ul class="team-list">
+            <li class="team-member" id="teamMember1">1. Syed Ayyan</li>
+            <li class="team-member" id="teamMember2">2. Jadi Santhosh</li>
+            <li class="team-member" id="teamMember3">3. Suryavamshi Sridhar Patil</li>
+          </ul>
+        </div>
+        <div>
+          <h4 id="getInTouchTitle">Get in touch</h4>
+          <p id="emailLabel">
+            Email:
+            <a href="mailto:saarthiforus2071@gmail.com">saarthiforus2071@gmail.com</a>
+          </p>
+          <div id="phoneLabel">Phone: +91-9133206035</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div id="footerText">
+      © 2026 SAARTHI – All rights reserved.
+    </div>
+    <button id="bottomLoginBtn" class="btn btn-primary">Login</button>
+  </footer>
+
+  <!-- Language + Login / Register Modal -->
+  <div id="loginModal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <button class="modal-close" id="closeLoginModal">&times;</button>
+      <h2 id="loginTitle">Farmer Login</h2>
+
+      <div class="voice-row">
+        <button id="playLoginInstructions" class="btn btn-ghost" style="display: inline-flex; align-items: center; gap: 0.35rem;">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg> Voice instructions
+        </button>
+      </div>
+
+      <div id="loginFormInputs">
+        <label id="phoneLabelLogin" class="field-label" for="phoneInput">Email or Username</label>
+        <input id="phoneInput" type="text" class="field-input" placeholder="Enter email or username" />
+
+        <label id="passwordLabelLogin" class="field-label" for="passwordInput">Password</label>
+        <div class="password-wrapper">
+          <input id="passwordInput" type="password" class="field-input" placeholder="Enter password" />
+          <button type="button" class="password-toggle-btn" id="togglePasswordBtn" tabindex="-1" aria-label="Toggle password visibility">
+            <svg class="eye-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
+              <path class="eye-open" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle class="eye-pupil" cx="12" cy="12" r="3"></circle>
+              <line class="eye-slash hidden" x1="1" y1="1" x2="23" y2="23" stroke="currentColor" stroke-width="2"></line>
+            </svg>
+          </button>
+        </div>
+
+        <div class="forgot-password-link-container">
+          <button id="forgotPasswordLink" type="button" class="forgot-link-btn">Forgot Password?</button>
+        </div>
+
+        <button id="loginSubmitBtn" class="btn btn-primary btn-block">Login</button>
+        
+        <div class="google-login-separator"><span>OR</span></div>
+        
+        <div id="googleBtnContainer" class="hidden" style="margin-top: 0.5rem; display: flex; justify-content: center;"></div>
+        
+        <button id="googleLoginBtn" type="button" class="btn btn-outline btn-block" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; border-color: #dadce0; background: white; color: #3c4043; margin-top: 0.5rem;">
+          <svg width="18" height="18" viewBox="0 0 18 18">
+            <path fill="#4285F4" d="M17.64 9.2c0-.63-.06-1.25-.16-1.84H9v3.47h4.84a4.14 4.14 0 0 1-1.8 2.71v2.26h2.91c1.7-1.57 2.69-3.88 2.69-6.6z"/>
+            <path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.2l-2.91-2.26a5.58 5.58 0 0 1-8.51-2.93H.57v2.33A9 9 0 0 0 9 18z"/>
+            <path fill="#FBBC05" d="M3.54 10.61a5.4 5.4 0 0 1 0-3.22V5.06H.57a9 9 0 0 0 0 7.88l2.97-2.33z"/>
+            <path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35L15 2.4A9 9 0 0 0 .57 5.06l2.97 2.33A5.48 5.48 0 0 1 9 3.58z"/>
+          </svg>
+          Sign in with Google
+        </button>
+      </div>
+
+      <!-- Google linking setup form -->
+      <div id="googleRegisterSection" class="hidden">
+        <h3 style="margin-bottom: 0.5rem; text-align: center; color: var(--primary-color);">Link Google Account</h3>
+        <p class="muted" style="font-size: 0.85rem; margin-bottom: 1rem; text-align: center;">Set a username and password to link to your Google Account.</p>
+        
+        <label class="field-label" for="googleUsernameInput">Choose Username</label>
+        <input id="googleUsernameInput" type="text" class="field-input" placeholder="Choose a username" />
+        
+        <label class="field-label" for="googlePasswordInput">Set Password</label>
+        <div class="password-wrapper">
+          <input id="googlePasswordInput" type="password" class="field-input" placeholder="Min 6 characters" />
+          <button type="button" class="password-toggle-btn" id="toggleGooglePasswordBtn" tabindex="-1" aria-label="Toggle password visibility">
+            <svg class="eye-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
+              <path class="eye-open" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle class="eye-pupil" cx="12" cy="12" r="3"></circle>
+              <line class="eye-slash hidden" x1="1" y1="1" x2="23" y2="23" stroke="currentColor" stroke-width="2"></line>
+            </svg>
+          </button>
+        </div>
+        
+        <label class="field-label" for="googleConfirmPasswordInput">Confirm Password</label>
+        <div class="password-wrapper">
+          <input id="googleConfirmPasswordInput" type="password" class="field-input" placeholder="Re-enter password" />
+          <button type="button" class="password-toggle-btn" id="toggleGoogleConfirmPasswordBtn" tabindex="-1" aria-label="Toggle password visibility">
+            <svg class="eye-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
+              <path class="eye-open" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle class="eye-pupil" cx="12" cy="12" r="3"></circle>
+              <line class="eye-slash hidden" x1="1" y1="1" x2="23" y2="23" stroke="currentColor" stroke-width="2"></line>
+            </svg>
+          </button>
+        </div>
+        
+        <button id="googleRegisterSubmitBtn" class="btn btn-primary btn-block" style="margin-top: 1.2rem;">Complete Setup &amp; Login</button>
+        <button id="cancelGoogleRegisterLink" class="btn btn-ghost btn-block" style="margin-top: 0.5rem;">Cancel</button>
+      </div>
+
+      <div id="forgotPasswordSection" class="hidden">
+        <h3 class="forgot-section-title">Forgot Password</h3>
+        <p class="muted forgot-section-desc">Verify your email address with OTP to set a new password.</p>
+        
+        <div id="forgotPhoneStep">
+          <label class="field-label" for="forgotEmailInput">Email address</label>
+          <input id="forgotEmailInput" type="email" class="field-input" placeholder="Enter your registered email" />
+          <button id="sendOtpBtn" class="btn btn-primary btn-block" style="margin-top: 1rem;">Send OTP</button>
+        </div>
+        
+        <div id="forgotOtpStep" class="hidden">
+          <label class="field-label" for="forgotOtpInput">Enter 4-digit OTP</label>
+          <input id="forgotOtpInput" type="text" class="field-input" placeholder="Enter OTP code" maxlength="4" />
+          <button id="verifyOtpBtn" class="btn btn-primary btn-block" style="margin-top: 1rem;">Verify OTP</button>
+        </div>
+
+        <div id="forgotResetStep" class="hidden">
+          <label class="field-label" for="forgotNewPasswordInput">New Password</label>
+          <div class="password-wrapper">
+            <input id="forgotNewPasswordInput" type="password" class="field-input" placeholder="Min 6 characters" />
+            <button type="button" class="password-toggle-btn" id="toggleForgotNewPasswordBtn" tabindex="-1" aria-label="Toggle password visibility">
+              <svg class="eye-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
+                <path class="eye-open" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle class="eye-pupil" cx="12" cy="12" r="3"></circle>
+                <line class="eye-slash hidden" x1="1" y1="1" x2="23" y2="23" stroke="currentColor" stroke-width="2"></line>
+              </svg>
+            </button>
+          </div>
+          
+          <label class="field-label" for="forgotConfirmPasswordInput">Confirm New Password</label>
+          <div class="password-wrapper">
+            <input id="forgotConfirmPasswordInput" type="password" class="field-input" placeholder="Re-enter password" />
+            <button type="button" class="password-toggle-btn" id="toggleForgotConfirmPasswordBtn" tabindex="-1" aria-label="Toggle password visibility">
+              <svg class="eye-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
+                <path class="eye-open" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle class="eye-pupil" cx="12" cy="12" r="3"></circle>
+                <line class="eye-slash hidden" x1="1" y1="1" x2="23" y2="23" stroke="currentColor" stroke-width="2"></line>
+              </svg>
+            </button>
+          </div>
+          
+          <button id="resetPasswordSubmitBtn" class="btn btn-primary btn-block" style="margin-top: 1rem;">Reset Password</button>
+        </div>
+        
+        <button id="backToLoginLink" class="btn btn-ghost btn-block" style="margin-top: 0.8rem;">Back to Login</button>
+      </div>
+
+      <p id="loginError" class="error-text"></p>
+    </div>
+  </div>
+
+  <!-- Mock Google Accounts Selector Modal -->
+  <div id="googleMockModal" class="modal hidden">
+    <div class="modal-backdrop" id="closeGoogleMockBackdrop"></div>
+    <div class="modal-content" style="max-width: 360px; padding: 1.5rem; text-align: center;">
+      <svg width="32" height="32" viewBox="0 0 24 24" style="margin-bottom: 0.5rem; margin-inline: auto; display: block;">
+        <path fill="#4285F4" d="M21.35 11.1H12v2.7h5.38c-.24 1.28-.96 2.37-2.05 3.1v2.58h3.32c1.94-1.78 3.05-4.4 3.05-7.48a9.4 9.4 0 0 0-.3-1.9z"/>
+        <path fill="#34A853" d="M12 21c2.43 0 4.47-.8 5.96-2.2l-3.32-2.58A5.6 5.6 0 0 1 6.13 13.3H2.76v2.6A9.5 9.5 0 0 0 12 21z"/>
+        <path fill="#FBBC05" d="M6.13 13.3a5.7 5.7 0 0 1 0-3.6V7.1H2.76A9.5 9.5 0 0 0 1 12c0 1.83.5 3.53 1.38 5l3.75-3.7z"/>
+        <path fill="#EA4335" d="M12 6.3c1.3 0 2.48.45 3.4 1.32l2.55-2.55A9.5 9.5 0 0 0 2.76 7.1l3.37 3.37c.72-2.2 2.79-3.17 5.87-3.17z"/>
+      </svg>
+      <h3 style="margin-top:0; margin-bottom: 0.25rem;">Choose an account</h3>
+      <p class="muted" style="font-size:0.8rem; margin-top:0; margin-bottom: 0.8rem;">to continue to SAARTHI</p>
+      <div style="background:#fffbeb; border:1px solid #fef3c7; color:#b45309; padding:0.5rem; border-radius:8px; font-size:0.75rem; margin-bottom:1.2rem; text-align:left; line-height:1.4; display:flex; align-items:flex-start; gap:0.4rem;">
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        <div><strong>Development Note:</strong> Google credentials are not configured in <code>.env</code> yet. Choose a mock account below to test via simulation mode.</div>
+      </div>
+      
+      <div style="display:flex; flex-direction:column; gap:0.5rem; margin-bottom: 1rem;">
+        <button class="google-account-option-btn" data-email="saarthiforus2071@gmail.com" data-name="Suryavamshi Sridhar" style="display:flex; align-items:center; gap:0.75rem; padding:0.6rem; border:1px solid #dadce0; border-radius:8px; background:none; cursor:pointer; width:100%; text-align:left;">
+          <div style="width:30px; height:30px; border-radius:50%; background:#10B981; color:white; display:flex; align-items:center; justify-content:center; font-weight:bold; flex-shrink:0;">S</div>
+          <div style="overflow:hidden;">
+            <strong style="display:block; font-size:0.85rem; text-overflow:ellipsis; white-space:nowrap; overflow:hidden;">Suryavamshi Sridhar</strong>
+            <span class="muted" style="font-size:0.75rem; text-overflow:ellipsis; white-space:nowrap; overflow:hidden; display:block;">saarthiforus2071@gmail.com</span>
+          </div>
+        </button>
+        <button class="google-account-option-btn" data-email="farmer.ram@gmail.com" data-name="Farmer Ram" style="display:flex; align-items:center; gap:0.75rem; padding:0.6rem; border:1px solid #dadce0; border-radius:8px; background:none; cursor:pointer; width:100%; text-align:left;">
+          <div style="width:30px; height:30px; border-radius:50%; background:#2563EB; color:white; display:flex; align-items:center; justify-content:center; font-weight:bold; flex-shrink:0;">R</div>
+          <div style="overflow:hidden;">
+            <strong style="display:block; font-size:0.85rem; text-overflow:ellipsis; white-space:nowrap; overflow:hidden;">Farmer Ram</strong>
+            <span class="muted" style="font-size:0.75rem; text-overflow:ellipsis; white-space:nowrap; overflow:hidden; display:block;">farmer.ram@gmail.com</span>
+          </div>
+        </button>
+      </div>
+      
+      <div style="border-top: 1px solid #dadce0; padding-top: 0.75rem; margin-top: 0.75rem;">
+        <button id="googleMockCancelBtn" type="button" class="btn btn-ghost btn-block" style="padding:0.4rem;">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/custom-select.js"></script>
+  <script src="js/main.js?v=1.1"></script>
+</body>
+
+</html>

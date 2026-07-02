@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard – SAARTHI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="img/saarthi-logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css?v=1.1" />
+</head>
+
+<body class="dashboard-body">
+  <header class="top-bar">
+    <a href="dashboard.html" class="logo-link">
+      <div class="logo-area">
+        <img src="img/saarthi-logo.png" alt="SAARTHI – AI Based Crop Recommendation" class="logo-img" />
+        <div>
+          <div id="dashLogoTitle" class="logo-title">SAARTHI</div>
+          <div id="dashLogoSubtitle" class="logo-subtitle">
+            Farmer Dashboard
+          </div>
+        </div>
+      </div>
+    </a>
+    <div class="top-right">
+            <select id="dashLangSelect" class="dash-lang-select">
+        <option value="en">English</option>
+        <option value="te">తెలుగు</option>
+        <option value="hi">हिन्दी</option>
+        <option value="mr">मराठी</option>
+        <option value="ml">മലയാളം</option>
+      </select>
+      <div id="profileMenu" class="profile-menu">
+        <button id="profileButton" class="profile-button">
+          <span id="profileInitials" class="profile-avatar">F</span>
+          <span id="profilePhoneShort" class="profile-phone">+91‑</span>
+          <span class="profile-caret">▾</span>
+        </button>
+        <div id="profileDropdown" class="profile-dropdown hidden">
+          <button id="profileViewBtn" class="profile-dropdown-item">
+            View profile
+          </button>
+          <button id="profileLogoutBtn" class="profile-dropdown-item">
+            Logout
+          </button>
+        </div>
+      </div>
+      <button id="sidebarMenuBtn" class="hamburger-menu-btn" aria-label="Open side menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="dashboard-main">
+    <section class="dashboard-header">
+      <div>
+        <h1 id="welcomeTitle">Welcome, Farmer</h1>
+        <p id="welcomeSubtitle" class="muted">
+          Choose an option below to get guidance for your farm.
+        </p>
+      </div>
+      <button id="playDashboardInstructions" class="btn btn-ghost" style="display: inline-flex; align-items: center; gap: 0.35rem;">
+        <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg> Voice instructions
+      </button>
+    </section>
+
+    <!-- Hero Banner with Farmer Image and Quote -->
+    <section class="dashboard-hero-banner">
+      <div class="hero-banner-image-container">
+        <img src="img/farmer_flowers.png" alt="Farming Inspiration" class="hero-banner-img" />
+        <span class="discover-badge" id="heroDiscover">🔍 Click to discover SAARTHI</span>
+        <div class="hero-banner-overlay"></div>
+        <div class="hero-banner-content">
+          <blockquote class="farming-quote" id="heroQuote">
+            "Agriculture is the soul of our nation, and farmers are its heartbeat."
+          </blockquote>
+          <cite class="farming-quote-author" id="heroAuthor">— Saarthi Agriculture Initiative</cite>
+        </div>
+      </div>
+    </section>
+
+    <section class="dashboard-grid">
+      <article class="dash-card clickable" id="cardCropRecommendation">
+        <div class="card-image-wrapper">
+          <img src="img/crop_recommendation.png" alt="Crop Recommendation" class="card-img" />
+        </div>
+        <div class="card-content-wrapper">
+          <h2 id="cardCropTitle">Crop Recommendation</h2>
+          <p id="cardCropText">
+            Get 4–5 crop suggestions and budget estimate using your land details.
+          </p>
+        </div>
+      </article>
+
+      <article class="dash-card clickable" id="cardMarketDemand">
+        <div class="card-image-wrapper">
+          <img src="img/market_demand.png" alt="Market Demand" class="card-img" />
+        </div>
+        <div class="card-content-wrapper">
+          <h2 id="cardMarketTitle">Market Demand Near You</h2>
+          <p id="cardMarketText">
+            See which crops have good demand and prices in your nearby markets.
+          </p>
+        </div>
+      </article>
+
+      <article class="dash-card clickable" id="cardChatbox">
+        <div class="card-image-wrapper">
+          <img src="img/ai_chatbox.png" alt="SAARTHI AI Chatbox" class="card-img" />
+        </div>
+        <div class="card-content-wrapper">
+          <h2 id="cardChatTitle">SAARTHI AI Chatbox</h2>
+          <p id="cardChatText">
+            Ask any farming questions in simple language to our intelligent assistant.
+          </p>
+        </div>
+      </article>
+
+      <article class="dash-card clickable" id="cardDiseaseDetector">
+        <div class="card-image-wrapper">
+          <img src="img/disease_detector.png" alt="Disease Detector" class="card-img" />
+        </div>
+        <div class="card-content-wrapper">
+          <h2 id="cardDiseaseTitle">Disease Detector (Demo)</h2>
+          <p id="cardDiseaseText">
+            Upload a crop or leaf photo to detect possible diseases (demo logic).
+          </p>
+        </div>
+      </article>
+      <article class="dash-card clickable" id="cardSelectedCropMonitor">
+        <div class="card-image-wrapper">
+          <img src="img/crop_monitoring.png" id="cardSelectedCropMonitorImg" alt="Crop Monitoring" class="card-img" />
+          <div class="card-status-badge" id="cardSelectedCropBadge">No Crop Selected</div>
+        </div>
+        <div class="card-content-wrapper">
+          <h2 id="cardSelectedCropTitle">My Selected Crop</h2>
+          <p id="cardSelectedCropText">
+            Track your selected crop timeline, fertilizing schedule, and watering guides.
+          </p>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <!-- Crop recommendation wizard -->
+  <div id="cropWizard" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content modal-wide">
+      <button class="modal-close" id="closeCropWizard">&times;</button>
+      <div id="cropStepLocation" class="wizard-step">
+        <h2>Step 1: Confirm Your Location</h2>
+        <p class="muted">
+          We try to read your location automatically. You can also edit if needed.
+        </p>
+        <label class="field-label" for="locationInput">Location</label>
+        <input id="locationInput" class="field-input" placeholder="Detecting location..." />
+        <button id="detectLocationBtn" class="btn btn-ghost" style="display: inline-flex; align-items: center; gap: 0.35rem;">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> Detect again
+        </button>
+        <div class="wizard-actions">
+          <button id="nextFromLocation" class="btn btn-primary">
+            Next
+          </button>
+        </div>
+        <p id="locationError" class="error-text"></p>
+      </div>
+
+      <div id="cropStepDetails" class="wizard-step hidden">
+        <h2>Step 2: Land &amp; Resource Details</h2>
+        <label class="field-label" for="soilSelect">Soil Type</label>
+        <select id="soilSelect" class="field-input">
+          <option value="">Select soil type</option>
+          <option value="red">Red soil</option>
+          <option value="black">Black cotton soil</option>
+          <option value="alluvial">Alluvial soil</option>
+          <option value="laterite">Laterite soil</option>
+          <option value="sandy">Sandy soil</option>
+        </select>
+
+        <label class="field-label" for="waterSelect">Water Source</label>
+        <select id="waterSelect" class="field-input">
+          <option value="">Select water source</option>
+          <option value="canal">Canal irrigation</option>
+          <option value="borewell">Borewell / Tube well</option>
+          <option value="openwell">Open well</option>
+          <option value="rainfed">Rainfed only</option>
+          <option value="tank">Tank / Pond</option>
+        </select>
+
+        <label class="field-label" for="acresInput">Total Acres</label>
+        <input id="acresInput" class="field-input" type="number" min="0.1" step="0.1" placeholder="e.g. 2.5" />
+
+        <div class="wizard-actions">
+          <button id="backToLocation" class="btn btn-outline">Back</button>
+          <button id="getRecommendationsBtn" class="btn btn-primary">
+            Get Recommendations
+          </button>
+        </div>
+        <p id="detailsError" class="error-text"></p>
+      </div>
+
+      <div id="cropStepResults" class="wizard-step hidden">
+        <h2>Recommended Crops</h2>
+        <p class="muted">
+          These are demo results. In the final system, ML models will refine this
+          list using soil, climate, groundwater, resources and market data.
+        </p>
+        <div id="recommendationsList" class="recommendations-grid"></div>
+        <p id="selectError" class="error-text"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Market demand modal -->
+  <div id="marketModal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content modal-wide">
+      <button class="modal-close" id="closeMarketModal">&times;</button>
+      <h2>Market Demand Near You</h2>
+      <p class="muted">
+        Demo data showing how demand &amp; prices could appear for your area.
+      </p>
+      <div id="marketContent"></div>
+    </div>
+  </div>
+
+  <!-- Chatbox modal -->
+  <div id="chatModal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content modal-wide">
+      <button class="modal-close" id="closeChatModal">&times;</button>
+      <h2>Chatbox (Prototype)</h2>
+      <div class="chat-window" id="chatWindow"></div>
+      <div class="chat-input-row">
+        <input id="chatInput" class="field-input" placeholder="Type your question here..." />
+        <button id="chatSendBtn" class="btn btn-primary">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Disease detection modal -->
+  <div id="diseaseModal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content modal-wide">
+      <button class="modal-close" id="closeDiseaseModal">&times;</button>
+      <h2>Disease Detection (Demo)</h2>
+      <p class="muted">
+        Upload a crop or leaf photo. In this demo we show fixed sample output.
+      </p>
+      <input id="diseaseFile" type="file" accept="image/*" />
+      <button id="detectDiseaseBtn" class="btn btn-primary">
+        Detect Disease
+      </button>
+      <div id="diseaseResult" class="disease-result"></div>
+    </div>
+  </div>
+
+  <!-- About SAARTHI modal -->
+  <div id="aboutSaarthiModal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content modal-wide">
+      <button class="modal-close" id="closeAboutSaarthiModal">&times;</button>
+      <div class="about-saarthi-content">
+        <div class="about-saarthi-header">
+          <img src="img/saarthi-logo.png" alt="SAARTHI" class="about-logo-img" />
+          <h2 id="aboutSaarthiTitle">About SAARTHI</h2>
+        </div>
+        <p class="about-intro" id="aboutSaarthiIntro">
+          <strong>SAARTHI</strong> (meaning <em>Charioteer</em> or <em>Guide</em>) is an advanced, data-driven agricultural intelligence platform designed to empower Indian farmers with precision agriculture.
+        </p>
+        <div class="about-features-grid">
+          <div class="about-feature-item">
+            <span class="feature-icon" style="display: inline-block; vertical-align: middle;"><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22c1.25-6.73 6.77-12 14-12 1.25 0 2.5.18 3.75.54M2 22C4.33 13.88 10.12 8 18 8c1.25 0 2.5.1 3.75.29M2 22C5.45 15.65 11.23 11 19 11c1 0 2 .06 3 .17"></path><path d="M12 22V12"></path></svg></span>
+            <h4 id="aboutF1Title">Precision Recommendation</h4>
+            <p id="aboutF1Text">Analyzes your soil, water source, acres, and climate data to suggest the most profitable and suitable crops.</p>
+          </div>
+          <div class="about-feature-item">
+            <span class="feature-icon" style="display: inline-block; vertical-align: middle;"><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></span>
+            <h4 id="aboutF2Title">Market Demand</h4>
+            <p id="aboutF2Text">Provides live market demand and price estimates in nearby mandis based on your location.</p>
+          </div>
+          <div class="about-feature-item">
+            <span class="feature-icon" style="display: inline-block; vertical-align: middle;"><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></span>
+            <h4 id="aboutF3Title">AI Chat Companion</h4>
+            <p id="aboutF3Text">An intelligent, multi-lingual chatbot to answer any crop questions, soil management queries, or pesticide advice.</p>
+          </div>
+          <div class="about-feature-item">
+            <span class="feature-icon" style="display: inline-block; vertical-align: middle;"><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
+            <h4 id="aboutF4Title">Disease Diagnostics</h4>
+            <p id="aboutF4Text">Computer-vision powered diagnosis of plant diseases directly from leaf photos with instant treatment advice.</p>
+          </div>
+        </div>
+        <div class="about-footer-info" id="aboutFooterText">
+          <p>Developed with <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="red" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle; margin: 0 2px;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> by the CSE Students of <strong>CMRCET</strong> to bridge the gap between AI technology and rural farmers.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sliding Sidebar Drawer -->
+  <div id="sidebarMenuDrawer" class="sidebar-drawer hidden">
+    <div class="sidebar-drawer-backdrop" id="sidebarDrawerBackdrop"></div>
+    <div class="sidebar-drawer-content">
+      <div class="sidebar-drawer-header">
+        <div class="logo-area">
+          <img src="img/saarthi-logo.png" alt="SAARTHI" class="logo-img" style="height: 36px;" />
+          <span class="logo-title" style="color: var(--text-dark);">SAARTHI Menu</span>
+        </div>
+        <button id="closeSidebarDrawerBtn" class="close-drawer-btn">&times;</button>
+      </div>
+      <div class="sidebar-drawer-body">
+        <button id="sidebarViewProfileBtn" class="sidebar-menu-item">
+          <span class="menu-item-icon" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span>
+          <span class="menu-item-text">View Profile</span>
+        </button>
+        <button id="sidebarHelpCenterBtn" class="sidebar-menu-item">
+          <span class="menu-item-icon" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></span>
+          <span class="menu-item-text">Help Center</span>
+        </button>
+        <button id="sidebarInboxBtn" class="sidebar-menu-item">
+          <span class="menu-item-icon" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 10 12 15 7 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line><path d="M20 17a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2"></path></svg></span>
+          <span class="menu-item-text">Help Center Inbox (Admin)</span>
+        </button>
+        <button id="sidebarTipsBtn" class="sidebar-menu-item">
+          <span class="menu-item-icon" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M15.09 14c.9-1.07 1.41-2.43 1.41-3.9a6.5 6.5 0 0 0-13 0c0 1.47.5 2.83 1.41 3.9H15.09z"></path></svg></span>
+          <span class="menu-item-text">Farming Tips</span>
+        </button>
+        <button id="sidebarSchemesBtn" class="sidebar-menu-item">
+          <span class="menu-item-icon" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></span>
+          <span class="menu-item-text">Govt Schemes</span>
+        </button>
+        <button id="sidebarAboutBtn" class="sidebar-menu-item">
+          <span class="menu-item-icon" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></span>
+          <span class="menu-item-text">About SAARTHI</span>
+        </button>
+
+
+      </div>
+      <div class="sidebar-drawer-footer">
+        <button id="sidebarLogoutBtn" class="btn btn-ghost btn-block" style="color: var(--text-dark); border-color: var(--primary-dark);">Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Edit Modal -->
+  <div id="profileModal" class="modal hidden">
+    <div class="modal-backdrop" id="closeProfileModalBackdrop"></div>
+    <div class="modal-content">
+      <button class="modal-close" id="closeProfileModalBtn">&times;</button>
+      <h2 class="modal-section-title">Farmer Profile</h2>
+      
+      <div class="profile-edit-avatar-container">
+        <div class="profile-edit-avatar-wrapper">
+          <img id="profileModalAvatarImg" src="img/saarthi-logo.png" alt="Avatar" class="profile-modal-avatar-img" />
+          <label for="profilePicInput" class="avatar-edit-overlay" title="Upload new photo">
+            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+              <circle cx="12" cy="13" r="4"></circle>
+            </svg>
+          </label>
+          <input type="file" id="profilePicInput" accept="image/*" style="display: none;" />
+        </div>
+        <p class="muted" style="font-size: 0.75rem; margin-top: 0.4rem;">Click icon to upload profile picture</p>
+      </div>
+
+      <label class="field-label" for="profileNameInput">Farmer Name</label>
+      <input id="profileNameInput" type="text" class="field-input" placeholder="Enter name" />
+
+      <label class="field-label" for="profilePhoneDisplay">Phone Number (Account ID)</label>
+      <input id="profilePhoneDisplay" type="text" class="field-input" readonly style="background: #e2ede4; cursor: not-allowed;" />
+
+      <label class="field-label" for="profileSoilSelect">Soil Type</label>
+      <select id="profileSoilSelect" class="field-input">
+        <option value="">Select soil type</option>
+        <option value="red">Red soil</option>
+        <option value="black">Black cotton soil</option>
+        <option value="alluvial">Alluvial soil</option>
+        <option value="laterite">Laterite soil</option>
+        <option value="sandy">Sandy soil</option>
+      </select>
+
+      <label class="field-label" for="profileWaterSelect">Water Source</label>
+      <select id="profileWaterSelect" class="field-input">
+        <option value="">Select water source</option>
+        <option value="canal">Canal irrigation</option>
+        <option value="borewell">Borewell / Tube well</option>
+        <option value="openwell">Open well</option>
+        <option value="rainfed">Rainfed only</option>
+        <option value="tank">Tank / Pond</option>
+      </select>
+
+      <label class="field-label" for="profileAcresInput">Total Acres</label>
+      <input id="profileAcresInput" class="field-input" type="number" min="0.1" step="0.1" placeholder="e.g. 2.5" />
+
+      <button id="saveProfileBtn" class="btn btn-primary btn-block" style="margin-top: 1.2rem;">Save Changes</button>
+      <p id="profileSaveStatus" class="success-text" style="color: green; font-size: 0.85rem; margin-top: 0.5rem; text-align: center;"></p>
+    </div>
+  </div>
+
+  <!-- Change Password Modal -->
+  <div id="changePasswordModal" class="modal hidden">
+    <div class="modal-backdrop" id="closeChangePasswordBackdrop"></div>
+    <div class="modal-content">
+      <button class="modal-close" id="closeChangePasswordBtn">&times;</button>
+      <h2 class="modal-section-title" style="color: var(--primary-color);">Change Password</h2>
+      <p class="muted" style="font-size: 0.85rem; margin-bottom: 1.2rem;">Verify your current password to set a new password.</p>
+      
+      <label class="field-label" for="profileOldPasswordInput">Current Password</label>
+      <input id="profileOldPasswordInput" type="password" class="field-input" placeholder="Enter current password" style="margin-bottom: 0.8rem;" />
+
+      <label class="field-label" for="profileNewPasswordInput">New Password</label>
+      <input id="profileNewPasswordInput" type="password" class="field-input" placeholder="Min 6 characters" style="margin-bottom: 0.8rem;" />
+
+      <label class="field-label" for="profileConfirmNewPasswordInput">Confirm New Password</label>
+      <input id="profileConfirmNewPasswordInput" type="password" class="field-input" placeholder="Confirm new password" style="margin-bottom: 1.2rem;" />
+
+      <button id="profileChangePasswordBtn" class="btn btn-primary btn-block">Update Password</button>
+      <p id="profilePasswordStatus" style="font-size: 0.85rem; margin-top: 0.5rem; text-align: center;"></p>
+    </div>
+  </div>
+
+  <!-- Admin Help Center Inbox Modal -->
+  <div id="inboxModal" class="modal hidden">
+    <div class="modal-backdrop" id="closeInboxBackdrop"></div>
+    <div class="modal-content modal-wide" style="max-height: 80vh; display: flex; flex-direction: column;">
+      <button class="modal-close" id="closeInboxBtn">&times;</button>
+      <h2 class="modal-section-title">Help Center Inbox (Admin)</h2>
+      <p class="muted" style="margin-bottom: 1rem;">View queries raised by farmers to CMRCET agronomists.</p>
+      
+      <div id="inboxQueryList" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; padding-right: 0.5rem;">
+        <!-- Query cards will be rendered dynamically here -->
+        <p class="muted" style="text-align: center; padding: 2rem;">Loading inquiries...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Help Center Modal -->
+  <div id="helpCenterModal" class="modal hidden">
+    <div class="modal-backdrop" id="closeHelpCenterBackdrop"></div>
+    <div class="modal-content modal-wide">
+      <button class="modal-close" id="closeHelpCenterBtn">&times;</button>
+      <h2 class="modal-section-title">Help Center</h2>
+      
+      <div class="help-center-grid">
+        <div class="help-contact-info">
+          <h3>Get In Touch</h3>
+          <p>For urgent agronomy support or technical issues, contact our support team:</p>
+          <div class="contact-card-item">
+            <span class="contact-icon" style="display: inline-flex; align-items: center; justify-content: center;"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg></span>
+            <div>
+              <strong>Email</strong>
+              <a href="mailto:saarthiforus2071@gmail.com">saarthiforus2071@gmail.com</a>
+            </div>
+          </div>
+          <div class="contact-card-item" style="margin-top: 0.8rem;">
+            <span class="contact-icon" style="display: inline-flex; align-items: center; justify-content: center;"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></span>
+            <div>
+              <strong>Phone</strong>
+              <a href="tel:9133206035">+91-9133206035</a>
+            </div>
+          </div>
+          
+          <h3 style="margin-top: 1.5rem;">Agronomist Inquiry</h3>
+          <p style="font-size: 0.85rem; margin-bottom: 0.5rem;">Send a query directly to our farm experts:</p>
+          <input id="helpQueryName" class="field-input" placeholder="Your Name" style="margin-bottom: 0.4rem;" />
+          <textarea id="helpQueryText" class="field-input" placeholder="How can we help you today?" rows="3" style="resize: none; font-family: inherit;"></textarea>
+          <button id="submitHelpQueryBtn" class="btn btn-primary btn-block" style="margin-top: 0.4rem;">Submit Query</button>
+          <p id="helpQueryStatus" style="color: green; font-size: 0.8rem; margin-top: 0.4rem; text-align: center;"></p>
+        </div>
+        
+        <div class="help-faq-accordion">
+          <h3>Frequently Asked Questions</h3>
+          <div class="faq-accordion-container">
+            <div class="faq-item">
+              <button class="faq-question">How do I get crop recommendations? <span>+</span></button>
+              <div class="faq-answer hidden">
+                <p>Go to the "Crop Recommendation" card on the dashboard, verify your location, select your soil type and water source, and enter land size. SAARTHI will suggest the top 4-5 matching crops with estimated budgets.</p>
+              </div>
+            </div>
+            <div class="faq-item">
+              <button class="faq-question">How does the Disease Detector work? <span>+</span></button>
+              <div class="faq-answer hidden">
+                <p>Upload a clear close-up picture of an infected leaf or crop. Our built-in Gemini Vision model will analyze the symptoms and suggest possible remedies and prevention practices.</p>
+              </div>
+            </div>
+            <div class="faq-item">
+              <button class="faq-question">What languages does SAARTHI support? <span>+</span></button>
+              <div class="faq-answer hidden">
+                <p>Currently, the portal fully supports English, Telugu (తెలుగు), Hindi (हिन्दी), Marathi (मराठी), and Malayalam (മലയാളം). You can toggle the language using the dropdown in the header or sidebar menu.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Farming Tips Modal -->
+  <div id="tipsModal" class="modal hidden">
+    <div class="modal-backdrop" id="closeTipsBackdrop"></div>
+    <div class="modal-content">
+      <button class="modal-close" id="closeTipsBtn">&times;</button>
+      <h2 class="modal-section-title" style="display: flex; align-items: center; gap: 0.5rem;"><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M15.09 14c.9-1.07 1.41-2.43 1.41-3.9a6.5 6.5 0 0 0-13 0c0 1.47.5 2.83 1.41 3.9H15.09z"></path></svg> Expert Farming Tips</h2>
+      <div class="modal-tips-list" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+        <div class="tip-card" style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 0.8rem; border-radius: 8px;">
+          <h4 style="margin: 0 0 0.3rem 0; color: #166534;">Smart Irrigation</h4>
+          <p style="margin: 0; font-size: 0.85rem; color: #14532d;">Irrigate early in the morning or late in the evening to minimize water evaporation and reduce root disease risks.</p>
+        </div>
+        <div class="tip-card" style="background: #fefce8; border: 1px solid #fef08a; padding: 0.8rem; border-radius: 8px;">
+          <h4 style="margin: 0 0 0.3rem 0; color: #854d0e;">Organic Pest Control</h4>
+          <p style="margin: 0; font-size: 0.85rem; color: #713f12;">Mix 5ml Neem Oil with a few drops of dish soap in 1 liter of water. Spray on leaf undersides to repel aphids and mites organically.</p>
+        </div>
+        <div class="tip-card" style="background: #f0f9ff; border: 1px solid #bae6fd; padding: 0.8rem; border-radius: 8px;">
+          <h4 style="margin: 0 0 0.3rem 0; color: #075985;">Soil Testing</h4>
+          <p style="margin: 0; font-size: 0.85rem; color: #0c4a6e;">Test your farm soil pH every two years. Balanced soil pH (6.0 - 7.0) maximizes crop nutrient absorption and crop yield potential.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Government Schemes Modal -->
+  <div id="schemesModal" class="modal hidden">
+    <div class="modal-backdrop" id="closeSchemesBackdrop"></div>
+    <div class="modal-content">
+      <button class="modal-close" id="closeSchemesBtn">&times;</button>
+      <h2 class="modal-section-title" style="display: flex; align-items: center; gap: 0.5rem;"><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> Government Agritech Schemes</h2>
+      <div class="modal-schemes-list" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+        <div class="scheme-card" style="background: #faf5ff; border: 1px solid #e9d5ff; padding: 0.8rem; border-radius: 8px;">
+          <h4 style="margin: 0 0 0.3rem 0; color: #6b21a8;">PM-KISAN Yojana</h4>
+          <p style="margin: 0; font-size: 0.85rem; color: #581c87;">Direct income support of ₹6,000 per year in three equal installments to all landholding farmer families across the country.</p>
+        </div>
+        <div class="scheme-card" style="background: #fff7ed; border: 1px solid #fed7aa; padding: 0.8rem; border-radius: 8px;">
+          <h4 style="margin: 0 0 0.3rem 0; color: #9a3412;">PM Fasal Bima Yojana (PMFBY)</h4>
+          <p style="margin: 0; font-size: 0.85rem; color: #7c2d12;">Crop insurance protection against natural calamities, pests, and diseases at a minimal premium of 2% for Kharif and 1.5% for Rabi crops.</p>
+        </div>
+        <div class="scheme-card" style="background: #f0fdfa; border: 1px solid #99f6e4; padding: 0.8rem; border-radius: 8px;">
+          <h4 style="margin: 0 0 0.3rem 0; color: #0f766e;">Micro Irrigation Fund (MIF)</h4>
+          <p style="margin: 0; font-size: 0.85rem; color: #115e59;">Subsidized loans and financial assistance to install drip and sprinkler irrigation networks to conserve water resources.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Selected Crop Timeline Modal -->
+  <div id="cropMonitorModal" class="modal hidden">
+    <div class="modal-backdrop" id="closeCropMonitorBackdrop"></div>
+    <div class="modal-content modal-wide">
+      <button class="modal-close" id="closeCropMonitorBtn">&times;</button>
+      <h2 id="selectedCropTitle" style="color: var(--primary-dark); margin-bottom: 0.3rem;">Selected Crop Monitoring</h2>
+      <p id="selectedCropIntro" class="muted" style="margin-bottom: 1rem;">No crop selected yet.</p>
+      
+      <div id="selectedCropContainer" class="monitor-card" style="max-height: 55vh; overflow-y: auto; border: none; background: transparent; padding: 0;">
+        <p class="muted">No crop selected yet.</p>
+      </div>
+      
+      <div style="display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1rem; border-top: 1px solid rgba(16,185,129,0.15); padding-top: 1rem;">
+        <button id="playSelectedCropInstructions" class="btn btn-ghost" style="display: inline-flex; align-items: center; gap: 0.35rem;">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg> Read Aloud
+        </button>
+        <button id="closeCropMonitorBtn2" class="btn btn-primary">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Confirmation Modal for Crop Removal -->
+  <div id="confirmRemoveModal" class="modal hidden" style="display:none; position: fixed; z-index: 1200; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); align-items: center; justify-content: center;">
+    <div class="modal-content" style="background-color: #fefefe; margin: auto; padding: 1.5rem; border: 1px solid #8cb89f; width: 90%; max-width: 400px; border-radius: 12px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+      <h3 style="margin-top: 0; color: var(--text-dark);">Remove Crop?</h3>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Are you sure you want to stop monitoring <strong id="confirmRemoveCropName" style="color: var(--primary-dark);"></strong>?</p>
+      <div style="display: flex; gap: 1rem; justify-content: center;">
+        <button id="cancelRemoveBtn" class="btn btn-ghost" style="padding: 0.5rem 1.2rem; border-radius: 20px; font-weight: 600; border: 1px solid #ccc;">Cancel</button>
+        <button id="okRemoveBtn" class="btn btn-primary" style="padding: 0.5rem 1.2rem; border-radius: 20px; font-weight: 600; background-color: var(--primary); color: white;">Yes, Remove</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/custom-select.js"></script>
+  <script src="js/dashboard.js?v=1.1"></script>
+</body>
+
+</html>

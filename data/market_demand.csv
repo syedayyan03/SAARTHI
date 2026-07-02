@@ -1,0 +1,44 @@
+State,District,Market,Commodity,Variety,Arrivals,MinPrice,MaxPrice,ModalPrice,Demand,Date
+Telangana,Nizamabad,Nizamabad APMC,Paddy,Sanna Ralu,186,2219,2686,2440,Rising,2026-07-02
+Telangana,Nizamabad,Nizamabad APMC,Maize,Local,133,1934,2204,2044,High,2026-07-02
+Telangana,Nizamabad,Nizamabad APMC,Chillies,Teja,42,18144,21150,19295,Rising,2026-07-02
+Telangana,Nizamabad,Nizamabad APMC,Turmeric,Finger,29,11272,14053,12412,Medium,2026-07-02
+Telangana,Warangal,Warangal Mandi,Cotton,Kapas,228,6693,7913,7334,Rising,2026-07-02
+Telangana,Warangal,Warangal Mandi,Chillies,Desi,62,15842,18857,17476,Rising,2026-07-02
+Telangana,Khammam,Khammam APMC,Cotton,Kapas,206,6182,7143,6590,Low,2026-07-02
+Telangana,Khammam,Khammam APMC,Paddy,Common,205,2085,2390,2236,Rising,2026-07-02
+Andhra Pradesh,Guntur,Guntur Mirchi Yard,Chillies,Guntur Red,312,16165,19561,17176,Low,2026-07-02
+Andhra Pradesh,Guntur,Guntur Mirchi Yard,Cotton,Kapas,121,7150,8514,7920,Rising,2026-07-02
+Andhra Pradesh,Krishna,Vijayawada Mandi,Paddy,BPT 5204,137,2446,2813,2646,High,2026-07-02
+Andhra Pradesh,Krishna,Vijayawada Mandi,Blackgram,Urad,32,7426,8982,8216,Medium,2026-07-02
+Andhra Pradesh,Chittoor,Madanapalle Mandi,Tomato,Local,522,1396,1720,1512,Rising,2026-07-02
+Andhra Pradesh,Chittoor,Madanapalle Mandi,Mango,Totapuri,261,2590,3110,2786,Medium,2026-07-02
+Maharashtra,Nashik,Lasalgaon Mandi,Onion,Red Onion,719,2012,2404,2164,Medium,2026-07-02
+Maharashtra,Nashik,Pimpalgaon Mandi,Tomato,Hybrid,646,1188,1398,1306,Rising,2026-07-02
+Maharashtra,Nashik,Nashik APMC,Grapes,Thomson Seedless,109,6717,8321,7285,Low,2026-07-02
+Maharashtra,Pune,Pune Market Yard,Onion,White Onion,404,2384,2971,2608,Rising,2026-07-02
+Maharashtra,Pune,Pune Market Yard,Tomato,Local,325,1287,1528,1417,Rising,2026-07-02
+Maharashtra,Pune,Pune Market Yard,Potato,Jyoti,291,1464,1803,1625,Medium,2026-07-02
+Maharashtra,Jalgaon,Jalgaon APMC,Banana,Bhushaval,600,1662,1982,1830,Medium,2026-07-02
+Maharashtra,Jalgaon,Jalgaon APMC,Soybean,Yellow,143,4646,5406,5037,High,2026-07-02
+Maharashtra,Nagpur,Kalamna Market,Orange,Nagpur Orange,207,3868,4595,4126,Low,2026-07-02
+Maharashtra,Nagpur,Kalamna Market,Cotton,Kapas,182,5953,7363,6415,Low,2026-07-02
+Maharashtra,Aurangabad,Aurangabad Mandi,Sugarcane,Co-86032,1014,289,331,315,Medium,2026-07-02
+Kerala,Kottayam,Kottayam Market,Natural Rubber,RSS-4,70,15299,17452,16397,Low,2026-07-02
+Kerala,Kottayam,Kottayam Market,Coconut,Dry,139,3521,4288,3731,Medium,2026-07-02
+Kerala,Wayanad,Kalpetta Mandi,Black Pepper,Malabar,13,52915,64343,57288,Low,2026-07-02
+Kerala,Wayanad,Kalpetta Mandi,Coffee,Robusta,43,19100,22703,20790,Medium,2026-07-02
+Kerala,Palakkad,Palakkad APMC,Paddy,Matta,141,2201,2661,2342,Low,2026-07-02
+Kerala,Palakkad,Palakkad APMC,Coconut,Raw,188,2607,3078,2875,Rising,2026-07-02
+Punjab,Amritsar,Amritsar Grain Market,Wheat,Kanak,789,2049,2481,2195,Medium,2026-07-02
+Punjab,Amritsar,Amritsar Grain Market,Paddy,Basmati,289,4072,4825,4302,Medium,2026-07-02
+Punjab,Patiala,Patiala Mandi,Wheat,Kanak,774,2032,2425,2249,Medium,2026-07-02
+Punjab,Patiala,Patiala Mandi,Paddy,PR 126,795,1899,2242,2109,Medium,2026-07-02
+Punjab,Ludhiana,Ludhiana APMC,Potato,Local,448,1025,1162,1097,Medium,2026-07-02
+Punjab,Ludhiana,Ludhiana APMC,Mustard Seeds,Sarso,126,5240,6137,5577,Medium,2026-07-02
+Uttar Pradesh,Varanasi,Varanasi Mandi,Paddy,Sarna,261,2131,2592,2317,Rising,2026-07-02
+Uttar Pradesh,Varanasi,Varanasi Mandi,Potato,Desi,413,1017,1223,1082,Low,2026-07-02
+Uttar Pradesh,Kanpur,Kanpur Grain Market,Wheat,Sharbati,777,2405,2770,2539,Rising,2026-07-02
+Uttar Pradesh,Kanpur,Kanpur Grain Market,Chickpea,Chana,105,5770,6469,6142,Rising,2026-07-02
+Uttar Pradesh,Lucknow,Lucknow Mandi,Mango,Dasheri,206,4037,4804,4401,Rising,2026-07-02
+Uttar Pradesh,Lucknow,Lucknow Mandi,Tomato,Hybrid,340,995,1209,1058,Low,2026-07-02

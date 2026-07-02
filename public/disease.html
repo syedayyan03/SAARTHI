@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>SAARTHI – Disease Detector</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="img/saarthi-logo.png" />
+  <link rel="stylesheet" href="css/styles.css?v=1.1" />
+</head>
+
+<body class="dashboard-body">
+  <header class="top-bar">
+    <div style="display: flex; align-items: center; gap: 0.75rem;">
+      <a href="dashboard.html" class="back-circle-btn" aria-label="Go back to Dashboard">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+      </a>
+      <a href="dashboard.html" class="logo-link">
+        <div class="logo-area">
+          <img src="img/saarthi-logo.png" alt="SAARTHI – AI Based Crop Recommendation" class="logo-img" />
+          <div>
+            <div class="logo-title">SAARTHI</div>
+            <div id="dashLogoSubtitle" class="logo-subtitle">Disease Detector (Demo)</div>
+          </div>
+        </div>
+      </a>
+    </div>
+    <div class="top-right">
+            <div id="profileMenu" class="profile-menu">
+        <button id="profileButton" class="profile-button">
+          <span id="profileInitials" class="profile-avatar">F</span>
+          <span id="profilePhoneShort" class="profile-phone">+91‑</span>
+          <span class="profile-caret">▾</span>
+        </button>
+        <div id="profileDropdown" class="profile-dropdown hidden">
+          <button id="profileBackDashboard" class="profile-dropdown-item">
+            Back to dashboard
+          </button>
+          <button id="profileLogoutBtn" class="profile-dropdown-item">
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="dashboard-main">
+    <section class="dashboard-header">
+      <div>
+        <h1 id="diseasePageTitle">Disease Detection</h1>
+        <p id="diseasePageIntro" class="muted">
+          Upload a crop or leaf photo below. Our built-in Gemini AI model will analyze your
+          photo in real-time to detect possible diseases and offer reliable advice.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="upload-container-wrapper">
+        <div id="dropZone" class="upload-dropzone">
+          <span class="upload-icon" style="display: inline-block; margin-bottom: 0.5rem;"><svg viewBox="0 0 24 24" width="36" height="36" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-color);"><path d="M2 22c1.25-6.73 6.77-12 14-12 1.25 0 2.5.18 3.75.54M2 22C4.33 13.88 10.12 8 18 8c1.25 0 2.5.1 3.75.29M2 22C5.45 15.65 11.23 11 19 11c1 0 2 .06 3 .17"></path><path d="M12 22V12"></path></svg></span>
+          <p id="uploadInstruction" class="upload-instruction">Drag & Drop leaf photo here or <span class="browse-link">browse files</span></p>
+          <p id="uploadSubtext" class="upload-subtext">Supports PNG, JPG, JPEG files</p>
+          <input id="diseaseFile" type="file" accept="image/*" style="display: none;" />
+        </div>
+        <div id="imagePreviewContainer" class="image-preview-container hidden">
+          <img id="imagePreview" src="" alt="Selected Leaf Preview" />
+          <button id="removeImageBtn" class="btn-remove-image" type="button">&times;</button>
+        </div>
+        <div class="action-btn-container" style="margin-top: 1.5rem; text-align: center;">
+          <button id="detectDiseaseBtn" class="btn btn-primary btn-block" style="width: 100%; max-width: 300px;" disabled>
+            Detect Disease
+          </button>
+        </div>
+      </div>
+      <div id="diseaseResult" class="disease-result"></div>
+    </section>
+  </main>
+
+  <script src="js/disease.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>SAARTHI – Crop Recommendation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="img/saarthi-logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css?v=1.1" />
+</head>
+
+<body class="dashboard-body">
+  <header class="top-bar">
+    <div style="display: flex; align-items: center; gap: 0.75rem;">
+      <a href="dashboard.html" class="back-circle-btn" aria-label="Go back to Dashboard">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+      </a>
+      <a href="dashboard.html" class="logo-link">
+        <div class="logo-area">
+          <img src="img/saarthi-logo.png" alt="SAARTHI – AI Based Crop Recommendation" class="logo-img" />
+          <div>
+            <div id="dashLogoTitle" class="logo-title">SAARTHI</div>
+            <div id="dashLogoSubtitle" class="logo-subtitle">
+              Crop Recommendation
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+    <div class="top-right">
+            <div id="profileMenu" class="profile-menu">
+        <button id="profileButton" class="profile-button">
+          <span id="profileInitials" class="profile-avatar">F</span>
+          <span id="profilePhoneShort" class="profile-phone">+91‑</span>
+          <span class="profile-caret">▾</span>
+        </button>
+        <div id="profileDropdown" class="profile-dropdown hidden">
+          <button id="profileBackDashboard" class="profile-dropdown-item">
+            Back to dashboard
+          </button>
+          <button id="profileLogoutBtn" class="profile-dropdown-item">
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="dashboard-main">
+    <section class="dashboard-header">
+      <div>
+        <h1 id="cropPageTitle">Crop Recommendation</h1>
+        <p id="cropPageIntro" class="muted">
+          Enter your location and land details. SAARTHI will suggest suitable
+          crops with budget estimates.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wizard-container">
+        <!-- Visual Stepper Progress Bar -->
+        <div class="stepper">
+          <div class="step active" id="stepIndicator1">
+            <div class="step-icon" style="display: flex; align-items: center; justify-content: center;"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></div>
+            <div class="step-label" id="stepLabel1">Location</div>
+          </div>
+          <div class="step-connector" id="connector1"></div>
+          <div class="step" id="stepIndicator2">
+            <div class="step-icon" style="display: flex; align-items: center; justify-content: center;"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22c1.25-6.73 6.77-12 14-12 1.25 0 2.5.18 3.75.54M2 22C4.33 13.88 10.12 8 18 8c1.25 0 2.5.1 3.75.29M2 22C5.45 15.65 11.23 11 19 11c1 0 2 .06 3 .17"></path><path d="M12 22V12"></path></svg></div>
+            <div class="step-label" id="stepLabel2">Land Details</div>
+          </div>
+          <div class="step-connector" id="connector2"></div>
+          <div class="step" id="stepIndicator3">
+            <div class="step-icon" style="display: flex; align-items: center; justify-content: center;"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg></div>
+            <div class="step-label" id="stepLabel3">Suggestions</div>
+          </div>
+        </div>
+
+        <div id="cropStepLocation" class="wizard-step">
+          <h2 id="step1Title">Step 1: Confirm Your Location</h2>
+          <p id="step1Desc" class="muted">
+            We try to read your location automatically. You can also search for your city or village.
+          </p>
+          <label id="locLabel" class="field-label" for="locationInput">Location</label>
+          <div style="position: relative;">
+            <input id="locationInput" class="field-input" placeholder="e.g. Hyderabad, India" autocomplete="off" />
+            <div id="locationSuggestions" class="autocomplete-dropdown hidden"></div>
+          </div>
+          <button id="detectLocationBtn" class="btn btn-ghost" style="display: inline-flex; align-items: center; gap: 0.35rem;">
+            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> Detect again
+          </button>
+          
+          <div class="quick-locations-container" style="margin-top: 1.25rem; display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+            <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-color); margin-right: 0.25rem;">Popular Districts:</span>
+            <button type="button" class="quick-loc-btn btn btn-outline" data-loc="Nizamabad, Telangana, India" data-lat="18.6725" data-lon="78.0941" style="padding: 0.35rem 0.85rem; font-size: 0.8rem; border-radius: 20px; font-weight: 500; cursor: pointer;">Nizamabad (TS)</button>
+            <button type="button" class="quick-loc-btn btn btn-outline" data-loc="Guntur, Andhra Pradesh, India" data-lat="16.3067" data-lon="80.4365" style="padding: 0.35rem 0.85rem; font-size: 0.8rem; border-radius: 20px; font-weight: 500; cursor: pointer;">Guntur (AP)</button>
+            <button type="button" class="quick-loc-btn btn btn-outline" data-loc="Nashik, Maharashtra, India" data-lat="19.9975" data-lon="73.7898" style="padding: 0.35rem 0.85rem; font-size: 0.8rem; border-radius: 20px; font-weight: 500; cursor: pointer;">Nashik (MH)</button>
+            <button type="button" class="quick-loc-btn btn btn-outline" data-loc="Kottayam, Kerala, India" data-lat="9.5916" data-lon="76.5221" style="padding: 0.35rem 0.85rem; font-size: 0.8rem; border-radius: 20px; font-weight: 500; cursor: pointer;">Kottayam (KL)</button>
+            <button type="button" class="quick-loc-btn btn btn-outline" data-loc="Karnal, Haryana, India" data-lat="29.6857" data-lon="76.9905" style="padding: 0.35rem 0.85rem; font-size: 0.8rem; border-radius: 20px; font-weight: 500; cursor: pointer;">Karnal (HR)</button>
+          </div>
+          <div class="wizard-actions">
+            <a href="dashboard.html" class="btn btn-outline" style="margin-right: auto;">
+              ← Back to Dashboard
+            </a>
+            <button id="nextFromLocation" class="btn btn-primary">
+              Next
+            </button>
+          </div>
+          <p id="locationError" class="error-text"></p>
+        </div>
+
+        <div id="cropStepDetails" class="wizard-step hidden">
+          <h2 id="step2Title">Step 2: Land &amp; Resource Details</h2>
+
+          <div id="weatherInfoCard" class="weather-card hidden">
+            <h3 class="weather-title" style="display: flex; align-items: center; gap: 0.4rem;">
+              <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> <span id="areaNameDisplay">Detecting Location...</span>
+            </h3>
+            <div class="weather-grid">
+              <div class="weather-item">
+                <span class="weather-item-icon" style="display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px;"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"></path></svg></span>
+                <span id="tempDisplay" class="weather-item-val">--°C</span>
+              </div>
+              <div class="weather-item">
+                <span id="weatherIconDisplay" class="weather-item-icon" style="display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px;"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg></span>
+                <span id="weatherDescDisplay" class="weather-item-val">--</span>
+              </div>
+              <div class="weather-item">
+                <span class="weather-item-icon" style="display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px;"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"></path></svg></span>
+                <span id="windDisplay" class="weather-item-val">-- km/h</span>
+              </div>
+              <div class="weather-item">
+                <span class="weather-item-icon" style="display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px;"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg></span>
+                <span id="humidityDisplay" class="weather-item-val">--%</span>
+              </div>
+            </div>
+          </div>
+
+          <label id="soilLabel" class="field-label" for="soilSelect">Soil Type</label>
+          <select id="soilSelect" class="field-input">
+            <option value="">Select soil type</option>
+            <option value="red">Red soil</option>
+            <option value="black">Black cotton soil</option>
+            <option value="alluvial">Alluvial soil</option>
+            <option value="laterite">Laterite soil</option>
+            <option value="sandy">Sandy soil</option>
+          </select>
+
+          <label id="phLabel" class="field-label" for="phInput">Soil pH (Optional)</label>
+          <input id="phInput" class="field-input" type="number" min="0" max="14" step="0.1" placeholder="e.g. 6.5" />
+
+          <label id="waterLabel" class="field-label" for="waterSelect">Water Source</label>
+          <select id="waterSelect" class="field-input">
+            <option value="">Select water source</option>
+            <option value="canal">Canal irrigation</option>
+            <option value="borewell">Borewell / Tube well</option>
+            <option value="openwell">Open well</option>
+            <option value="rainfed">Rainfed only</option>
+            <option value="tank">Tank / Pond</option>
+          </select>
+
+          <label id="acresLabel" class="field-label" for="acresInput">Total Acres</label>
+          <input id="acresInput" class="field-input" type="number" min="0.1" step="0.1" value="1.0" placeholder="e.g. 2.5" />
+
+          <div class="wizard-actions">
+            <button id="backToLocation" class="btn btn-outline">Back</button>
+            <button id="getRecommendationsBtn" class="btn btn-primary">
+              Get Recommendations
+            </button>
+          </div>
+          <p id="detailsError" class="error-text"></p>
+        </div>
+
+        <div id="cropStepResults" class="wizard-step hidden">
+          <h2 id="step3Title">Recommended Crops</h2>
+          <p id="step3Desc" class="muted">
+            These are demo results. In the final system, ML models will refine this
+            list using soil, climate, groundwater, resources and market data.
+          </p>
+          <div id="recommendationsList" class="recommendations-grid"></div>
+          <p id="selectError" class="error-text"></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/custom-select.js"></script>
+  <script src="js/crop.js"></script>
+</body>
+
+</html>
