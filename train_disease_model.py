@@ -215,30 +215,51 @@ def get_transforms(img_size: int):
 
 def build_loaders(data_dir: str, cfg: dict):
     from torchvision import datasets
-    from torch.utils.data import DataLoader, random_split
+    from torch.utils.data import DataLoader, Subset
     import torch
+    import numpy as np
 
-    _, val_tf = get_transforms(cfg["img_size"])
-    full = datasets.ImageFolder(data_dir, transform=val_tf)
-    n    = len(full)
+    # 1. Select subset indices (max 100 per class)
+    temp_ds = datasets.ImageFolder(data_dir)
+    targets = np.array(temp_ds.targets)
+    indices = []
+    for c in range(len(temp_ds.classes)):
+        class_indices = np.where(targets == c)[0]
+        np.random.seed(42)
+        np.random.shuffle(class_indices)
+        indices.extend(class_indices[:min(100, len(class_indices))])
+    
+    indices = np.array(indices)
+    n = len(indices)
+    
+    # 2. Split indices into train/val/test
+    np.random.seed(42)
+    shuffled_idx = np.random.permutation(n)
     n_te = int(n * cfg["test_split"])
     n_va = int(n * cfg["val_split"])
-    n_tr = n - n_va - n_te
-    tr_ds, va_ds, te_ds = random_split(
-        full, [n_tr, n_va, n_te],
-        generator=torch.Generator().manual_seed(42)
-    )
-    train_tf, _ = get_transforms(cfg["img_size"])
-    tr_ds.dataset = datasets.ImageFolder(data_dir, transform=train_tf)
+    
+    te_indices = indices[shuffled_idx[:n_te]]
+    va_indices = indices[shuffled_idx[n_te:n_te+n_va]]
+    tr_indices = indices[shuffled_idx[n_te+n_va:]]
+
+    # 3. Create subsets with respective transforms
+    train_tf, val_tf = get_transforms(cfg["img_size"])
+    base_train = datasets.ImageFolder(data_dir, transform=train_tf)
+    base_val = datasets.ImageFolder(data_dir, transform=val_tf)
+    
+    tr_ds = Subset(base_train, tr_indices)
+    va_ds = Subset(base_val, va_indices)
+    te_ds = Subset(base_val, te_indices)
 
     def make(ds, shuffle):
         return DataLoader(ds, batch_size=cfg["batch_size"], shuffle=shuffle,
                           num_workers=cfg["num_workers"], pin_memory=True)
 
     loaders = {"train": make(tr_ds, True), "val": make(va_ds, False), "test": make(te_ds, False)}
-    print(f"  Classes : {len(full.classes)}")
-    print(f"  Images  : train={n_tr}  val={n_va}  test={n_te}")
-    return loaders, full.classes, len(full.classes)
+    print(f"  Classes : {len(temp_ds.classes)}")
+    print(f"  Images  : train={len(tr_indices)}  val={len(va_indices)}  test={len(te_indices)}")
+    return loaders, temp_ds.classes, len(temp_ds.classes)
+
 
 
 # ──────────────────────────────────────────────────────────────────────────

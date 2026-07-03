@@ -7,21 +7,28 @@ import warnings
 warnings.filterwarnings("ignore")
 
 try:
-    from train_disease_model import predict_disease
+    try:
+        from train_disease_model_v2 import predict_disease
+    except ImportError:
+        from train_disease_model import predict_disease
 except ImportError:
-    print(json.dumps({"ok": False, "error": "train_disease_model.py not found or dependencies missing (torch, torchvision, Pillow)"}))
+    print(json.dumps({"ok": False, "error": "Training scripts or PyTorch dependencies missing"}))
     sys.exit(1)
 
 def predict(image_path):
     # Determine model directory
     model_dir = 'models'
-    if not os.path.exists(os.path.join(model_dir, 'plant_disease_model.pth')):
-        # Check current directory
-        if os.path.exists('plant_disease_model.pth'):
-            model_dir = '.'
-        else:
-            print(json.dumps({"ok": False, "error": "Model file plant_disease_model.pth not found"}))
-            return
+    model_exists = (
+        os.path.exists(os.path.join(model_dir, 'best_disease_model.pth')) or
+        os.path.exists(os.path.join(model_dir, 'last_disease_model.pth')) or
+        os.path.exists(os.path.join(model_dir, 'plant_disease_model.pth')) or
+        os.path.exists('best_disease_model.pth') or
+        os.path.exists('plant_disease_model.pth')
+    )
+    if not model_exists:
+        print(json.dumps({"ok": False, "error": "Model file best_disease_model.pth or plant_disease_model.pth not found"}))
+        return
+
 
     try:
         # We redirect stderr temporarily because predict_disease prints loading info to stderr

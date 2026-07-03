@@ -2208,7 +2208,7 @@ app.post('/api/detect-disease', authenticateToken, upload.single('image'), async
     // 1. Try local prediction if model file exists
     const modelPath = path.join(__dirname, 'models', 'plant_disease_model.pth');
     const altModelPath = path.join(__dirname, 'plant_disease_model.pth');
-    const modelExists = fs.existsSync(modelPath) || fs.existsSync(altModelPath);
+    const modelExists = fs.existsSync(modelPath) || fs.existsSync(path.join(__dirname, 'models', 'best_disease_model.pth')) || fs.existsSync(altModelPath);
 
     if (modelExists) {
       console.log("Local CNN Model file found. Running local inference...");
