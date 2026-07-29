@@ -749,9 +749,10 @@ async function sendChat() {
   const loaderId = "loader_" + Date.now();
   const loadingDiv = addChatBubble(`
     <div class="agri-loader-wrapper" id="${loaderId}" style="margin: 0; background: transparent; border: none; padding: 0.2rem 0; box-shadow: none; align-items: flex-start; backdrop-filter: none;">
-      <div class="agri-loader-sprout" style="display: flex; align-items: center; gap: 0.4rem;">
-        <span class="agri-loader-text" style="font-size: 0.95rem; font-weight: 500; display: inline-flex; align-items: center; gap: 0.35rem;">
-          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-color); vertical-align: middle; margin-right: 4px; display: inline-block;"><path d="M2 22c1.25-6.73 6.77-12 14-12 1.25 0 2.5.18 3.75.54M2 22C4.33 13.88 10.12 8 18 8c1.25 0 2.5.1 3.75.29M2 22C5.45 15.65 11.23 11 19 11c1 0 2 .06 3 .17"></path><path d="M12 22V12"></path></svg> Planting your question in our agricultural database...
+      <div class="agri-loader-sprout" style="display: flex; align-items: center; gap: 0.5rem; flex-direction: row;">
+        <svg class="plant-drawing-loader" viewBox="0 0 32 32" style="width: 24px; height: 24px; flex-shrink: 0;"><path class="plant-ground" d="M 6 30 L 26 30" /><path class="plant-stem" d="M 16 30 Q 14 20, 16 10" /><path class="plant-leaf leaf-left" d="M 15 20 Q 7 18, 10 13 Q 14 14, 15 17 Z" /><path class="plant-leaf leaf-right" d="M 16 14 Q 24 12, 21 7 Q 17 8, 16 11 Z" /><path class="plant-leaf leaf-top" d="M 16 10 Q 11 5, 16 2 Q 21 5, 16 10 Z" /></svg>
+        <span class="agri-loader-text" style="font-size: 0.95rem; font-weight: 500; display: inline-flex; align-items: center;">
+          Planting your question in our agricultural database...
         </span>
       </div>
     </div>
@@ -759,13 +760,13 @@ async function sendChat() {
   loadingDiv.style.opacity = "0.9";
 
   const agriLoadingMessages = [
-    `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-color); vertical-align: middle; margin-right: 4px; display: inline-block;"><path d="M2 22c1.25-6.73 6.77-12 14-12 1.25 0 2.5.18 3.75.54M2 22C4.33 13.88 10.12 8 18 8c1.25 0 2.5.1 3.75.29M2 22C5.45 15.65 11.23 11 19 11c1 0 2 .06 3 .17"></path><path d="M12 22V12"></path></svg> Planting your question in our agricultural database...`,
-    `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-color); vertical-align: middle; margin-right: 4px; display: inline-block;"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg> Tilling the soil of knowledge to find the best answer...`,
-    `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-color); vertical-align: middle; margin-right: 4px; display: inline-block;"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg> Watering the seeds of information...`,
-    `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-color); vertical-align: middle; margin-right: 4px; display: inline-block;"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg> Waiting for the sun to shine on the results...`,
-    `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-color); vertical-align: middle; margin-right: 4px; display: inline-block;"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg> Harvesting the best farming advice for you...`,
-    `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-color); vertical-align: middle; margin-right: 4px; display: inline-block;"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg> Composting the data to enrich the recommendation...`,
-    `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-color); vertical-align: middle; margin-right: 4px; display: inline-block;"><line x1="6" y1="3" x2="6" y2="15"></line><circle cx="18" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><path d="M18 9a9 9 0 0 1-9 9"></path></svg> Cross-pollinating insights from precision agronomy...`
+    `Planting your question in our agricultural database...`,
+    `Tilling the soil of knowledge to find the best answer...`,
+    `Watering the seeds of information...`,
+    `Waiting for the sun to shine on the results...`,
+    `Harvesting the best farming advice for you...`,
+    `Composting the data to enrich the recommendation...`,
+    `Cross-pollinating insights from precision agronomy...`
   ];
 
   let messageIndex = 0;
@@ -775,7 +776,7 @@ async function sendChat() {
       messageIndex = (messageIndex + 1) % agriLoadingMessages.length;
       const textEl = loaderEl.querySelector(".agri-loader-text");
       if (textEl) {
-        textEl.innerHTML = agriLoadingMessages[messageIndex];
+        textEl.textContent = agriLoadingMessages[messageIndex];
       }
     } else {
       clearInterval(intervalId);
@@ -813,22 +814,7 @@ async function sendChat() {
         return;
       }
       if (res.status === 401 || res.status === 403) {
-        showPopup({
-          title: farmerLang === 'te' ? "సెషన్ ముగిసింది" :
-                 farmerLang === 'hi' ? "सत्र समाप्त" :
-                 farmerLang === 'mr' ? "सत्र संपले" :
-                 farmerLang === 'ml' ? "സെഷൻ കാലഹരണപ്പെട്ടു" :
-                 "Session Expired",
-          message: farmerLang === 'te' ? "మీ సెషన్ ముగిసింది. దయచేసి మళ్ళీ లాగిన్ అవ్వండి." :
-                   farmerLang === 'hi' ? "आपका सत्र समाप्त हो गया है। कृपया पुनः लॉगिन करें।" :
-                   farmerLang === 'mr' ? "तुमचे सत्र संपले आहे. कृपया पुन्हा लॉगिन करा." :
-                   farmerLang === 'ml' ? "നിങ്ങളുടെ സെഷൻ കാലഹരണപ്പെട്ടു. ദയവായി വീണ്ടും ലോഗിൻ ചെയ്യുക." :
-                   "Your session has expired. Please login again.",
-          showCancel: false,
-          onConfirm: () => {
-            performLogout();
-          }
-        });
+        addChatBubble(`Authentication Error (${res.status}): ${data.message || "Session expired. Please login again."}`, false);
         return;
       }
       addChatBubble("Error: " + (data.message || data.reply || "Server error"), false);
@@ -1089,13 +1075,13 @@ function parseChatCropRecommendations(text) {
     if (cropNameKey.includes("coconut") || cropNameKey.includes("arecanut") || cropNameKey.includes("cocoa") || cropNameKey.includes("palm")) return "/images/coconut.jpg";
     if (cropNameKey.includes("grape") || cropNameKey.includes("jamun") || cropNameKey.includes("plum") || cropNameKey.includes("litchi")) return "/images/grape.jpg";
     if (cropNameKey.includes("sapota") || cropNameKey.includes("chikoo")) return "/images/sapota.jpg";
-    if (cropNameKey.includes("mango") || cropNameKey.includes("guava") || cropNameKey.includes("jackfruit") || cropNameKey.includes("kathal") || cropNameKey.includes("fig") || cropNameKey.includes("anjeer") || cropNameKey.includes("avocado") || cropNameKey.includes("tamarind") || cropNameKey.includes("carambola") || cropNameKey.includes("rambutan") || cropNameKey.includes("mangosteen") || cropNameKey.includes("karonda") || cropNameKey.includes("phalsa") || cropNameKey.includes("ber")) return "/images/mango.jpg";
+    if (cropNameKey.includes("mango") || cropNameKey.includes("guava") || cropNameKey.includes("jackfruit") || cropNameKey.includes("kathal") || cropNameKey.includes("fig") || cropNameKey.includes("anjeer") || cropNameKey.includes("avocado") || cropNameKey.includes("tamarind") || cropNameKey.includes("carambola") || cropNameKey.includes("rambutan") || cropNameKey.includes("mangosteen") || cropNameKey.includes("karonda") || cropNameKey.includes("phalsa") || /\bber\b/.test(cropNameKey)) return "/images/mango.jpg";
     
     // Plantations / Herbs
     if (cropNameKey.includes("coffee") || cropNameKey.includes("tea") || cropNameKey.includes("rubber") || cropNameKey.includes("spices") || cropNameKey.includes("cardamom") || cropNameKey.includes("clove") || cropNameKey.includes("cinnamon") || cropNameKey.includes("nutmeg") || cropNameKey.includes("anise")) return "/images/coffee.jpg";
     
     // General vegetable/green fallbacks
-    if (cropNameKey.includes("cabbage") || cropNameKey.includes("cauliflower") || cropNameKey.includes("spinach") || cropNameKey.includes("palak") || cropNameKey.includes("leaves") || cropNameKey.includes("drumstick") || cropNameKey.includes("moringa") || cropNameKey.includes("carrot") || cropNameKey.includes("radish") || cropNameKey.includes("beetroot") || cropNameKey.includes("potato") || cropNameKey.includes("yam") || cropNameKey.includes("tapioca") || cropNameKey.includes("cassava") || cropNameKey.includes("taro") || cropNameKey.includes("colocasia") || cropNameKey.includes("sweet potato")) return "/images/cucumber.jpg";
+    if (cropNameKey.includes("cabbage") || cropNameKey.includes("cauliflower") || cropNameKey.includes("spinach") || cropNameKey.includes("palak") || cropNameKey.includes("leaves") || cropNameKey.includes("drumstick") || cropNameKey.includes("moringa") || cropNameKey.includes("carrot") || cropNameKey.includes("radish") || cropNameKey.includes("beetroot") || cropNameKey.includes("potato") || cropNameKey.includes("yam") || cropNameKey.includes("tapioca") || cropNameKey.includes("cassava") || cropNameKey.includes("taro") || cropNameKey.includes("colocasia") || cropNameKey.includes("sweet potato") || cropNameKey.includes("fodder") || cropNameKey.includes("clover") || cropNameKey.includes("grass")) return "/images/cucumber.jpg";
     
     return "/images/rice.jpg"; // Default fallback (pointing to valid existing file)
   };

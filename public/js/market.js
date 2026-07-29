@@ -237,17 +237,32 @@ if (loadMarketBtn) {
     const ct = cardTranslations[uiLang] || cardTranslations.en;
     const mt = marketTranslations[uiLang] || marketTranslations.en;
     
-    marketContent.textContent = uiLang === 'te' ? "మార్కెట్ సమాచారాన్ని లోడ్ చేస్తున్నాము..." : 
-                                uiLang === 'hi' ? "बाजार की जानकारी लोड हो रही है..." : 
-                                uiLang === 'mr' ? "बाजार माहिती लोड होत आहे..." : 
-                                uiLang === 'ml' ? "മാർക്കറ്റ് വിവരങ്ങൾ ലോഡ് ചെയ്യുന്നു..." : 
-                                "Loading market information...";
+    // Clear previous results
+    marketContent.innerHTML = "";
+    
+    // Show top loader
+    const marketLoaderTop = document.getElementById("marketLoaderTop");
+    if (marketLoaderTop) {
+      const textEl = marketLoaderTop.querySelector(".agri-loader-text");
+      if (textEl) {
+        textEl.textContent = uiLang === 'te' ? "మార్కెట్ సమాచారాన్ని లోడ్ చేస్తున్నాము..." : 
+                             uiLang === 'hi' ? "बाजार की जानकारी लोड हो रही है..." : 
+                             uiLang === 'mr' ? "बाजार माहिती लोड होत आहे..." : 
+                             uiLang === 'ml' ? "മാർക്കറ്റ് വിവരങ്ങൾ ലോഡ് ചെയ്യുന്നു..." : 
+                             "Loading market information...";
+      }
+      marketLoaderTop.style.display = "flex";
+    }
                                 
     try {
       const res = await fetch(
         `/api/market-demand?location=${encodeURIComponent(loc)}&search=${encodeURIComponent(searchVal)}`
       );
       const data = await res.json();
+      
+      // Hide top loader
+      if (marketLoaderTop) marketLoaderTop.style.display = "none";
+
       if (!data.ok) {
         marketContent.textContent = "Error loading market data.";
         return;
@@ -259,8 +274,10 @@ if (loadMarketBtn) {
       }
 
       const list = document.createElement("div");
-      list.className = "recommendations-grid";
-      data.crops.forEach((c) => {
+      list.className = "market-grid";
+      list.style.cssText = "display: grid !important; gap: 1.5rem !important; margin-top: 1.5rem !important; width: 100% !important;";
+      const maxCropsToShow = window.innerWidth <= 768 ? 6 : 8;
+      data.crops.slice(0, maxCropsToShow).forEach((c) => {
         const d = document.createElement("div");
         d.className = "recommendation-card";
         d.style.background = "white"; // Override any background color conflicts
@@ -287,7 +304,7 @@ if (loadMarketBtn) {
               <!-- Arrivals Row -->
               <div style="display: flex; align-items: center; gap: 0.5rem;">
                 <svg viewBox="0 0 24 24" width="16" height="16" stroke="var(--primary-color)" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; color: var(--primary-color);"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
-                <span><strong>${ct.arrivals}:</strong> ${c.arrivals}</span>
+                <span><strong>${ct.arrivals}:</strong> ${c.arrivals || '0 tonnes'}</span>
               </div>
 
               <!-- Price Box -->
@@ -319,6 +336,7 @@ if (loadMarketBtn) {
       marketContent.innerHTML = `<p class="muted">${locLabelText}: ${data.location}</p>`;
       marketContent.appendChild(list);
     } catch (err) {
+      if (marketLoaderTop) marketLoaderTop.style.display = "none";
       marketContent.textContent = "Unable to reach market service.";
     }
   });

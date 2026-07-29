@@ -607,6 +607,21 @@ a:hover {
   margin-top: 2rem;
 }
 
+.upload-container-wrapper {
+  background: var(--surface-color);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius-md);
+  border: var(--card-border);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 2rem;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  max-width: 850px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .feature-card {
   background: var(--surface-color);
   backdrop-filter: blur(10px);
@@ -1006,7 +1021,7 @@ a:hover {
 
 .recommendations-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
   gap: 1.25rem;
   margin-top: 1rem;
 }
@@ -1015,12 +1030,12 @@ a:hover {
   padding: 1.5rem;
 }
 
-@media (max-width: 576px) {
+@media (max-width: 768px) {
   .recommendation-category-section {
     padding: 0.85rem;
   }
   .recommendations-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
     gap: 1rem;
   }
 }
@@ -2444,7 +2459,7 @@ a:hover {
 }
 
 /* Custom Drag and Drop Dropzone for Disease page */
-.upload-container-wrapper {
+.upload-container-wrapper-unused {
   background: var(--surface-color);
   backdrop-filter: blur(10px);
   border-radius: var(--radius-md);
@@ -2459,14 +2474,14 @@ a:hover {
 .upload-dropzone {
   border: 2px dashed #a7f3d0;
   border-radius: var(--radius-md);
-  padding: 3rem 1.5rem;
+  padding: 4.5rem 2rem;
   background: rgba(243, 255, 247, 0.5);
   cursor: pointer;
   transition: all 0.25s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.8rem;
+  gap: 1.2rem;
 }
 
 .upload-dropzone:hover, .upload-dropzone.dragover {
@@ -2481,7 +2496,7 @@ a:hover {
 }
 
 .upload-instruction {
-  font-size: 1.1rem;
+  font-size: 1.35rem;
   font-weight: 600;
   color: var(--text-dark);
   margin: 0;
@@ -2493,28 +2508,32 @@ a:hover {
 }
 
 .upload-subtext {
-  font-size: 0.85rem;
+  font-size: 1rem;
   color: var(--text-muted);
   margin: 0;
 }
 
 /* Image Preview */
-.image-preview-container {
+.upload-container-wrapper .image-preview-container {
   position: relative;
   width: 100%;
-  max-width: 320px;
-  height: 220px;
-  margin: 1.5rem auto 0;
+  max-width: 100%;
+  height: 320px;
+  margin: 0 auto;
   border-radius: var(--radius-md);
   overflow: hidden;
-  box-shadow: var(--shadow-md);
-  border: 3px solid white;
+  box-shadow: var(--shadow-sm);
+  border: 2px solid #c9e8d4;
+  align-self: unset;
+  padding: 0;
+  background: #1e293b;
 }
 
-.image-preview-container img {
+.upload-container-wrapper .image-preview-container img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  max-height: none;
+  object-fit: contain;
 }
 
 .btn-remove-image {
@@ -4355,4 +4374,139 @@ a, p, div, span {
   background-color: var(--primary) !important;
   color: white !important;
   border-color: var(--primary) !important;
+}
+
+/* Centered Content Wrapper for single-focused pages like Disease Detection */
+.centered-content-wrapper {
+  max-width: 850px;
+  margin: 0 auto;
+}
+
+#diseasePageIntro, #cropPageIntro, #marketPageIntro {
+  font-size: 1.15rem !important;
+  line-height: 1.6;
+  color: #4b6251;
+}
+
+/* Dedicated grid style for market results to ensure they align side-by-side */
+.market-results-container {
+  width: 100%;
+  padding: 1rem 0;
+}
+
+.market-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+  gap: 1.5rem !important;
+  margin-top: 1.5rem !important;
+  width: 100% !important;
+}
+
+@media (max-width: 768px) {
+  .market-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Beautiful Plant Drawing Loader SVG Styles with scale animation */
+.plant-drawing-loader {
+  width: 48px;
+  height: 48px;
+  display: inline-block;
+  vertical-align: middle;
+  overflow: visible;
+  animation: plantGrowScale 2.5s infinite ease-in-out;
+}
+
+.plant-ground {
+  fill: none;
+  stroke: #c2410c; /* Earthy brown */
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
+  animation: drawGround 2.5s infinite ease-in-out;
+}
+
+.plant-stem {
+  fill: none;
+  stroke: #10b981; /* Emerald stem */
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 30;
+  stroke-dashoffset: 30;
+  animation: drawStem 2.5s infinite ease-in-out;
+}
+
+.plant-leaf {
+  fill: #34d399;
+  stroke: #059669;
+  stroke-width: 1;
+  stroke-linejoin: round;
+  transform: scale(0);
+  opacity: 0;
+}
+
+.leaf-left {
+  transform-origin: 15px 20px;
+  animation: growLeafLeft 2.5s infinite ease-in-out;
+}
+
+.leaf-right {
+  transform-origin: 16px 14px;
+  animation: growLeafRight 2.5s infinite ease-in-out;
+}
+
+.leaf-top {
+  transform-origin: 16px 10px;
+  fill: #059669;
+  animation: growLeafTop 2.5s infinite ease-in-out;
+}
+
+@keyframes plantGrowScale {
+  0%, 15% { transform: scale(0.3); }
+  85%, 100% { transform: scale(1.1); }
+}
+
+@keyframes drawGround {
+  0%, 10% { stroke-dashoffset: 20; }
+  35%, 100% { stroke-dashoffset: 0; }
+}
+
+@keyframes drawStem {
+  0%, 25% { stroke-dashoffset: 30; }
+  65%, 100% { stroke-dashoffset: 0; }
+}
+
+@keyframes growLeafLeft {
+  0%, 50% { transform: scale(0); opacity: 0; }
+  75%, 100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes growLeafRight {
+  0%, 60% { transform: scale(0); opacity: 0; }
+  85%, 100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes growLeafTop {
+  0%, 70% { transform: scale(0); opacity: 0; }
+  95%, 100% { transform: scale(1); opacity: 1; }
+}
+
+/* Form overlay loader */
+.market-loader-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(6px);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  border-radius: var(--radius-md);
 }

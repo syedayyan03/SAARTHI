@@ -1,0 +1,22 @@
+{
+  "name": "SAARTHI – Smart Farming Portal",
+  "short_name": "SAARTHI",
+  "description": "Multi-language crop recommendation, disease detection, and agricultural market intelligence.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2ebd66",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "img/saarthi-logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "img/saarthi-logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

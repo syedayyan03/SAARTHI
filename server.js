@@ -7,7 +7,7 @@ const multer = require('multer');
 const { GoogleGenAI } = require('@google/genai');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
-const { spawn } = require('child_process');
+const { spawn, exec } = require('child_process');
 
 require('dotenv').config();
 
@@ -119,10 +119,17 @@ function requireAdmin(req, res, next) {
 }
 
 // Initialize Multer for in-memory file uploads
+
+// Initialize Multer for in-memory file uploads
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 8 * 1024 * 1024, files: 1 },
-  fileFilter: (_req, file, cb) => cb(null, ['image/jpeg', 'image/png', 'image/webp'].includes(file.mimetype))
+  limits: { fileSize: 5 * 1024 * 1024, files: 1 }, // Stricter 5MB file limit
+  fileFilter: (_req, file, cb) => {
+    if (!['image/jpeg', 'image/jpg', 'image/png', 'image/webp'].includes(file.mimetype)) {
+      return cb(new Error('Only JPG, JPEG, PNG, and WEBP image files are allowed.'));
+    }
+    cb(null, true);
+  }
 });
 
 // Initialize Gemini Client
@@ -134,7 +141,7 @@ try {
 }
 
 // Unified function to handle both native Gemini SDK and OpenRouter API calls
-async function generateContent({ model, contents, systemInstruction = null, responseMimeType = null }) {
+async function generateContent({ model, contents, systemInstruction = null, responseMimeType = null, tools = null, maxOutputTokens = 2000 }) {
   const apiKey = process.env.GEMINI_API_KEY;
   const isOpenRouter = apiKey && apiKey.startsWith('sk-or-');
 
@@ -211,7 +218,7 @@ async function generateContent({ model, contents, systemInstruction = null, resp
       body: JSON.stringify({
         model: orModel,
         messages: messages,
-        max_tokens: 2000,
+        max_tokens: maxOutputTokens,
         response_format: responseMimeType === 'application/json' ? { type: "json_object" } : undefined
       })
     });
@@ -241,8 +248,9 @@ async function generateContent({ model, contents, systemInstruction = null, resp
       contents: contents,
       config: {
         systemInstruction: systemInstruction || undefined,
-        maxOutputTokens: 2000,
-        responseMimeType: responseMimeType || undefined
+        maxOutputTokens: maxOutputTokens,
+        responseMimeType: responseMimeType || undefined,
+        tools: tools || undefined
       }
     });
     return response;
@@ -251,6 +259,42 @@ async function generateContent({ model, contents, systemInstruction = null, resp
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Security headers middleware
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  next();
+});
+
+// Simple in-memory rate limiter middleware creator
+function apiRateLimiter(windowMs, maxRequests, message) {
+  const limits = {};
+  return (req, res, next) => {
+    const ip = req.ip || req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    const now = Date.now();
+    
+    if (!limits[ip]) {
+      limits[ip] = [];
+    }
+    
+    limits[ip] = limits[ip].filter(timestamp => now - timestamp < windowMs);
+    
+    if (limits[ip].length >= maxRequests) {
+      return res.status(429).json({ ok: false, message: message || 'Too many requests. Please try again later.' });
+    }
+    
+    limits[ip].push(now);
+    next();
+  };
+}
+
+// Define rate limit instances
+const authLimiter = apiRateLimiter(60 * 1000, 5, 'Too many login attempts. Please try again in a minute.');
+const otpLimiter = apiRateLimiter(60 * 1000, 3, 'Too many OTP requests. Please try again in a minute.');
+const chatLimiter = apiRateLimiter(60 * 1000, 20, 'Rate limit exceeded. Please wait a minute before sending more messages.');
+const diseaseLimiter = apiRateLimiter(60 * 1000, 10, 'Too many disease scans. Please try again in a minute.');
 
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
@@ -395,7 +439,7 @@ app.post('/api/register', async (req, res) => {
 
 
 // API: secure login using stored hash
-app.post('/api/login', async (req, res) => {
+app.post('/api/login', authLimiter, async (req, res) => {
   const { phoneOrEmail, password, language } = req.body;
   if (!phoneOrEmail || !password) {
     return res.status(400).json({ ok: false, message: 'Missing phone/email or password.' });
@@ -434,7 +478,7 @@ app.get('/api/config', (req, res) => {
 });
 
 // API: Google registration/login (supports both real ID token verify and mock fallback)
-app.post('/api/google-login', async (req, res) => {
+app.post('/api/google-login', authLimiter, async (req, res) => {
   const { idToken, email: mockEmail, name: mockName, language } = req.body;
   let email, name, picture;
 
@@ -490,7 +534,7 @@ app.post('/api/google-login', async (req, res) => {
 });
 
 // API: Send OTP for forgot password to User Email
-app.post('/api/forgot-password/send-otp', async (req, res) => {
+app.post('/api/forgot-password/send-otp', otpLimiter, async (req, res) => {
   const { email } = req.body;
   if (!email) {
     return res.status(400).json({ ok: false, message: 'Email address is required.' });
@@ -624,7 +668,7 @@ app.post('/api/help-query', async (req, res) => {
 });
 
 // API: Complete Google account linking registration
-app.post('/api/google-register', async (req, res) => {
+app.post('/api/google-register', authLimiter, async (req, res) => {
   const { email, name, picture, username, password, language } = req.body;
   if (!email || !username || !password) {
     return res.status(400).json({ ok: false, message: 'Email, username, and password are required.' });
@@ -1462,87 +1506,283 @@ app.get('/api/selected-crop', authenticateToken, (req, res) => {
   res.json({ ok: true, selection: lastSelection, selections });
 });
 
-// API: fake market demand
-app.get('/api/market-demand', (req, res) => {
-  const { location, search } = req.query;
+const MARKET_COORDINATES = {
+  "kurukshetra": { lat: 29.9697, lon: 76.8783 },
+  "bhatinda": { lat: 30.2076, lon: 74.9454 },
+  "idukki": { lat: 9.8510, lon: 77.0844 },
+  "alluri sitharama raju": { lat: 17.9829, lon: 81.9839 },
+  "shamli": { lat: 29.4481, lon: 77.3094 },
+  "agra": { lat: 27.1767, lon: 78.0081 },
+  "bapatla": { lat: 15.9045, lon: 80.4682 },
+  "palnadu": { lat: 16.3075, lon: 80.1554 },
+  "amreli": { lat: 21.6033, lon: 71.2223 },
+  "prakasam": { lat: 15.5057, lon: 80.0499 },
+  "kurnool": { lat: 15.8281, lon: 78.0373 },
+  "hyderabad": { lat: 17.3850, lon: 78.4867 },
+  "surat": { lat: 21.1702, lon: 72.8311 },
+  "delhi": { lat: 28.6139, lon: 77.2090 },
+  "nashik": { lat: 19.9975, lon: 73.7898 },
+  "bareilly": { lat: 28.3670, lon: 79.4304 },
+  "indore": { lat: 22.7196, lon: 75.8577 },
+  "nalgonda": { lat: 17.0575, lon: 79.2684 },
+  "khammam": { lat: 17.2473, lon: 80.1514 },
+  "warangal": { lat: 17.9784, lon: 79.5941 },
+  "salem": { lat: 11.6643, lon: 78.1460 },
+  "coimbatore": { lat: 11.0168, lon: 76.9558 },
+  "mysore": { lat: 12.2958, lon: 76.6394 },
+  "dharwad": { lat: 15.4589, lon: 74.0078 },
+  "nadia": { lat: 23.4710, lon: 88.5565 },
+  "cuttack": { lat: 20.4625, lon: 85.8830 },
+  "patna": { lat: 25.5941, lon: 85.1376 },
+  "dehradun": { lat: 30.3165, lon: 78.0322 },
+  "shimla": { lat: 31.1048, lon: 77.1734 }
+};
+
+function getHaversineDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = 
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+function geocodeLocation(query) {
+  if (!query) return null;
+  const qLower = query.toLowerCase().trim();
+  const coordsMatch = qLower.match(/lat\s*([-\d.]+)\s*,\s*lon\s*([-\d.]+)/i);
+  if (coordsMatch) {
+    return { lat: parseFloat(coordsMatch[1]), lon: parseFloat(coordsMatch[2]) };
+  }
+  const cityCoords = {
+    "medchal": { lat: 17.6297, lon: 78.4814 },
+    "hyderabad": { lat: 17.3850, lon: 78.4867 },
+    "secunderabad": { lat: 17.4399, lon: 78.4983 },
+    "nizamabad": { lat: 18.6725, lon: 78.0941 },
+    "karimnagar": { lat: 18.4386, lon: 79.1288 },
+    "mahabubnagar": { lat: 16.7367, lon: 77.9819 },
+    "suryapet": { lat: 17.1500, lon: 79.6167 },
+    "vijayawada": { lat: 16.5062, lon: 80.6480 },
+    "guntur": { lat: 16.3067, lon: 80.4367 },
+    "visakhapatnam": { lat: 17.6868, lon: 83.2185 },
+    "vizag": { lat: 17.6868, lon: 83.2185 },
+    "nellore": { lat: 14.4426, lon: 79.9865 },
+    "tirupati": { lat: 13.6288, lon: 79.4192 },
+    "pune": { lat: 18.5204, lon: 73.8567 },
+    "mumbai": { lat: 19.0760, lon: 72.8777 },
+    "gurgaon": { lat: 28.4595, lon: 77.0266 },
+    "noida": { lat: 28.5355, lon: 77.3910 },
+    "kurukshetra": { lat: 29.9697, lon: 76.8783 },
+    "bhatinda": { lat: 30.2076, lon: 74.9454 },
+    "idukki": { lat: 9.8510, lon: 77.0844 },
+    "alluri sitharama raju": { lat: 17.9829, lon: 81.9839 },
+    "shamli": { lat: 29.4481, lon: 77.3094 },
+    "agra": { lat: 27.1767, lon: 78.0081 },
+    "bapatla": { lat: 15.9045, lon: 80.4682 },
+    "palnadu": { lat: 16.3075, lon: 80.1554 },
+    "amreli": { lat: 21.6033, lon: 71.2223 },
+    "prakasam": { lat: 15.5057, lon: 80.0499 },
+    "kurnool": { lat: 15.8281, lon: 78.0373 },
+    "surat": { lat: 21.1702, lon: 72.8311 },
+    "delhi": { lat: 28.6139, lon: 77.2090 },
+    "nashik": { lat: 19.9975, lon: 73.7898 },
+    "bareilly": { lat: 28.3670, lon: 79.4304 },
+    "indore": { lat: 22.7196, lon: 75.8577 },
+    "nalgonda": { lat: 17.0575, lon: 79.2684 },
+    "khammam": { lat: 17.2473, lon: 80.1514 },
+    "warangal": { lat: 17.9784, lon: 79.5941 },
+    "salem": { lat: 11.6643, lon: 78.1460 },
+    "coimbatore": { lat: 11.0168, lon: 76.9558 },
+    "mysore": { lat: 12.2958, lon: 76.6394 },
+    "dharwad": { lat: 15.4589, lon: 74.0078 },
+    "nadia": { lat: 23.4710, lon: 88.5565 },
+    "cuttack": { lat: 20.4625, lon: 85.8830 },
+    "patna": { lat: 25.5941, lon: 85.1376 },
+    "dehradun": { lat: 30.3165, lon: 78.0322 },
+    "shimla": { lat: 31.1048, lon: 77.1734 }
+  };
+  for (const [city, coords] of Object.entries(cityCoords)) {
+    if (qLower.includes(city)) {
+      return coords;
+    }
+  }
+  return null;
+}
+
+// API: live web-grounded market demand using Gemini Google Search
+app.get('/api/market-demand', async (req, res) => {
+  const { location, search, lang } = req.query;
   const locLower = (location || '').toLowerCase();
   const searchLower = (search || '').trim().toLowerCase();
 
-  const csvPath = path.join(__dirname, 'data', 'market_demand.csv');
+  // 1. Live Grounded Search via Gemini (Performs live Google searches for actual today's mandi prices)
+  if (process.env.GEMINI_API_KEY) {
+    try {
+      const todayStr = new Date().toISOString().split('T')[0];
+      const prompt = `Use Google Search to find the ACTUAL, CURRENT daily mandi market wholesale prices and arrivals today (around date: ${todayStr}) for farmers in/near "${location}" in India. Search for actual live APMC/Mandi listings. For the location "${location}" (and filtering by "${search || 'All'}" commodity if specified), generate a list of exactly 8 crops with their real daily modal, min, and max prices in Indian Rupees (use "Rs." instead of the Rupee symbol). Return ONLY a JSON object with this exact structure:
+      {
+        "crops": [
+          {
+            "name": "Commodity (Variety)",
+            "commodity": "Commodity",
+            "variety": "Variety",
+            "market": "Mandi Name APMC",
+            "demand": "High",
+            "price": "Rs. [ModalPrice] / quintal",
+            "minPrice": "Rs. [MinPrice]",
+            "maxPrice": "Rs. [MaxPrice]",
+            "arrivals": "[Arrivals] tonnes",
+            "date": "${todayStr}"
+          }
+        ],
+        "availableCommodities": ["Commodity1", "Commodity2"]
+      }
+      Do not truncate. Ensure the JSON is complete and valid.`;
 
-  if (!fs.existsSync(csvPath)) {
-    return res.json({
-      ok: true,
-      crops: [
-        { name: 'Paddy (Sanna Ralu)', commodity: 'Paddy', variety: 'Sanna Ralu', demand: 'High', price: '₹2300 / quintal', market: 'Nizamabad APMC', arrivals: '180 tonnes', date: '2026-06-18' },
-        { name: 'Onion (Red Onion)', commodity: 'Onion', variety: 'Red Onion', demand: 'High', price: '₹2200 / quintal', market: 'Lasalgaon Mandi', arrivals: '850 tonnes', date: '2026-06-18' }
-      ],
-      location: location || 'Your area',
-      availableCommodities: ['Paddy', 'Onion']
-    });
-  }
-
-  const results = [];
-  const csv = require('csv-parser');
-
-  fs.createReadStream(csvPath)
-    .pipe(csv())
-    .on('data', (data) => results.push(data))
-    .on('end', () => {
-      // 1. Filter by Location (District or State match)
-      let locationFiltered = results.filter(row => {
-        const stateMatch = row.State && locLower.includes(row.State.toLowerCase());
-        const districtMatch = row.District && locLower.includes(row.District.toLowerCase());
-        return stateMatch || districtMatch;
+      const response = await generateContent({
+        model: 'gemini-2.5-flash',
+        contents: [{ text: prompt }],
+        tools: [{ googleSearch: {} }] // Enable live Google Search grounding!
       });
 
-      // If no match found for location, fallback to all results
-      if (locationFiltered.length === 0) {
-        locationFiltered = results;
-      }
+      const aiText = response.text || '';
+      const resultJSON = parseJSONFromText(aiText);
+      if (resultJSON && Array.isArray(resultJSON.crops) && resultJSON.crops.length > 0) {
+        const userCoords = geocodeLocation(location);
+        if (userCoords) {
+          resultJSON.crops.forEach(c => {
+            const marketNameLower = (c.market || '').toLowerCase();
+            let marketCoords = null;
+            for (const [district, coords] of Object.entries(MARKET_COORDINATES)) {
+              if (marketNameLower.includes(district)) {
+                marketCoords = coords;
+                break;
+              }
+            }
+            if (marketCoords) {
+              c.distance = getHaversineDistance(userCoords.lat, userCoords.lon, marketCoords.lat, marketCoords.lon);
+            } else {
+              c.distance = 9999;
+            }
+          });
+          resultJSON.crops.sort((a, b) => a.distance - b.distance);
+        }
 
-      // 2. Filter by Commodity Search if requested, otherwise show high demand
-      let finalFiltered = [];
-      if (searchLower) {
-        finalFiltered = locationFiltered.filter(row => 
-          row.Commodity && row.Commodity.toLowerCase().includes(searchLower)
-        );
-      } else {
-        // Show all markets in the area, but prioritize High/Rising demand
-        finalFiltered = locationFiltered.sort((a, b) => {
+        console.log(`Loaded LIVE web-grounded market prices for: ${location}`);
+        return res.json({
+          ok: true,
+          crops: resultJSON.crops.slice(0, 8),
+          location: location || 'Your area',
+          availableCommodities: resultJSON.availableCommodities || []
+        });
+      }
+    } catch (geminiError) {
+      console.warn("Live Gemini search failed, falling back to local database:", geminiError.message);
+    }
+  }
+
+  // 2. Local Fallback Database Search (Only on API failure/offline)
+  const csvPath = path.join(__dirname, 'data', 'market_demand.csv');
+  if (fs.existsSync(csvPath)) {
+    try {
+      const results = [];
+      const csv = require('csv-parser');
+          const matchedRows = await new Promise((resolve) => {
+        fs.createReadStream(csvPath)
+          .pipe(csv())
+          .on('data', (data) => results.push(data))
+          .on('end', () => {
+            const userCoords = geocodeLocation(location);
+
+            let scored = results.map(row => {
+              let score = 0;
+              const marketName = (row.Market || '').toLowerCase().replace("apmc", "").replace("mandi", "").trim();
+              const districtName = (row.District || '').toLowerCase().trim();
+              const stateName = (row.State || '').toLowerCase().trim();
+
+              if (marketName && locLower.includes(marketName)) {
+                score += 1000;
+              }
+              if (districtName && locLower.includes(districtName)) {
+                score += 500;
+              }
+              if (stateName && locLower.includes(stateName)) {
+                score += 10;
+              }
+
+              if (userCoords) {
+                const districtKey = districtName;
+                const marketCoords = MARKET_COORDINATES[districtKey];
+                if (marketCoords) {
+                  const distKm = getHaversineDistance(userCoords.lat, userCoords.lon, marketCoords.lat, marketCoords.lon);
+                  const distanceScore = Math.max(0, Math.round(300 - distKm));
+                  score += distanceScore;
+                }
+              }
+              row.locationScore = score;
+              return row;
+            });;
+
+            let matched = scored.filter(row => row.locationScore > 0);
+            resolve(matched);
+          })
+          .on('error', () => resolve([]));
+      });
+
+      if (matchedRows && matchedRows.length > 0) {
+        let filtered = matchedRows;
+        if (searchLower) {
+          filtered = matchedRows.filter(row => 
+            row.Commodity && row.Commodity.toLowerCase().includes(searchLower)
+          );
+        }
+
+        filtered.sort((a, b) => {
+          if (b.locationScore !== a.locationScore) {
+            return b.locationScore - a.locationScore;
+          }
           const score = (d) => d === 'High' ? 3 : d === 'Rising' ? 2 : d === 'Medium' ? 1 : 0;
           return score(b.Demand) - score(a.Demand);
         });
+
+        const crops = filtered.map(row => ({
+          name: `${row.Commodity} (${row.Variety})`,
+          commodity: row.Commodity,
+          variety: row.Variety,
+          market: row.Market,
+          demand: row.Demand,
+          price: `Rs. ${row.ModalPrice} / quintal`,
+          minPrice: `Rs. ${row.MinPrice}`,
+          maxPrice: `Rs. ${row.MaxPrice}`,
+          arrivals: `${row.Arrivals} tonnes`,
+          date: row.Date
+        }));
+
+        const uniqueCommodities = [...new Set(matchedRows.map(row => row.Commodity))];
+
+        console.log(`Loaded ${crops.length} fallback crops locally from CSV for: ${location}`);
+        return res.json({
+          ok: true,
+          crops: crops.slice(0, 8),
+          location: location || 'Your area',
+          availableCommodities: uniqueCommodities
+        });
       }
+    } catch (csvError) {
+      console.warn("Local fallback search failed:", csvError.message);
+    }
+  }
 
-      // Map to frontend structure
-      const crops = finalFiltered.map(row => ({
-        name: `${row.Commodity} (${row.Variety})`,
-        commodity: row.Commodity,
-        variety: row.Variety,
-        market: row.Market,
-        demand: row.Demand,
-        price: `₹${row.ModalPrice} / quintal`,
-        minPrice: `₹${row.MinPrice}`,
-        maxPrice: `₹${row.MaxPrice}`,
-        arrivals: `${row.Arrivals} tonnes`,
-        date: row.Date
-      }));
-
-      // Get unique available commodities in this location for suggestions
-      const availableCommodities = [...new Set(locationFiltered.map(row => row.Commodity))];
-
-      res.json({
-        ok: true,
-        crops: crops,
-        location: location || 'Your area',
-        availableCommodities: availableCommodities
-      });
-    })
-    .on('error', (err) => {
-      console.error("Error reading market CSV:", err.message);
-      res.status(500).json({ ok: false, message: 'Failed to read market demand data.' });
-    });
+  // 3. Absolute Fallback
+  return res.json({
+    ok: true,
+    crops: [],
+    location: location || 'Your area',
+    availableCommodities: []
+  });
 });
 
 function parseJSONFromText(text) {
@@ -1575,9 +1815,95 @@ function parseJSONFromText(text) {
       return JSON.parse(jsonStr);
     } catch (e) {}
   }
+
+  // Fallback: Try repairing truncated JSON stream
+  try {
+    const repaired = tryParseTruncatedJSON(trimmed);
+    if (repaired) return repaired;
+  } catch (e) {}
   
   console.error("parseJSONFromText failed. Raw text:", text);
   return null;
+}
+
+function tryParseTruncatedJSON(str) {
+  if (!str) return null;
+  let cleanStr = str.trim();
+  
+  try { return JSON.parse(cleanStr); } catch(e) {}
+  
+  const start = cleanStr.indexOf('{');
+  if (start === -1) return null;
+  cleanStr = cleanStr.substring(start);
+  
+  let inString = false;
+  let escape = false;
+  let stack = [];
+  
+  for (let i = 0; i < cleanStr.length; i++) {
+    const char = cleanStr[i];
+    if (escape) {
+      escape = false;
+      continue;
+    }
+    if (char === '\\') {
+      escape = true;
+      continue;
+    }
+    if (char === '"') {
+      inString = !inString;
+      continue;
+    }
+    if (!inString) {
+      if (char === '{' || char === '[') {
+        stack.push(char);
+      } else if (char === '}') {
+        if (stack[stack.length - 1] === '{') stack.pop();
+      } else if (char === ']') {
+        if (stack[stack.length - 1] === '[') stack.pop();
+      }
+    }
+  }
+  
+  let workingStr = cleanStr;
+  if (inString) {
+    const lastQuote = workingStr.lastIndexOf('"');
+    if (lastQuote !== -1) {
+      workingStr = workingStr.substring(0, lastQuote);
+    }
+    inString = false;
+  }
+  
+  workingStr = workingStr.trim();
+  workingStr = workingStr.replace(/,?\s*[^,:{}\[\]"]*$/, "").trim();
+  workingStr = workingStr.replace(/,$/, "").trim();
+  
+  let rebuildStack = [];
+  inString = false;
+  escape = false;
+  for (let i = 0; i < workingStr.length; i++) {
+    const char = workingStr[i];
+    if (escape) { escape = false; continue; }
+    if (char === '\\') { escape = true; continue; }
+    if (char === '"') { inString = !inString; continue; }
+    if (!inString) {
+      if (char === '{' || char === '[') rebuildStack.push(char);
+      else if (char === '}') { if (rebuildStack[rebuildStack.length - 1] === '{') rebuildStack.pop(); }
+      else if (char === ']') { if (rebuildStack[rebuildStack.length - 1] === '[') rebuildStack.pop(); }
+    }
+  }
+  
+  while (rebuildStack.length > 0) {
+    const top = rebuildStack.pop();
+    if (top === '{') workingStr += '}';
+    if (top === '[') workingStr += ']';
+  }
+  
+  try {
+    return JSON.parse(workingStr);
+  } catch(e) {
+    return null;
+  }
 }
 
 // --- Translation & Synonym Maps for Dynamic Crop Fallback ---
@@ -2086,7 +2412,7 @@ const RATE_LIMIT_WINDOW_MS = 60000; // 1 minute
 const MAX_REQUESTS_PER_WINDOW = 5;
 
 // API: Real-time intelligent AI Chatbox via Gemini (Multimodal)
-app.post('/api/chat', authenticateToken, upload.single('image'), async (req, res) => {
+app.post('/api/chat', authenticateToken, chatLimiter, upload.single('image'), async (req, res) => {
   const message = req.body.message || '';
   const lang = req.body.lang || 'en';
 
@@ -2139,7 +2465,7 @@ app.post('/api/chat', authenticateToken, upload.single('image'), async (req, res
     const requestedLang = langMap[lang] || "English";
 
     // Extremely concise system prompt to minimize input tokens
-    const systemPrompt = `You are SAARTHI, an agricultural assistant. ONLY answer queries directly related to farming, crops, soil, pests, weather, and market prices in ${requestedLang}. Refuse unrelated topics politely and briefly. Keep answers helpful and clear.`;
+    const systemPrompt = `You are SAARTHI, an agricultural assistant. ONLY answer queries directly related to farming, crops, soil, pests, weather, and market prices in ${requestedLang}. Refuse unrelated topics briefly. Be extremely concise. Give short, direct, sweet, correct answers instead of detailed explanations. Limit response to 1-3 sentences maximum.`;
 
     // Map frontend history into Gemini "contents" format - keeping only the last 2 messages to save input tokens
     const formattedHistory = [];
@@ -2180,7 +2506,8 @@ app.post('/api/chat', authenticateToken, upload.single('image'), async (req, res
     const response = await generateContent({
       model: 'gemini-2.5-flash',
       contents: formattedHistory,
-      systemInstruction: systemPrompt
+      systemInstruction: systemPrompt,
+      maxOutputTokens: 120
     });
 
     res.json({ ok: true, reply: response.text });
@@ -2194,7 +2521,7 @@ app.post('/api/chat', authenticateToken, upload.single('image'), async (req, res
 });
 
 // API: real-time disease detection via local CNN / Gemini Vision API
-app.post('/api/detect-disease', authenticateToken, upload.single('image'), async (req, res) => {
+app.post('/api/detect-disease', authenticateToken, diseaseLimiter, upload.single('image'), async (req, res) => {
   const lang = req.body.lang || 'en';
 
   try {
@@ -2210,7 +2537,7 @@ app.post('/api/detect-disease', authenticateToken, upload.single('image'), async
     const altModelPath = path.join(__dirname, 'plant_disease_model.pth');
     const modelExists = fs.existsSync(modelPath) || fs.existsSync(path.join(__dirname, 'models', 'best_disease_model.pth')) || fs.existsSync(altModelPath);
 
-    if (modelExists) {
+    if (modelExists) { // Run local CNN model first
       console.log("Local CNN Model file found. Running local inference...");
       
       // Ensure temp_uploads folder exists
@@ -2232,7 +2559,9 @@ app.post('/api/detect-disease', authenticateToken, upload.single('image'), async
 
         // Run python predict_disease.py <tempFilePath>
         const predictScript = path.join(__dirname, 'predict_disease.py');
-        const command = `python "${predictScript}" "${tempFilePath}"`;
+        const localVenvPython = path.join(__dirname, '..', 'venv', 'Scripts', 'python.exe');
+        const pythonCmd = fs.existsSync(localVenvPython) ? `"${localVenvPython}"` : 'python';
+        const command = `${pythonCmd} "${predictScript}" "${tempFilePath}"`;
         const { stdout } = await execPromise(command);
 
         // Clean up temp file immediately
@@ -2390,19 +2719,43 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-  
-  // Asynchronously trigger fetch_market_data.py on startup to ensure data is updated daily
-  const { exec } = require('child_process');
-  const path = require('path');
+// Global error handler middleware for Multer and validation exceptions
+app.use((err, req, res, next) => {
+  if (err.code === 'LIMIT_FILE_SIZE') {
+    return res.status(400).json({ ok: false, message: 'File is too large. Maximum size allowed is 5MB.' });
+  } else if (err.message && (err.message.includes('Only JPG') || err.message.includes('image files') || err.message.includes('allowed'))) {
+    return res.status(400).json({ ok: false, message: err.message });
+  }
+  console.error("Unhandled Global Error:", err);
+  res.status(500).json({ ok: false, message: 'Internal Server Error' });
+});
+
+function startServer(port) {
+  const server = app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
   const fetchScript = path.join(__dirname, 'fetch_market_data.py');
-  exec(`python "${fetchScript}"`, (err, stdout, stderr) => {
+  const localVenvPython = path.join(__dirname, '..', 'venv', 'Scripts', 'python.exe');
+  const pythonCmd = fs.existsSync(localVenvPython) ? `"${localVenvPython}"` : 'python';
+  exec(`${pythonCmd} "${fetchScript}"`, (err, stdout, stderr) => {
     if (err) {
       console.warn("Could not auto-run fetch_market_data.py on startup:", err.message);
     } else {
       console.log("Daily mandi market data updated on startup:", stdout.trim());
     }
   });
-});
+  });
+  
+  server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      console.warn(`[Port Conflict] Port ${port} is already in use.`);
+      const nextPort = port + 1;
+      console.log(`Smart-routing: Retrying on the next available port: http://localhost:${nextPort}...`);
+      startServer(nextPort);
+    } else {
+      console.error("Server listener encountered an error:", err);
+    }
+  });
+}
+
+startServer(PORT);
 

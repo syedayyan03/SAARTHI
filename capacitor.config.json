@@ -1,0 +1,6 @@
+{
+  "appId": "com.saarthi.app",
+  "appName": "SAARTHI",
+  "webDir": "public",
+  "bundledWebRuntime": false
+}

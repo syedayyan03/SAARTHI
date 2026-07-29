@@ -5,7 +5,9 @@
     <title>SAARTHI – Market Demand</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/png" href="img/saarthi-logo.png" />
-    <link rel="stylesheet" href="css/styles.css?v=1.1" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#2ebd66" />
+    <link rel="stylesheet" href="css/styles.css?v=2.0" />
   </head>
   <body class="dashboard-body">
     <header class="top-bar">
@@ -50,61 +52,67 @@
     </header>
 
     <main class="dashboard-main">
-      <section class="dashboard-header">
-        <div>
-          <h1 id="marketPageTitle">Market Demand Near You</h1>
-          <p id="marketPageIntro" class="muted">
-            We use your location to show demand and approximate prices for key
-            crops in nearby markets.
-          </p>
-        </div>
-      </section>
+      <div class="centered-content-wrapper">
+        <section class="dashboard-header">
+          <div>
+            <h1 id="marketPageTitle">Market Demand Near You</h1>
+            <p id="marketPageIntro" class="muted">
+              We use your location to show demand and approximate prices for key
+              crops in nearby markets.
+            </p>
+          </div>
+        </section>
 
-      <section class="section">
-        <div class="wizard-step">
-          <label id="locLabel" class="field-label" for="locationInputMarket">Location</label>
-          <input
-            id="locationInputMarket"
-            class="field-input"
-            placeholder="Detecting location..."
-          />
-          <button id="detectLocationMarketBtn" class="btn btn-ghost" style="display: inline-flex; align-items: center; gap: 0.35rem;">
-            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> Detect location
-          </button>
-          
-          <!-- Crop Search Field -->
-          <div style="margin-top: 1.25rem;">
-            <label id="cropSearchLabel" class="field-label" for="cropSearchInput">Search Commodity (Optional)</label>
-            <input
-              id="cropSearchInput"
-              class="field-input"
-              placeholder="Search specific crop (e.g., Tomato, Cotton, Paddy, Onion)..."
-            />
-            <div id="popularTagsContainer" style="margin-top: 0.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem; font-size: 0.85rem; align-items: center;">
-              <span id="popularTagsLabel" class="muted" style="margin-right: 0.25rem;">Popular:</span>
-              <button type="button" class="crop-tag-btn" data-crop="Tomato" style="padding: 0.25rem 0.6rem; font-size: 0.8rem; border-radius: 20px; border: 1px solid var(--border-color, #ddd); background: var(--bg-card, #fff); cursor: pointer; color: var(--text-color, #333); transition: all 0.2s;">Tomato</button>
-              <button type="button" class="crop-tag-btn" data-crop="Cotton" style="padding: 0.25rem 0.6rem; font-size: 0.8rem; border-radius: 20px; border: 1px solid var(--border-color, #ddd); background: var(--bg-card, #fff); cursor: pointer; color: var(--text-color, #333); transition: all 0.2s;">Cotton</button>
-              <button type="button" class="crop-tag-btn" data-crop="Paddy" style="padding: 0.25rem 0.6rem; font-size: 0.8rem; border-radius: 20px; border: 1px solid var(--border-color, #ddd); background: var(--bg-card, #fff); cursor: pointer; color: var(--text-color, #333); transition: all 0.2s;">Paddy</button>
-              <button type="button" class="crop-tag-btn" data-crop="Onion" style="padding: 0.25rem 0.6rem; font-size: 0.8rem; border-radius: 20px; border: 1px solid var(--border-color, #ddd); background: var(--bg-card, #fff); cursor: pointer; color: var(--text-color, #333); transition: all 0.2s;">Onion</button>
+        <section class="section">
+          <div class="upload-container-wrapper" style="text-align: left; position: relative;">
+            <div class="wizard-step">
+              <!-- Top Loader Area -->
+              <div id="marketLoaderTop" class="market-loader-overlay" style="display: none;">
+                <svg class="plant-drawing-loader" viewBox="0 0 32 32" style="width: 48px; height: 48px;"><path class="plant-ground" d="M 6 30 L 26 30" /><path class="plant-stem" d="M 16 30 Q 14 20, 16 10" /><path class="plant-leaf leaf-left" d="M 15 20 Q 7 18, 10 13 Q 14 14, 15 17 Z" /><path class="plant-leaf leaf-right" d="M 16 14 Q 24 12, 21 7 Q 17 8, 16 11 Z" /><path class="plant-leaf leaf-top" d="M 16 10 Q 11 5, 16 2 Q 21 5, 16 10 Z" /></svg>
+                <span class="agri-loader-text" style="font-size: 1.1rem; font-weight: 600; color: #047857;">Loading...</span>
+              </div>
+              <label id="locLabel" class="field-label" for="locationInputMarket">Location</label>
+              <input
+                id="locationInputMarket"
+                class="field-input"
+                placeholder="Detecting location..."
+              />
+              <button id="detectLocationMarketBtn" class="btn btn-ghost" style="display: inline-flex; align-items: center; gap: 0.35rem; margin-top: 0.5rem;">
+                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> Detect location
+              </button>
+              
+              <!-- Crop Search Field -->
+              <div style="margin-top: 1.25rem;">
+                <label id="cropSearchLabel" class="field-label" for="cropSearchInput">Search Commodity (Optional)</label>
+                <input
+                  id="cropSearchInput"
+                  class="field-input"
+                  placeholder="Search specific crop (e.g., Tomato, Cotton, Paddy, Onion)..."
+                />
+                <div id="popularTagsContainer" style="margin-top: 0.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem; font-size: 0.85rem; align-items: center;">
+                  <span id="popularTagsLabel" class="muted" style="margin-right: 0.25rem;">Popular:</span>
+                  <button type="button" class="crop-tag-btn" data-crop="Tomato" style="padding: 0.25rem 0.6rem; font-size: 0.8rem; border-radius: 20px; border: 1px solid var(--border-color, #ddd); background: var(--bg-card, #fff); cursor: pointer; color: var(--text-color, #333); transition: all 0.2s;">Tomato</button>
+                  <button type="button" class="crop-tag-btn" data-crop="Cotton" style="padding: 0.25rem 0.6rem; font-size: 0.8rem; border-radius: 20px; border: 1px solid var(--border-color, #ddd); background: var(--bg-card, #fff); cursor: pointer; color: var(--text-color, #333); transition: all 0.2s;">Cotton</button>
+                  <button type="button" class="crop-tag-btn" data-crop="Paddy" style="padding: 0.25rem 0.6rem; font-size: 0.8rem; border-radius: 20px; border: 1px solid var(--border-color, #ddd); background: var(--bg-card, #fff); cursor: pointer; color: var(--text-color, #333); transition: all 0.2s;">Paddy</button>
+                  <button type="button" class="crop-tag-btn" data-crop="Onion" style="padding: 0.25rem 0.6rem; font-size: 0.8rem; border-radius: 20px; border: 1px solid var(--border-color, #ddd); background: var(--bg-card, #fff); cursor: pointer; color: var(--text-color, #333); transition: all 0.2s;">Onion</button>
+                </div>
+              </div>
+
+              <div class="wizard-actions" style="margin-top: 2rem; display: flex; justify-content: center;">
+                <button id="loadMarketBtn" class="btn btn-primary">
+                  Show Market Demand
+                </button>
+              </div>
+              <p id="locationMarketError" class="error-text"></p>
             </div>
           </div>
 
-          <div class="wizard-actions">
-            <a href="dashboard.html" class="btn btn-outline" style="margin-right: auto;">
-              ← Back to Dashboard
-            </a>
-            <button id="loadMarketBtn" class="btn btn-primary">
-              Show Market Demand
-            </button>
-          </div>
-          <p id="locationMarketError" class="error-text"></p>
-        </div>
-
-        <div id="marketContent" class="section" style="padding-top: 1rem"></div>
-      </section>
+          <div id="marketContent" class="market-results-container" style="padding-top: 1rem"></div>
+        </section>
+      </div>
     </main>
 
-    <script src="js/market.js"></script>
+    <script src="js/market.js?v=1.4"></script>
   </body>
 </html>
 

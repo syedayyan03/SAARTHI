@@ -2,124 +2,116 @@ import os
 import sys
 import json
 import datetime
-import random
+import re
+import urllib.request
+import urllib.error
 import pandas as pd
+
+def get_gemini_api_key():
+    if os.environ.get('GEMINI_API_KEY'):
+        return os.environ.get('GEMINI_API_KEY')
+    if os.path.exists('.env'):
+        with open('.env', 'r') as f:
+            content = f.read()
+            match = re.search(r'GEMINI_API_KEY\s*=\s*([^\s]+)', content)
+            if match:
+                # Remove quotes if present
+                val = match.group(1).strip()
+                if (val.startswith('"') and val.endswith('"')) or (val.startswith("'") and val.endswith("'")):
+                    val = val[1:-1]
+                return val
+    return None
 
 def generate_market_data():
     today_str = datetime.date.today().isoformat()
-    # Use the current day of the year/month as seed to ensure consistencies within the same day
-    day_seed = datetime.date.today().toordinal()
-    random.seed(day_seed)
-
-    # Base market definitions: State, District, Mandi, Commodity, Variety, BaseModalPrice, BaseArrivals(Tonnes)
-    base_data = [
-        # Telangana
-        ("Telangana", "Nizamabad", "Nizamabad APMC", "Paddy", "Sanna Ralu", 2300, 180),
-        ("Telangana", "Nizamabad", "Nizamabad APMC", "Maize", "Local", 1900, 140),
-        ("Telangana", "Nizamabad", "Nizamabad APMC", "Chillies", "Teja", 18500, 45),
-        ("Telangana", "Nizamabad", "Nizamabad APMC", "Turmeric", "Finger", 12500, 30),
-        ("Telangana", "Warangal", "Warangal Mandi", "Cotton", "Kapas", 7100, 250),
-        ("Telangana", "Warangal", "Warangal Mandi", "Chillies", "Desi", 17000, 60),
-        ("Telangana", "Khammam", "Khammam APMC", "Cotton", "Kapas", 7250, 220),
-        ("Telangana", "Khammam", "Khammam APMC", "Paddy", "Common", 2180, 190),
-
-        # Andhra Pradesh
-        ("Andhra Pradesh", "Guntur", "Guntur Mirchi Yard", "Chillies", "Guntur Red", 19000, 350),
-        ("Andhra Pradesh", "Guntur", "Guntur Mirchi Yard", "Cotton", "Kapas", 7300, 110),
-        ("Andhra Pradesh", "Krishna", "Vijayawada Mandi", "Paddy", "BPT 5204", 2450, 160),
-        ("Andhra Pradesh", "Krishna", "Vijayawada Mandi", "Blackgram", "Urad", 8200, 40),
-        ("Andhra Pradesh", "Chittoor", "Madanapalle Mandi", "Tomato", "Local", 1400, 480),
-        ("Andhra Pradesh", "Chittoor", "Madanapalle Mandi", "Mango", "Totapuri", 2800, 300),
-
-        # Maharashtra
-        ("Maharashtra", "Nashik", "Lasalgaon Mandi", "Onion", "Red Onion", 2200, 850),
-        ("Maharashtra", "Nashik", "Pimpalgaon Mandi", "Tomato", "Hybrid", 1200, 600),
-        ("Maharashtra", "Nashik", "Nashik APMC", "Grapes", "Thomson Seedless", 7800, 95),
-        ("Maharashtra", "Pune", "Pune Market Yard", "Onion", "White Onion", 2400, 400),
-        ("Maharashtra", "Pune", "Pune Market Yard", "Tomato", "Local", 1350, 320),
-        ("Maharashtra", "Pune", "Pune Market Yard", "Potato", "Jyoti", 1600, 280),
-        ("Maharashtra", "Jalgaon", "Jalgaon APMC", "Banana", "Bhushaval", 1800, 500),
-        ("Maharashtra", "Jalgaon", "Jalgaon APMC", "Soybean", "Yellow", 4600, 150),
-        ("Maharashtra", "Nagpur", "Kalamna Market", "Orange", "Nagpur Orange", 4500, 210),
-        ("Maharashtra", "Nagpur", "Kalamna Market", "Cotton", "Kapas", 7050, 180),
-        ("Maharashtra", "Aurangabad", "Aurangabad Mandi", "Sugarcane", "Co-86032", 310, 1200),
-
-        # Kerala
-        ("Kerala", "Kottayam", "Kottayam Market", "Natural Rubber", "RSS-4", 17500, 80),
-        ("Kerala", "Kottayam", "Kottayam Market", "Coconut", "Dry", 3800, 120),
-        ("Kerala", "Wayanad", "Kalpetta Mandi", "Black Pepper", "Malabar", 62000, 15),
-        ("Kerala", "Wayanad", "Kalpetta Mandi", "Coffee", "Robusta", 21000, 45),
-        ("Kerala", "Palakkad", "Palakkad APMC", "Paddy", "Matta", 2600, 140),
-        ("Kerala", "Palakkad", "Palakkad APMC", "Coconut", "Raw", 2800, 200),
-
-        # Punjab
-        ("Punjab", "Amritsar", "Amritsar Grain Market", "Wheat", "Kanak", 2275, 950),
-        ("Punjab", "Amritsar", "Amritsar Grain Market", "Paddy", "Basmati", 4500, 320),
-        ("Punjab", "Patiala", "Patiala Mandi", "Wheat", "Kanak", 2275, 800),
-        ("Punjab", "Patiala", "Patiala Mandi", "Paddy", "PR 126", 2200, 680),
-        ("Punjab", "Ludhiana", "Ludhiana APMC", "Potato", "Local", 1100, 450),
-        ("Punjab", "Ludhiana", "Ludhiana APMC", "Mustard Seeds", "Sarso", 5600, 120),
-
-        # Uttar Pradesh
-        ("Uttar Pradesh", "Varanasi", "Varanasi Mandi", "Paddy", "Sarna", 2180, 240),
-        ("Uttar Pradesh", "Varanasi", "Varanasi Mandi", "Potato", "Desi", 1200, 380),
-        ("Uttar Pradesh", "Kanpur", "Kanpur Grain Market", "Wheat", "Sharbati", 2400, 750),
-        ("Uttar Pradesh", "Kanpur", "Kanpur Grain Market", "Chickpea", "Chana", 5800, 90),
-        ("Uttar Pradesh", "Lucknow", "Lucknow Mandi", "Mango", "Dasheri", 4200, 180),
-        ("Uttar Pradesh", "Lucknow", "Lucknow Mandi", "Tomato", "Hybrid", 1150, 290)
-    ]
-
-    records = []
-    for state, district, market, commodity, variety, base_price, base_arrivals in base_data:
-        # Create calendar-based slight fluctuations (+/- 10%)
-        price_factor = round(random.uniform(0.9, 1.10), 3)
-        arrival_factor = round(random.uniform(0.8, 1.20), 3)
-
-        modal_price = int(base_price * price_factor)
-        min_price = int(modal_price * random.uniform(0.90, 0.95))
-        max_price = int(modal_price * random.uniform(1.05, 1.15))
-        arrivals = int(base_arrivals * arrival_factor)
-
-        # Decide demand level based on price factor and arrival factor
-        # Higher prices and lower arrivals suggest High/Rising demand
-        if price_factor > 1.05 and arrival_factor < 1.0:
-            demand = "High"
-        elif price_factor > 1.02:
-            demand = "Rising"
-        elif price_factor < 0.95:
-            demand = "Low"
-        else:
-            demand = "Medium"
-
-        records.append({
-            "State": state,
-            "District": district,
-            "Market": market,
-            "Commodity": commodity,
-            "Variety": variety,
-            "Arrivals": arrivals,
-            "MinPrice": min_price,
-            "MaxPrice": max_price,
-            "ModalPrice": modal_price,
-            "Demand": demand,
-            "Date": today_str
-        })
-
-    # Convert to Pandas DataFrame
-    df = pd.DataFrame(records)
-
-    # Ensure output directory exists
-    os.makedirs("data", exist_ok=True)
-
-    csv_path = os.path.join("data", "market_demand.csv")
-    df.to_csv(csv_path, index=False)
+    api_key = get_gemini_api_key()
     
-    print(json.dumps({
-        "ok": True,
-        "records_count": len(df),
-        "path": csv_path,
-        "date": today_str
-    }))
+    if not api_key:
+        print(json.dumps({"ok": False, "error": "No GEMINI_API_KEY found in environment or .env file"}))
+        return
+
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={api_key}"
+    prompt = f"""Search Google for today's (around {today_str}) wholesale mandi prices in India (from Agmarknet or recent commodity news). Collect the daily prices (ModalPrice, MinPrice, MaxPrice, and arrivals) for crops like Tomato, Potato, Onion, Paddy, Wheat, Cotton, Maize, Chilli, Mango, Coconut, Banana across states like Delhi, Punjab, Haryana, Uttar Pradesh, Rajasthan, Gujarat, Madhya Pradesh, Maharashtra, Andhra Pradesh, Telangana, Karnataka, Tamil Nadu, Kerala, West Bengal.
+    Return ONLY a valid JSON object matching this structure:
+    {{
+      "records": [
+        {{
+          "State": "State Name",
+          "District": "District Name",
+          "Market": "Mandi Name APMC",
+          "Commodity": "Crop Name",
+          "Variety": "Variety Name",
+          "Arrivals": 120, // arrivals in tonnes
+          "MinPrice": 1400, // min price in Rs.
+          "MaxPrice": 1800, // max price in Rs.
+          "ModalPrice": 1600, // modal price in Rs.
+          "Demand": "High", // High/Rising/Medium/Low
+          "Date": "{today_str}"
+        }}
+      ]
+    }}
+    Include at least 60-80 records to cover all major states and districts. Ensure the JSON is complete and valid. Do not write any conversational text, write ONLY the JSON."""
+
+    req_body = {
+        "contents": [{
+            "parts": [{"text": prompt}]
+        }],
+        "tools": [{"googleSearch": {}}]
+    }
+
+    headers = {
+        "Content-Type": "application/json"
+    }
+
+    try:
+        req = urllib.request.Request(
+            url,
+            data=json.dumps(req_body).encode('utf-8'),
+            headers=headers,
+            method='POST'
+        )
+        with urllib.request.urlopen(req) as response:
+            res_body = response.read().decode('utf-8')
+            res_json = json.loads(res_body)
+            
+            candidates = res_json.get('candidates', [])
+            if not candidates:
+                raise ValueError("No candidates returned from Gemini API")
+            
+            text = candidates[0].get('content', {}).get('parts', [{}])[0].get('text', '')
+            
+            # Extract JSON block
+            json_match = re.search(r'(\{.*\})', text, re.DOTALL)
+            if json_match:
+                clean_json = json_match.group(1)
+            else:
+                clean_json = text
+                
+            data_dict = json.loads(clean_json)
+            records = data_dict.get('records', [])
+            
+            if not records:
+                raise ValueError("No records found in parsed JSON")
+                
+            df = pd.DataFrame(records)
+            os.makedirs("data", exist_ok=True)
+            csv_path = os.path.join("data", "market_demand.csv")
+            df.to_csv(csv_path, index=False)
+            
+            print(json.dumps({
+                "ok": True,
+                "records_count": len(df),
+                "path": csv_path,
+                "date": today_str
+            }))
+            
+    except Exception as e:
+        # Print raw output on error for debugging
+        print(json.dumps({
+            "ok": False,
+            "error": str(e),
+            "raw_response_text": text if 'text' in locals() else None
+        }))
 
 if __name__ == '__main__':
     generate_market_data()

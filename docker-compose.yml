@@ -1,0 +1,13 @@
+services:
+  web:
+    image: saarthi-app:latest
+    build: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+      - ./temp_uploads:/app/temp_uploads
+    restart: unless-stopped

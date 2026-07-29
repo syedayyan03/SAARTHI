@@ -1,6 +1,12 @@
 {
   "8074328382": {
-    "selections": []
+    "selections": [
+      {
+        "crop": "Rice",
+        "acres": 1,
+        "createdAt": "2026-07-18T07:42:42.953Z"
+      }
+    ]
   },
   "G636132206": {
     "selections": [

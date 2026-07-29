@@ -2,7 +2,7 @@ node_modules/
 venv/
 .env
 __pycache__/
-
+models/torch_cache/
 models/best_model.pkl
 data/plantvillage/
 *.zip

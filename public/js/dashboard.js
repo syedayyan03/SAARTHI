@@ -57,7 +57,11 @@ function getLocalizedCropName(name, lang) {
     papaya: { en: "Papaya", te: "బొప్పాయి", hi: "पपीता", mr: "पपई", ml: "പപ്പായ" },
     coconut: { en: "Coconut", te: "కొబ్బరి", hi: "നാരയൽ", mr: "नारळ", ml: "തേങ്ങ" },
     coffee: { en: "Coffee", te: "కాఫీ", hi: "कॉफी", mr: "कॉफी", ml: "കാപ്പി" },
-    turmeric: { en: "Turmeric", te: "పసుపు", hi: "हल्दी", mr: "हळद", ml: "മഞ്ഞൾ" }
+    turmeric: { en: "Turmeric", te: "పసుపు", hi: "हल्दी", mr: "हळद", ml: "മഞ്ഞൾ" },
+    "berseem(cloverfodder)": { en: "Berseem (Clover)", te: "బెర్సీమ్ (పశుగ్రాసం)", hi: "बरसीम (चारा)", mr: "बरसीम (चारा)", ml: "ബെർസീം (തീറ്റപ്പുല്ല്)" },
+    "betelvine(pan)": { en: "Betel Vine (Pan)", te: "తమలపాకు", hi: "पान", mr: "पान", ml: "വെറ്റില" },
+    coriander: { en: "Coriander", te: "కొత్తిమీర", hi: "धनिया", mr: "कोथिंबीर", ml: "മല്ലിയില" },
+    mustard: { en: "Mustard", te: "ఆవాలు", hi: "सरसों", mr: "मोहरी", ml: "കടുക്" }
   };
   return translations[key] ? (translations[key][lang] || translations[key].en) : name;
 }

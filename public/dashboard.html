@@ -6,6 +6,8 @@
   <title>Dashboard – SAARTHI</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="icon" type="image/png" href="img/saarthi-logo.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#2ebd66" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
@@ -584,6 +586,15 @@
 
   <script src="js/custom-select.js"></script>
   <script src="js/dashboard.js?v=1.1"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(reg => console.log('Service Worker registered successfully:', reg.scope))
+          .catch(err => console.error('Service Worker registration failed:', err));
+      });
+    }
+  </script>
 </body>
 
 </html>

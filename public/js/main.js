@@ -819,6 +819,8 @@ const googleBtnContainer = document.getElementById("googleBtnContainer");
 const googleMockModal = document.getElementById("googleMockModal");
 const googleMockCancelBtn = document.getElementById("googleMockCancelBtn");
 const closeGoogleMockBackdrop = document.getElementById("closeGoogleMockBackdrop");
+const googleMockFallbackLinkContainer = document.getElementById("googleMockFallbackLinkContainer");
+const useMockGoogleBtn = document.getElementById("useMockGoogleBtn");
 
 // Google Link setup inputs
 const googleRegisterSection = document.getElementById("googleRegisterSection");
@@ -1004,19 +1006,22 @@ async function setupGoogleSignIn() {
         googleBtnContainer,
         { theme: "outline", size: "large", width: 280 }
       );
-      // Show official container, hide fallback button
+      // Show official container, hide fallback button, show mock link fallback
       if (googleBtnContainer) googleBtnContainer.classList.remove("hidden");
       if (googleLoginBtn) googleLoginBtn.classList.add("hidden");
+      if (googleMockFallbackLinkContainer) googleMockFallbackLinkContainer.classList.remove("hidden");
     } else {
       // Credentials are missing: Show fallback button (opens simulation dialog)
       if (googleBtnContainer) googleBtnContainer.classList.add("hidden");
       if (googleLoginBtn) googleLoginBtn.classList.remove("hidden");
+      if (googleMockFallbackLinkContainer) googleMockFallbackLinkContainer.classList.add("hidden");
     }
   } catch (e) {
     console.warn("Unable to fetch configuration for Google Sign-in:", e);
     // Graceful fallback to mock selector
     if (googleBtnContainer) googleBtnContainer.classList.add("hidden");
     if (googleLoginBtn) googleLoginBtn.classList.remove("hidden");
+    if (googleMockFallbackLinkContainer) googleMockFallbackLinkContainer.classList.add("hidden");
   }
 }
 
@@ -1029,6 +1034,12 @@ if (window.addEventListener) {
 
 if (googleLoginBtn && googleMockModal) {
   googleLoginBtn.addEventListener("click", () => {
+    googleMockModal.classList.remove("hidden");
+  });
+}
+
+if (useMockGoogleBtn && googleMockModal) {
+  useMockGoogleBtn.addEventListener("click", () => {
     googleMockModal.classList.remove("hidden");
   });
 }

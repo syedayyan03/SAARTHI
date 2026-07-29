@@ -57,7 +57,11 @@ function getLocalizedCropName(name, lang) {
     papaya: { en: "Papaya", te: "బొప్పాయి", hi: "पपीता", mr: "पपई", ml: "പപ്പായ" },
     coconut: { en: "Coconut", te: "కొబ్బరి", hi: "नारियल", mr: "नारळ", ml: "തേങ്ങ" },
     coffee: { en: "Coffee", te: "కాఫీ", hi: "कॉफी", mr: "कॉफी", ml: "കാപ്പി" },
-    turmeric: { en: "Turmeric", te: "పసుపు", hi: "हल्दी", mr: "हळद", ml: "മഞ്ഞൾ" }
+    turmeric: { en: "Turmeric", te: "పసుపు", hi: "हल्दी", mr: "हळद", ml: "മഞ്ഞൾ" },
+    "berseem(cloverfodder)": { en: "Berseem (Clover)", te: "బెర్సీమ్ (పశుగ్రాసం)", hi: "बरसीम (चारा)", mr: "बरसीम (चारा)", ml: "ബെർസീം (തീറ്റപ്പുല്ല്)" },
+    "betelvine(pan)": { en: "Betel Vine (Pan)", te: "తమలపాకు", hi: "पान", mr: "पान", ml: "വെറ്റില" },
+    coriander: { en: "Coriander", te: "కొత్తిమీర", hi: "धनिया", mr: "कोथिंबीर", ml: "മല്ലിയില" },
+    mustard: { en: "Mustard", te: "ఆవాలు", hi: "सरसों", mr: "मोहरी", ml: "കടുക്" }
   };
   return translations[key] ? (translations[key][lang] || translations[key].en) : name;
 }
@@ -459,6 +463,7 @@ if (locationInput) {
               currentLon = loc.longitude;
               lastDetectedAreaName = fullName;
               locationSuggestions.classList.add("hidden");
+              recordLocationSelection(fullName, currentLat, currentLon);
               await fetchLocationAndWeather(currentLat, currentLon, false, fullName);
             };
             locationSuggestions.appendChild(div);
@@ -487,27 +492,139 @@ if (detectLocationBtn) {
   detectLocationBtn.addEventListener("click", autoDetectLocation);
 }
 
-// Bind click listeners for popular districts quick actions
-document.querySelectorAll(".quick-loc-btn").forEach(btn => {
-  btn.addEventListener("click", async (e) => {
-    const loc = e.currentTarget.getAttribute("data-loc");
-    const lat = parseFloat(e.currentTarget.getAttribute("data-lat"));
-    const lon = parseFloat(e.currentTarget.getAttribute("data-lon"));
-    
-    if (locationInput) {
-      locationInput.value = loc;
+// Helper to track location selection frequency
+function recordLocationSelection(loc, lat, lon) {
+  if (!loc || !lat || !lon) return;
+  
+  const parts = loc.split(',');
+  const districtName = parts[0].trim();
+  let labelName = districtName;
+  
+  let stateCode = "";
+  if (parts.length > 1) {
+    const stateName = parts[1].trim().toLowerCase();
+    if (stateName.includes("telangana")) stateCode = "TS";
+    else if (stateName.includes("andhra")) stateCode = "AP";
+    else if (stateName.includes("maharashtra")) stateCode = "MH";
+    else if (stateName.includes("kerala")) stateCode = "KL";
+    else if (stateName.includes("haryana")) stateCode = "HR";
+    else if (stateName.includes("delhi")) stateCode = "DL";
+    else if (stateName.includes("karnataka")) stateCode = "KA";
+    else if (stateName.includes("tamil")) stateCode = "TN";
+    else if (stateName.includes("punjab")) stateCode = "PB";
+    else if (stateName.includes("uttar")) stateCode = "UP";
+    else if (stateName.includes("rajasthan")) stateCode = "RJ";
+    else if (stateName.includes("gujarat")) stateCode = "GJ";
+    else if (stateName.includes("madhya")) stateCode = "MP";
+  }
+  if (stateCode) {
+    labelName += ` (${stateCode})`;
+  }
+
+  let list = [];
+  try {
+    list = JSON.parse(localStorage.getItem("frequentLocations") || "[]");
+  } catch (e) {}
+
+  const existing = list.find(item => item.label.toLowerCase() === labelName.toLowerCase());
+  if (existing) {
+    existing.count += 1;
+  } else {
+    list.push({
+      label: labelName,
+      loc: loc,
+      lat: parseFloat(lat),
+      lon: parseFloat(lon),
+      count: 1
+    });
+  }
+
+  localStorage.setItem("frequentLocations", JSON.stringify(list));
+  renderPopularDistricts();
+}
+
+// Render dynamic popular districts (Exactly 3)
+function renderPopularDistricts() {
+  const container = $("quickLocationsContainer");
+  if (!container) return;
+
+  const buttons = container.querySelectorAll("button");
+  buttons.forEach(b => b.remove());
+
+  let list = [];
+  try {
+    list = JSON.parse(localStorage.getItem("frequentLocations") || "[]");
+  } catch (e) {}
+
+  list.sort((a, b) => b.count - a.count);
+
+  const uniqueList = [];
+  const seenLabels = new Set();
+  list.forEach(item => {
+    if (!seenLabels.has(item.label.toLowerCase())) {
+      seenLabels.add(item.label.toLowerCase());
+      uniqueList.push(item);
     }
-    currentLat = lat;
-    currentLon = lon;
-    lastDetectedAreaName = loc;
-    if (locationError) {
-      locationError.textContent = "";
-    }
-    
-    // Trigger geocoding and weather lookup
-    await fetchLocationAndWeather(lat, lon, false, loc);
   });
-});
+
+  const defaults = [
+    { label: "Nizamabad (TS)", loc: "Nizamabad, Telangana, India", lat: 18.6725, lon: 78.0941 },
+    { label: "Guntur (AP)", loc: "Guntur, Andhra Pradesh, India", lat: 16.3067, lon: 80.4365 },
+    { label: "Nashik (MH)", loc: "Nashik, Maharashtra, India", lat: 19.9975, lon: 73.7898 }
+  ];
+
+  let i = 0;
+  while (uniqueList.length < 3 && i < defaults.length) {
+    const def = defaults[i];
+    if (!seenLabels.has(def.label.toLowerCase())) {
+      seenLabels.add(def.label.toLowerCase());
+      uniqueList.push({
+        label: def.label,
+        loc: def.loc,
+        lat: def.lat,
+        lon: def.lon,
+        count: 0
+      });
+    }
+    i++;
+  }
+
+  const final3 = uniqueList.slice(0, 3);
+
+  final3.forEach(item => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "quick-loc-btn btn btn-outline";
+    btn.setAttribute("data-loc", item.loc);
+    btn.setAttribute("data-lat", item.lat);
+    btn.setAttribute("data-lon", item.lon);
+    btn.style.cssText = "padding: 0.35rem 0.85rem; font-size: 0.85rem; border-radius: 20px; font-weight: 500; cursor: pointer;";
+    btn.textContent = item.label;
+
+    btn.addEventListener("click", async (e) => {
+      const locVal = e.currentTarget.getAttribute("data-loc");
+      const latVal = parseFloat(e.currentTarget.getAttribute("data-lat"));
+      const lonVal = parseFloat(e.currentTarget.getAttribute("data-lon"));
+
+      if (locationInput) {
+        locationInput.value = locVal;
+      }
+      currentLat = latVal;
+      currentLon = lonVal;
+      lastDetectedAreaName = locVal;
+      if (locationError) locationError.textContent = "";
+
+      recordLocationSelection(locVal, latVal, lonVal);
+      await fetchLocationAndWeather(latVal, lonVal, false, locVal);
+    });
+
+    container.appendChild(btn);
+  });
+}
+
+// Initial trigger to render districts
+renderPopularDistricts();
+
 
 if (nextFromLocation) {
   nextFromLocation.addEventListener("click", async () => {
@@ -520,6 +637,7 @@ if (nextFromLocation) {
     // If the user picked a suggestion, currentLat and currentLon are already set
     if (currentLat !== null && currentLon !== null && locationInput.value === lastDetectedAreaName) {
       locationError.textContent = "";
+      recordLocationSelection(lastDetectedAreaName, currentLat, currentLon);
       cropStepLocation.classList.add("hidden");
       cropStepDetails.classList.remove("hidden");
       updateStepper(2);
@@ -546,6 +664,7 @@ if (nextFromLocation) {
           }
 
           await fetchLocationAndWeather(currentLat, currentLon, true, newAreaName);
+          recordLocationSelection(newAreaName, currentLat, currentLon);
 
           locationError.textContent = "";
           cropStepLocation.classList.add("hidden");
@@ -609,20 +728,20 @@ if (getRecommendationsBtn) {
     recommendationsList.innerHTML = `
       <div class="agri-loader-wrapper" id="${loaderId}" style="margin: 2rem auto; align-items: center; text-align: center; justify-content: center; width: 100%;">
         <div class="agri-loader-sprout">
-          <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-color);"><path d="M2 22c1.25-6.73 6.77-12 14-12 1.25 0 2.5.18 3.75.54M2 22C4.33 13.88 10.12 8 18 8c1.25 0 2.5.1 3.75.29M2 22C5.45 15.65 11.23 11 19 11c1 0 2 .06 3 .17"></path><path d="M12 22V12"></path></svg>
+          <svg class="plant-drawing-loader" viewBox="0 0 32 32" style="width: 48px; height: 48px;"><path class="plant-ground" d="M 6 30 L 26 30" /><path class="plant-stem" d="M 16 30 Q 14 20, 16 10" /><path class="plant-leaf leaf-left" d="M 15 20 Q 7 18, 10 13 Q 14 14, 15 17 Z" /><path class="plant-leaf leaf-right" d="M 16 14 Q 24 12, 21 7 Q 17 8, 16 11 Z" /><path class="plant-leaf leaf-top" d="M 16 10 Q 11 5, 16 2 Q 21 5, 16 10 Z" /></svg>
         </div>
-        <div class="agri-loader-text" style="font-size: 1.2rem; font-weight: 600; margin-top: 1rem; display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem;">
-          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-color);"><path d="M2 22c1.25-6.73 6.77-12 14-12 1.25 0 2.5.18 3.75.54M2 22C4.33 13.88 10.12 8 18 8c1.25 0 2.5.1 3.75.29M2 22C5.45 15.65 11.23 11 19 11c1 0 2 .06 3 .17"></path><path d="M12 22V12"></path></svg> Analyzing soil profile and matching climate parameters...
+        <div class="agri-loader-text" style="font-size: 1.2rem; font-weight: 600; margin-top: 1rem; display: inline-flex; align-items: center; justify-content: center;">
+          Analyzing soil profile and matching climate parameters...
         </div>
       </div>
     `;
 
     const cropLoadingMessages = [
-      `<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-color);"><path d="M2 22c1.25-6.73 6.77-12 14-12 1.25 0 2.5.18 3.75.54M2 22C4.33 13.88 10.12 8 18 8c1.25 0 2.5.1 3.75.29M2 22C5.45 15.65 11.23 11 19 11c1 0 2 .06 3 .17"></path><path d="M12 22V12"></path></svg> Analyzing soil profile and matching climate parameters...`,
-      `<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-color);"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="15" x2="23" y2="15"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="15" x2="4" y2="15"></line></svg> Running machine learning models for yield prediction...`,
-      `<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-color);"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg> Calculating water source efficiency and irrigation budget...`,
-      `<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-color);"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg> Checking market prices and demand trends in nearby mandis...`,
-      `<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-color);"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg> Preparing precision advice for your farm...`
+      `Analyzing soil profile and matching climate parameters...`,
+      `Running machine learning models for yield prediction...`,
+      `Calculating water source efficiency and irrigation budget...`,
+      `Checking market prices and demand trends in nearby mandis...`,
+      `Preparing precision advice for your farm...`
     ];
 
     let cropMessageIndex = 0;
@@ -632,7 +751,7 @@ if (getRecommendationsBtn) {
         cropMessageIndex = (cropMessageIndex + 1) % cropLoadingMessages.length;
         const textEl = loaderEl.querySelector(".agri-loader-text");
         if (textEl) {
-          textEl.innerHTML = cropLoadingMessages[cropMessageIndex];
+          textEl.textContent = cropLoadingMessages[cropMessageIndex];
         }
       } else {
         clearInterval(cropIntervalId);
@@ -665,7 +784,7 @@ if (getRecommendationsBtn) {
       clearInterval(cropIntervalId);
       if (!res.ok) {
         if (res.status === 401 || res.status === 403) {
-          performLogout();
+          recommendationsList.innerHTML = `<p class="error-text">Authentication Error (${res.status}): ${data.message || "Session expired. Please login again."}</p>`;
           return;
         }
         recommendationsList.textContent = data.message || "Error loading data.";
@@ -728,13 +847,13 @@ function renderRecommendations(data, acres) {
     if (cropNameKey.includes("coconut") || cropNameKey.includes("arecanut") || cropNameKey.includes("cocoa") || cropNameKey.includes("palm")) return "/images/coconut.jpg";
     if (cropNameKey.includes("grape") || cropNameKey.includes("jamun") || cropNameKey.includes("plum") || cropNameKey.includes("litchi")) return "/images/grape.jpg";
     if (cropNameKey.includes("sapota") || cropNameKey.includes("chikoo")) return "/images/sapota.jpg";
-    if (cropNameKey.includes("mango") || cropNameKey.includes("guava") || cropNameKey.includes("jackfruit") || cropNameKey.includes("kathal") || cropNameKey.includes("fig") || cropNameKey.includes("anjeer") || cropNameKey.includes("avocado") || cropNameKey.includes("tamarind") || cropNameKey.includes("carambola") || cropNameKey.includes("rambutan") || cropNameKey.includes("mangosteen") || cropNameKey.includes("karonda") || cropNameKey.includes("phalsa") || cropNameKey.includes("ber")) return "/images/mango.jpg";
+    if (cropNameKey.includes("mango") || cropNameKey.includes("guava") || cropNameKey.includes("jackfruit") || cropNameKey.includes("kathal") || cropNameKey.includes("fig") || cropNameKey.includes("anjeer") || cropNameKey.includes("avocado") || cropNameKey.includes("tamarind") || cropNameKey.includes("carambola") || cropNameKey.includes("rambutan") || cropNameKey.includes("mangosteen") || cropNameKey.includes("karonda") || cropNameKey.includes("phalsa") || /\bber\b/.test(cropNameKey)) return "/images/mango.jpg";
     
     // Plantations / Herbs
     if (cropNameKey.includes("coffee") || cropNameKey.includes("tea") || cropNameKey.includes("rubber") || cropNameKey.includes("spices") || cropNameKey.includes("cardamom") || cropNameKey.includes("clove") || cropNameKey.includes("cinnamon") || cropNameKey.includes("nutmeg") || cropNameKey.includes("anise")) return "/images/coffee.jpg";
     
     // General vegetable/green fallbacks
-    if (cropNameKey.includes("cabbage") || cropNameKey.includes("cauliflower") || cropNameKey.includes("spinach") || cropNameKey.includes("palak") || cropNameKey.includes("leaves") || cropNameKey.includes("drumstick") || cropNameKey.includes("moringa") || cropNameKey.includes("carrot") || cropNameKey.includes("radish") || cropNameKey.includes("beetroot") || cropNameKey.includes("potato") || cropNameKey.includes("yam") || cropNameKey.includes("tapioca") || cropNameKey.includes("cassava") || cropNameKey.includes("taro") || cropNameKey.includes("colocasia") || cropNameKey.includes("sweet potato")) return "/images/cucumber.jpg";
+    if (cropNameKey.includes("cabbage") || cropNameKey.includes("cauliflower") || cropNameKey.includes("spinach") || cropNameKey.includes("palak") || cropNameKey.includes("leaves") || cropNameKey.includes("drumstick") || cropNameKey.includes("moringa") || cropNameKey.includes("carrot") || cropNameKey.includes("radish") || cropNameKey.includes("beetroot") || cropNameKey.includes("potato") || cropNameKey.includes("yam") || cropNameKey.includes("tapioca") || cropNameKey.includes("cassava") || cropNameKey.includes("taro") || cropNameKey.includes("colocasia") || cropNameKey.includes("sweet potato") || cropNameKey.includes("fodder") || cropNameKey.includes("clover") || cropNameKey.includes("grass")) return "/images/cucumber.jpg";
     
     return "/images/rice.jpg"; // Default fallback (pointing to valid existing file)
   };

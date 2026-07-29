@@ -185,19 +185,20 @@ if (detectDiseaseBtn) {
     const loaderId = "diseaseLoader_" + Date.now();
     diseaseResult.innerHTML = `
       <div class="agri-loader-wrapper" id="${loaderId}" style="margin: 1.5rem 0; align-items: flex-start; text-align: left; max-width: 100%;">
-        <div class="agri-loader-sprout" style="display: flex; align-items: center; gap: 0.4rem;">
-          <span class="agri-loader-text" style="font-size: 1rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.35rem;">
-            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-color); vertical-align: middle; margin-right: 4px; display: inline-block;"><path d="M2 22c1.25-6.73 6.77-12 14-12 1.25 0 2.5.18 3.75.54M2 22C4.33 13.88 10.12 8 18 8c1.25 0 2.5.1 3.75.29M2 22C5.45 15.65 11.23 11 19 11c1 0 2 .06 3 .17"></path><path d="M12 22V12"></path></svg> Inspecting plant tissue and cell structure...
+        <div class="agri-loader-sprout" style="display: flex; align-items: center; gap: 0.5rem; flex-direction: row;">
+          <svg class="plant-drawing-loader" viewBox="0 0 32 32" style="width: 24px; height: 24px; flex-shrink: 0;"><path class="plant-ground" d="M 6 30 L 26 30" /><path class="plant-stem" d="M 16 30 Q 14 20, 16 10" /><path class="plant-leaf leaf-left" d="M 15 20 Q 7 18, 10 13 Q 14 14, 15 17 Z" /><path class="plant-leaf leaf-right" d="M 16 14 Q 24 12, 21 7 Q 17 8, 16 11 Z" /><path class="plant-leaf leaf-top" d="M 16 10 Q 11 5, 16 2 Q 21 5, 16 10 Z" /></svg>
+          <span class="agri-loader-text" style="font-size: 1rem; font-weight: 600; display: inline-flex; align-items: center;">
+            Inspecting plant tissue and cell structure...
           </span>
         </div>
       </div>
     `;
 
     const diseaseLoadingMessages = [
-      `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-color); vertical-align: middle; margin-right: 4px; display: inline-block;"><path d="M2 22c1.25-6.73 6.77-12 14-12 1.25 0 2.5.18 3.75.54M2 22C4.33 13.88 10.12 8 18 8c1.25 0 2.5.1 3.75.29M2 22C5.45 15.65 11.23 11 19 11c1 0 2 .06 3 .17"></path><path d="M12 22V12"></path></svg> Scanning leaf surfaces for fungal or bacterial pathogens...`,
-      `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-color); vertical-align: middle; margin-right: 4px; display: inline-block;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg> Analyzing pigmentation and leaf lesion patterns...`,
-      `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-color); vertical-align: middle; margin-right: 4px; display: inline-block;"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5M3 12c0 1.66 4 3 9 3s9-1.34 9-3"></path></svg> Matching anomalies against crop disease database...`,
-      `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-color); vertical-align: middle; margin-right: 4px; display: inline-block;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> Formulating organic treatments and soil remedies...`
+      `Scanning leaf surfaces for fungal or bacterial pathogens...`,
+      `Analyzing pigmentation and leaf lesion patterns...`,
+      `Matching anomalies against crop disease database...`,
+      `Formulating organic treatments and soil remedies...`
     ];
 
     let diseaseMessageIndex = 0;
@@ -207,7 +208,7 @@ if (detectDiseaseBtn) {
         diseaseMessageIndex = (diseaseMessageIndex + 1) % diseaseLoadingMessages.length;
         const textEl = loaderEl.querySelector(".agri-loader-text");
         if (textEl) {
-          textEl.innerHTML = diseaseLoadingMessages[diseaseMessageIndex];
+          textEl.textContent = diseaseLoadingMessages[diseaseMessageIndex];
         }
       } else {
         clearInterval(diseaseIntervalId);
@@ -228,12 +229,7 @@ if (detectDiseaseBtn) {
 
       if (!res.ok) {
         if (res.status === 401 || res.status === 403) {
-          /* alert(farmerLang === 'te' ? "మీ సెషన్ ముగిసింది. దయచేసి మళ్ళీ లాగిన్ అవ్వండి." :
-                farmerLang === 'hi' ? "आपका सत्र समाप्त हो गया है। कृपया पुनः लॉगिन करें।" :
-                farmerLang === 'mr' ? "तुमचे सत्र संपले आहे. कृपया पुन्हा लॉगिन करा." :
-                farmerLang === 'ml' ? "നിങ്ങളുടെ സെഷൻ കാലഹരണപ്പെട്ടു. ദയവായി വീണ്ടും ലോഗിൻ ചെയ്യുക." :
-                "Session expired. Please login again."); */
-          performLogout();
+          diseaseResult.innerHTML = `<p class="error-text">Authentication Error (${res.status}): ${data.message || "Session expired. Please login again."}</p>`;
           return;
         }
         diseaseResult.innerHTML = `<p class="error-text">Error: ${data.message || data.reply || "Unknown error"}</p>`;
@@ -293,7 +289,7 @@ if (detectDiseaseBtn) {
 // Global localization logic for Disease Detector page
 const diseaseTranslations = {
   en: {
-    dashLogoSubtitle: "Disease Detector (Demo)",
+    dashLogoSubtitle: "Disease Detection",
     navHome: "Home",
     navContactUs: "Contact Us",
     navProfile: "Profile",

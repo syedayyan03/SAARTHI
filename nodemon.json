@@ -1,0 +1,7 @@
+{
+  "ignore": [
+    "data",
+    "temp_uploads",
+    "public"
+  ]
+}
