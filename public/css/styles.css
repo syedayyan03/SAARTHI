@@ -4510,3 +4510,30 @@ a, p, div, span {
   gap: 1rem;
   border-radius: var(--radius-md);
 }
+
+/* Premium styling for Google Mock Account Buttons */
+.google-account-option-btn {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  padding: 0.75rem 1rem !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  background: white !important;
+  cursor: pointer !important;
+  width: 100% !important;
+  text-align: left !important;
+  transition: all 0.2s ease !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+.google-account-option-btn:hover {
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  transform: translateY(-1px);
+}
+
+.google-account-option-btn:active {
+  background: #e2e8f0 !important;
+  transform: translateY(0);
+}

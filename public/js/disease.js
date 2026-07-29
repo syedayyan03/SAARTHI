@@ -125,8 +125,9 @@ if (imagePreviewContainer) {
 if (diseaseFile) {
   diseaseFile.addEventListener("change", () => {
     if (diseaseFile.files && diseaseFile.files.length > 0) {
+      const selectedFile = diseaseFile.files[0];
       resetUpload();
-      handleFileSelected(diseaseFile.files[0]);
+      handleFileSelected(selectedFile);
     }
   });
 }
