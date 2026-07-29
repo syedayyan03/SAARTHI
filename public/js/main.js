@@ -1014,14 +1014,14 @@ async function setupGoogleSignIn() {
       // Credentials are missing: Show fallback button (opens simulation dialog)
       if (googleBtnContainer) googleBtnContainer.classList.add("hidden");
       if (googleLoginBtn) googleLoginBtn.classList.remove("hidden");
-      if (googleMockFallbackLinkContainer) googleMockFallbackLinkContainer.classList.add("hidden");
+      if (googleMockFallbackLinkContainer) googleMockFallbackLinkContainer.classList.remove("hidden");
     }
   } catch (e) {
     console.warn("Unable to fetch configuration for Google Sign-in:", e);
     // Graceful fallback to mock selector
     if (googleBtnContainer) googleBtnContainer.classList.add("hidden");
     if (googleLoginBtn) googleLoginBtn.classList.remove("hidden");
-    if (googleMockFallbackLinkContainer) googleMockFallbackLinkContainer.classList.add("hidden");
+    if (googleMockFallbackLinkContainer) googleMockFallbackLinkContainer.classList.remove("hidden");
   }
 }
 
@@ -1037,47 +1037,74 @@ if (googleLoginBtn && googleMockModal) {
     googleMockModal.classList.remove("hidden");
   });
 }
-if (useMockGoogleBtn && googleMockModal) {
-  useMockGoogleBtn.addEventListener("click", () => {
-    googleMockModal.classList.remove("hidden");
+// Toggle login forms and handle registration
+const showEmailSignupBtn = document.getElementById("showEmailSignupBtn");
+const backToLoginFromSignupBtn = document.getElementById("backToLoginFromSignupBtn");
+const loginFormInputs = document.getElementById("loginFormInputs");
+const emailSignupSection = document.getElementById("emailSignupSection");
+
+if (showEmailSignupBtn && loginFormInputs && emailSignupSection) {
+  showEmailSignupBtn.addEventListener("click", () => {
+    loginFormInputs.classList.add("hidden");
+    emailSignupSection.classList.remove("hidden");
+    loginError.textContent = "";
   });
 }
 
-// Quick Email Login/Signup Handling
-const emailQuickLoginSubmitBtn = document.getElementById("emailQuickLoginSubmitBtn");
-const emailQuickLoginInput = document.getElementById("emailQuickLoginInput");
+if (backToLoginFromSignupBtn && loginFormInputs && emailSignupSection) {
+  backToLoginFromSignupBtn.addEventListener("click", () => {
+    emailSignupSection.classList.add("hidden");
+    loginFormInputs.classList.remove("hidden");
+    loginError.textContent = "";
+  });
+}
 
-if (emailQuickLoginSubmitBtn && emailQuickLoginInput) {
-  emailQuickLoginSubmitBtn.addEventListener("click", async () => {
-    const email = emailQuickLoginInput.value.trim();
-    if (!email) {
+// Email Signup Form Submit Handling
+const signupEmailInput = document.getElementById("signupEmailInput");
+const signupPasswordInput = document.getElementById("signupPasswordInput");
+const signupConfirmPasswordInput = document.getElementById("signupConfirmPasswordInput");
+const emailSignupSubmitBtn = document.getElementById("emailSignupSubmitBtn");
+
+if (emailSignupSubmitBtn && signupEmailInput && signupPasswordInput && signupConfirmPasswordInput) {
+  emailSignupSubmitBtn.addEventListener("click", async () => {
+    const email = signupEmailInput.value.trim();
+    const password = signupPasswordInput.value;
+    const confirmPassword = signupConfirmPasswordInput.value;
+
+    if (!email || !password || !confirmPassword) {
       loginError.style.color = "red";
-      loginError.textContent = "Please enter an email address.";
+      loginError.textContent = "All fields are required.";
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      loginError.style.color = "red";
+      loginError.textContent = "Passwords do not match.";
       return;
     }
 
     loginError.textContent = "";
     loginError.style.color = "";
-    emailQuickLoginSubmitBtn.disabled = true;
-    emailQuickLoginSubmitBtn.textContent = "Processing...";
+    emailSignupSubmitBtn.disabled = true;
+    emailSignupSubmitBtn.textContent = "Registering...";
 
     try {
-      const res = await fetch("/api/email-login", {
+      const res = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ email, password, confirmPassword })
       });
       const data = await res.json();
       
       if (!data.ok) {
         loginError.style.color = "red";
-        loginError.textContent = data.message || "Email authentication failed.";
-        emailQuickLoginSubmitBtn.disabled = false;
-        emailQuickLoginSubmitBtn.textContent = "Sign in / Register with Email";
+        loginError.textContent = data.message || "Registration failed.";
+        emailSignupSubmitBtn.disabled = false;
+        emailSignupSubmitBtn.textContent = "Register Account";
         return;
       }
 
-      // Successful login/registration
+      // Successful registration & auto-login
       localStorage.setItem("sessionToken", data.token);
       localStorage.setItem("farmerPhone", data.phone);
       localStorage.setItem("farmerName", data.name);
@@ -1087,8 +1114,8 @@ if (emailQuickLoginSubmitBtn && emailQuickLoginInput) {
     } catch (err) {
       loginError.style.color = "red";
       loginError.textContent = "Connection error. Please try again.";
-      emailQuickLoginSubmitBtn.disabled = false;
-      emailQuickLoginSubmitBtn.textContent = "Sign in / Register with Email";
+      emailSignupSubmitBtn.disabled = false;
+      emailSignupSubmitBtn.textContent = "Register Account";
     }
   });
 }

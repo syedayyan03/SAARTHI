@@ -222,11 +222,6 @@
         <div class="google-login-separator"><span>OR</span></div>
         
         <div id="googleBtnContainer" class="hidden" style="margin-top: 0.5rem; display: flex; justify-content: center;"></div>
-        <div id="googleMockFallbackLinkContainer" class="hidden" style="margin-top: 0.5rem; text-align: center;">
-          <button id="useMockGoogleBtn" type="button" class="btn btn-ghost" style="font-size: 0.78rem; color: #475569; display: inline-flex; align-items: center; gap: 0.25rem; text-decoration: underline;">
-            Use Mock Google Login (Simulation)
-          </button>
-        </div>
         
         <button id="googleLoginBtn" type="button" class="btn btn-outline btn-block" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; border-color: #dadce0; background: white; color: #3c4043; margin-top: 0.5rem;">
           <svg width="18" height="18" viewBox="0 0 18 18">
@@ -238,14 +233,29 @@
           Sign in with Google
         </button>
 
-        <!-- Email Quick Login/Signup Section -->
-        <div class="google-login-separator" style="margin-top: 1rem;"><span>OR USE EMAIL</span></div>
-        <div style="margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.5rem;">
-          <input type="email" id="emailQuickLoginInput" placeholder="Enter your email address" class="field-input" style="width: 100%; text-align: center; border-radius: 8px; border: 1px solid #cbd5e1; padding: 0.65rem; font-size: 0.9rem;" />
-          <button id="emailQuickLoginSubmitBtn" type="button" class="btn btn-outline btn-block" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; border-color: var(--primary-color); color: var(--primary-color); background: transparent; font-weight: 600; margin-top: 0.25rem;">
-            Sign in / Register with Email
-          </button>
-        </div>
+        <!-- Email Signup Toggle Button -->
+        <div class="google-login-separator" style="margin-top: 1rem;"><span>OR</span></div>
+        <button id="showEmailSignupBtn" type="button" class="btn btn-outline btn-block" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; border-color: var(--primary-color); color: var(--primary-color); background: transparent; font-weight: 600; margin-top: 0.5rem;">
+          Email Signup
+        </button>
+      </div>
+
+      <!-- New Email Signup Form Section -->
+      <div id="emailSignupSection" class="hidden" style="margin-top: 0.5rem;">
+        <h3 style="margin-bottom: 0.5rem; text-align: center; color: var(--primary-color);">Email Registration</h3>
+        <p class="muted" style="font-size: 0.85rem; margin-bottom: 1rem; text-align: center;">Enter your details to register a new account.</p>
+        
+        <label class="field-label" for="signupEmailInput">Email Address</label>
+        <input id="signupEmailInput" type="email" class="field-input" placeholder="Enter your email address" style="margin-bottom: 0.75rem; width: 100%; border-radius: 8px; border: 1px solid #cbd5e1; padding: 0.65rem;" />
+        
+        <label class="field-label" for="signupPasswordInput">Set Password</label>
+        <input id="signupPasswordInput" type="password" class="field-input" placeholder="Set your password" style="margin-bottom: 0.75rem; width: 100%; border-radius: 8px; border: 1px solid #cbd5e1; padding: 0.65rem;" />
+        
+        <label class="field-label" for="signupConfirmPasswordInput">Confirm Password</label>
+        <input id="signupConfirmPasswordInput" type="password" class="field-input" placeholder="Confirm your password" style="margin-bottom: 1.25rem; width: 100%; border-radius: 8px; border: 1px solid #cbd5e1; padding: 0.65rem;" />
+        
+        <button id="emailSignupSubmitBtn" class="btn btn-primary btn-block" style="margin-bottom: 0.75rem;">Register Account</button>
+        <button id="backToLoginFromSignupBtn" type="button" class="btn btn-ghost btn-block" style="font-size: 0.85rem; color: #475569; width: 100%; text-align: center; background: none; border: none; cursor: pointer; text-decoration: underline;">Back to Login</button>
       </div>
       <div id="googleRegisterSection" class="hidden">
         <h3 style="margin-bottom: 0.5rem; text-align: center; color: var(--primary-color);">Link Google Account</h3>

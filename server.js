@@ -431,14 +431,71 @@ const userSelections = loadSelections();
 const userChats = loadChats();
 const otpStore = {};
 
-
-// API: register new user with hashed password (DISABLED - Google Only)
+// API: register new user with hashed password using email and password
 app.post('/api/register', async (req, res) => {
-  return res.status(403).json({ ok: false, message: 'Standard registration is disabled. Please sign up using Google Login.' });
+  const { email, password, confirmPassword } = req.body;
+  if (!email || !password || !confirmPassword) {
+    return res.status(400).json({ ok: false, message: 'All fields are required.' });
+  }
+
+  const trimmedEmail = String(email).trim().toLowerCase();
+  
+  // Simple validation for email format
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(trimmedEmail)) {
+    return res.status(400).json({ ok: false, message: 'Please enter a valid email address.' });
+  }
+
+  if (password.length < 6) {
+    return res.status(400).json({ ok: false, message: 'Password must be at least 6 characters long.' });
+  }
+
+  if (password !== confirmPassword) {
+    return res.status(400).json({ ok: false, message: 'Passwords do not match.' });
+  }
+
+  const users = loadUsers();
+  if (users.some(u => u.email && u.email.toLowerCase() === trimmedEmail)) {
+    return res.status(400).json({ ok: false, message: 'An account with this email already exists.' });
+  }
+
+  // Generate a unique dummy phone number starting with +91-00000
+  let dummyPhone;
+  let attempts = 0;
+  do {
+    const randDigits = Math.floor(10000 + Math.random() * 90000).toString();
+    dummyPhone = `+91-00000${randDigits}`;
+    attempts++;
+  } while (users.some(u => u.phone === dummyPhone) && attempts < 100);
+
+  const emailPrefix = trimmedEmail.split('@')[0];
+  const capitalizedName = emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1);
+  const passwordHash = await bcrypt.hash(password, 10);
+
+  const newUser = {
+    phone: dummyPhone,
+    email: trimmedEmail,
+    name: capitalizedName,
+    username: emailPrefix,
+    language: 'en',
+    passwordHash: passwordHash,
+    created_at: new Date().toISOString()
+  };
+
+  users.push(newUser);
+  saveUsers(users);
+  console.log(`[Email Registration] Registered user: ${trimmedEmail} with dummy phone: ${dummyPhone}`);
+
+  res.json({
+    ok: true,
+    phone: newUser.phone,
+    email: newUser.email,
+    name: newUser.name,
+    language: newUser.language || 'en',
+    token: generateSessionToken(newUser.phone)
+  });
 });
 
-
-// API: secure login using stored hash
 app.post('/api/login', authLimiter, async (req, res) => {
   const { phoneOrEmail, password, language } = req.body;
   if (!phoneOrEmail || !password) {
