@@ -1037,10 +1037,10 @@ if (googleLoginBtn && googleMockModal) {
     googleMockModal.classList.remove("hidden");
   });
 }
+
 // Toggle login forms and handle registration
 const showEmailSignupBtn = document.getElementById("showEmailSignupBtn");
 const backToLoginFromSignupBtn = document.getElementById("backToLoginFromSignupBtn");
-const loginFormInputs = document.getElementById("loginFormInputs");
 const emailSignupSection = document.getElementById("emailSignupSection");
 
 if (showEmailSignupBtn && loginFormInputs && emailSignupSection) {
