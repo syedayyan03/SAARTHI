@@ -237,9 +237,16 @@
           </svg>
           Sign in with Google
         </button>
-      </div>
 
-      <!-- Google linking setup form -->
+        <!-- Email Quick Login/Signup Section -->
+        <div class="google-login-separator" style="margin-top: 1rem;"><span>OR USE EMAIL</span></div>
+        <div style="margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.5rem;">
+          <input type="email" id="emailQuickLoginInput" placeholder="Enter your email address" class="field-input" style="width: 100%; text-align: center; border-radius: 8px; border: 1px solid #cbd5e1; padding: 0.65rem; font-size: 0.9rem;" />
+          <button id="emailQuickLoginSubmitBtn" type="button" class="btn btn-outline btn-block" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; border-color: var(--primary-color); color: var(--primary-color); background: transparent; font-weight: 600; margin-top: 0.25rem;">
+            Sign in / Register with Email
+          </button>
+        </div>
+      </div>
       <div id="googleRegisterSection" class="hidden">
         <h3 style="margin-bottom: 0.5rem; text-align: center; color: var(--primary-color);">Link Google Account</h3>
         <p class="muted" style="font-size: 0.85rem; margin-bottom: 1rem; text-align: center;">Set a username and password to link to your Google Account.</p>

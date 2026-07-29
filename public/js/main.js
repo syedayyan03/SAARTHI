@@ -1037,10 +1037,59 @@ if (googleLoginBtn && googleMockModal) {
     googleMockModal.classList.remove("hidden");
   });
 }
-
 if (useMockGoogleBtn && googleMockModal) {
   useMockGoogleBtn.addEventListener("click", () => {
     googleMockModal.classList.remove("hidden");
+  });
+}
+
+// Quick Email Login/Signup Handling
+const emailQuickLoginSubmitBtn = document.getElementById("emailQuickLoginSubmitBtn");
+const emailQuickLoginInput = document.getElementById("emailQuickLoginInput");
+
+if (emailQuickLoginSubmitBtn && emailQuickLoginInput) {
+  emailQuickLoginSubmitBtn.addEventListener("click", async () => {
+    const email = emailQuickLoginInput.value.trim();
+    if (!email) {
+      loginError.style.color = "red";
+      loginError.textContent = "Please enter an email address.";
+      return;
+    }
+
+    loginError.textContent = "";
+    loginError.style.color = "";
+    emailQuickLoginSubmitBtn.disabled = true;
+    emailQuickLoginSubmitBtn.textContent = "Processing...";
+
+    try {
+      const res = await fetch("/api/email-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
+      });
+      const data = await res.json();
+      
+      if (!data.ok) {
+        loginError.style.color = "red";
+        loginError.textContent = data.message || "Email authentication failed.";
+        emailQuickLoginSubmitBtn.disabled = false;
+        emailQuickLoginSubmitBtn.textContent = "Sign in / Register with Email";
+        return;
+      }
+
+      // Successful login/registration
+      localStorage.setItem("sessionToken", data.token);
+      localStorage.setItem("farmerPhone", data.phone);
+      localStorage.setItem("farmerName", data.name);
+      localStorage.setItem("uiLang", data.language || "en");
+      
+      window.location.href = "dashboard.html";
+    } catch (err) {
+      loginError.style.color = "red";
+      loginError.textContent = "Connection error. Please try again.";
+      emailQuickLoginSubmitBtn.disabled = false;
+      emailQuickLoginSubmitBtn.textContent = "Sign in / Register with Email";
+    }
   });
 }
 

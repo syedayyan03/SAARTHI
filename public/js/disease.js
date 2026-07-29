@@ -133,8 +133,16 @@ if (diseaseFile) {
 }
 
 function handleFileSelected(file) {
+  const textObj = diseaseTranslations[farmerLang] || diseaseTranslations.en;
+
   if (!file.type.startsWith("image/")) {
     diseaseResult.innerHTML = `<p class="error-text">Please upload an image file.</p>`;
+    return;
+  }
+
+  if (file.size > 10 * 1024 * 1024) {
+    diseaseResult.innerHTML = `<p class="error-text">${textObj.sizeAlert || "Image file size exceeds the 10MB limit. Please choose a smaller image."}</p>`;
+    resetUpload();
     return;
   }
 
@@ -284,10 +292,7 @@ if (detectDiseaseBtn) {
       clearInterval(diseaseIntervalId);
       diseaseResult.innerHTML = `<p class="error-text">Error: Unable to reach disease detection service.</p>`;
     }
-  });
-}
-
-// Global localization logic for Disease Detector page
+  });// Global localization logic for Disease Detector page
 const diseaseTranslations = {
   en: {
     dashLogoSubtitle: "Disease Detection",
@@ -298,9 +303,10 @@ const diseaseTranslations = {
     diseasePageIntro: "Upload a crop or leaf photo below. Our built-in Gemini AI model will analyze your photo in real-time to detect possible diseases and offer reliable advice.",
     detectDiseaseBtn: "Detect Disease",
     analysisResult: "Analysis Result:",
-    uploadSubtext: "Supports PNG, JPG, JPEG files",
+    uploadSubtext: "Supports PNG, JPG, JPEG files (Max 10MB)",
     adviceTitle: "Recommended Action Plan:",
-    selectAlert: "Please select an image file first."
+    selectAlert: "Please select an image file first.",
+    sizeAlert: "Image file size exceeds the 10MB limit. Please choose a smaller image."
   },
   te: {
     dashLogoSubtitle: "వ్యాధి గుర్తింపు",
@@ -311,9 +317,10 @@ const diseaseTranslations = {
     diseasePageIntro: "క్రింద ఒక పంట లేదా ఆకు ఫోటోను అప్‌లోడ్ చేయండి. మా Gemini AI మోడల్ మీ ఫోటోను విశ్లేషించి వ్యాధులను గుర్తిస్తుంది.",
     detectDiseaseBtn: "వ్యాధిని గుర్తించండి",
     analysisResult: "విశ్లేషణ ఫలితం:",
-    uploadSubtext: "PNG, JPG, JPEG ఫైల్‌లు మాత్రమే సపోర్ట్ చేయబడతాయి",
+    uploadSubtext: "PNG, JPG, JPEG ఫైల్‌లు మాత్రమే సపోర్ट చేయబడతాయి (గరిష్టంగా 10MB)",
     adviceTitle: "సిఫార్సు చేయబడిన చర్యలు:",
-    selectAlert: "దయచేసి ముందుగా ఒక చిత్రాన్ని ఎంచుకోండి."
+    selectAlert: "దయచేసి ముందుగా ఒక చిత్రాన్ని ఎంచుకోండి.",
+    sizeAlert: "చిత్రం సైజు 10MB పరిమితిని మించిపోయింది. దయచేసి చిన్న చిత్రాన్ని ఎంచుకోండి."
   },
   hi: {
     dashLogoSubtitle: "रोग पहचान",
@@ -324,9 +331,10 @@ const diseaseTranslations = {
     diseasePageIntro: "नीचे एक फसल या पत्ते का फोटो अपलोड करें। हमारा Gemini AI मॉडल वास्तविक समय में आपके फोटो का विश्लेषण करेगा।",
     detectDiseaseBtn: "रोग का पता लगाएं",
     analysisResult: "विश्लेषण परिणाम:",
-    uploadSubtext: "PNG, JPG, JPEG फाइलों का समर्थन करता है",
+    uploadSubtext: "PNG, JPG, JPEG फाइलों का समर्थन करता है (अधिकतम 10MB)",
     adviceTitle: "अनुशंसित कार्रवाई कदम:",
-    selectAlert: "कृपया पहले एक छवि फ़ाइल चुनें।"
+    selectAlert: "कृपया पहले एक छवि फ़ाइल चुनें।",
+    sizeAlert: "छवि फ़ाइल का आकार 10MB की सीमा से अधिक है। कृपया एक छोटी छवि चुनें।"
   },
   mr: {
     dashLogoSubtitle: "रोग ओळख",
@@ -337,9 +345,10 @@ const diseaseTranslations = {
     diseasePageIntro: "खाली पीक किंवा पानाचा फोटो अपलोड करा. आमचे Gemini AI मॉडेल रिअल-टाइममध्ये फोटोचे विश्लेषण करेल.",
     detectDiseaseBtn: "रोग शोधा",
     analysisResult: "विश्लेषण परिणाम:",
-    uploadSubtext: "PNG, JPG, JPEG फाईल्सना सपोर्ट करते",
+    uploadSubtext: "PNG, JPG, JPEG फाईल्सना सपोर्ट करते (कमाल 10MB)",
     adviceTitle: "शिफारस केलेले उपाय:",
-    selectAlert: "कृपया प्रथम एक प्रतिमा फाइल निवडा."
+    selectAlert: "कृपया प्रथम एक प्रतिमा फाइल निवडा.",
+    sizeAlert: "इमेज फाईलचा आकार 10MB मर्यादेपेक्षा जास्त आहे. कृपया लहान प्रतिमा निवडा."
   },
   ml: {
     dashLogoSubtitle: "രോഗ നിർണ്ണയം",
@@ -350,9 +359,20 @@ const diseaseTranslations = {
     diseasePageIntro: "താഴെ വിളയുടെയോ ഇലയുടെയോ ഫോട്ടോ അപ്‌ലോഡ് ചെയ്യുക. പുതിയ Gemini AI മോഡൽ രോഗങ്ങൾ കണ്ടെത്തും.",
     detectDiseaseBtn: "രോഗ നിർണ്ണയം നടത്തുക",
     analysisResult: "വിശകലന ഫലം:",
-    uploadSubtext: "PNG, JPG, JPEG ഫയലുകൾ സപ്പോർട്ട് ചെയ്യും",
+    uploadSubtext: "PNG, JPG, JPEG ഫയലുകൾ സപ്പോർട്ട് ചെയ്യും (പരമാവധി 10MB)",
     adviceTitle: "ശുപാർശ ചെയ്യുന്ന നടപടികൾ:",
-    selectAlert: "ദയവായി ആദ്യം ഒരു ചിത്ര ഫയൽ തിരഞ്ഞെടുക്കുക."
+    selectAlert: "ദയവായി ആദ്യം ഒരു ചിത്ര ഫയൽ തിരഞ്ഞെടുക്കുക.",
+    sizeAlert: "ചിത്രത്തിന്റെ ഫയൽ സൈസ് 10MB പരിധി കവിഞ്ഞു. ദയവായി ചെറിയ ചിത്രം തിരഞ്ഞെടുക്കുക."
+  }
+};ൽ",
+    diseasePageTitle: "രോഗ നിർണ്ണയം",
+    diseasePageIntro: "താഴെ വിളയുടെയോ ഇലയുടെയോ ഫോട്ടോ അപ്‌ലോഡ് ചെയ്യുക. പുതിയ Gemini AI മോഡൽ രോഗങ്ങൾ കണ്ടെത്തും.",
+    detectDiseaseBtn: "രോഗ നിർണ്ണയം നടത്തുക",
+    analysisResult: "വിശകലന ഫലം:",
+    uploadSubtext: "PNG, JPG, JPEG ഫയലുകൾ സപ്പോർട്ട് ചെയ്യും (പരമാവധി 10MB)",
+    adviceTitle: "ശുപാർശ ചെയ്യുന്ന നടപടികൾ:",
+    selectAlert: "ദയവായി ആദ്യം ഒരു ചിത്ര ഫയൽ തിരഞ്ഞെടുക്കുക.",
+    sizeAlert: "ചിത്രത്തിന്റെ ഫയൽ സൈസ് 10MB പരിധി കവിഞ്ഞു. ദയവായി ചെറിയ ചിത്രം തിരഞ്ഞെടുക്കുക."
   }
 };
 

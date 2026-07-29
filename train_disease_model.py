@@ -266,7 +266,7 @@ def build_loaders(data_dir: str, cfg: dict):
 # MODEL
 # ──────────────────────────────────────────────────────────────────────────
 
-def build_model(n_classes: int, backbone: str, torch_cache: str):
+def build_model(n_classes: int, backbone: str, torch_cache: str, pretrained: bool = True):
     """EfficientNet-B0 (or ResNet50) with custom classification head."""
     import torch.nn as nn
     from torchvision import models
@@ -275,7 +275,7 @@ def build_model(n_classes: int, backbone: str, torch_cache: str):
     os.environ["TORCH_HOME"] = torch_cache   # redirect pretrained-weight cache
 
     if backbone == "efficientnet_b0":
-        weights = models.EfficientNet_B0_Weights.IMAGENET1K_V1
+        weights = models.EfficientNet_B0_Weights.IMAGENET1K_V1 if pretrained else None
         model   = models.efficientnet_b0(weights=weights)
         in_feat = model.classifier[1].in_features
         model.classifier = nn.Sequential(
@@ -287,7 +287,7 @@ def build_model(n_classes: int, backbone: str, torch_cache: str):
             nn.Linear(512, n_classes),
         )
     elif backbone == "resnet50":
-        weights = models.ResNet50_Weights.IMAGENET1K_V1
+        weights = models.ResNet50_Weights.IMAGENET1K_V1 if pretrained else None
         model   = models.resnet50(weights=weights)
         in_feat = model.fc.in_features
         model.fc = nn.Sequential(
@@ -503,7 +503,7 @@ def predict_disease(image_input, model_dir: str = "models", top_k: int = 3):
         print(f"[Loading model from {model_path}]", file=sys.stderr)
         ckpt = torch.load(model_path, map_location="cpu")
         cache = os.path.join(model_dir, "torch_cache")
-        m = build_model(ckpt["n_classes"], ckpt["backbone"], cache)
+        m = build_model(ckpt["n_classes"], ckpt["backbone"], cache, pretrained=False)
         m.load_state_dict(ckpt["model_state"])
         m.eval()
         predict_disease._cache = dict(model=m, class_names=ckpt["class_names"],

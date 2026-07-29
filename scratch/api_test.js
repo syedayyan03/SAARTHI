@@ -106,8 +106,8 @@ async function runTests() {
       };
     }
 
-    // 4a. Size constraint check (Oversized payload simulation: 6MB)
-    const oversizedBuffer = Buffer.alloc(6 * 1024 * 1024);
+    // 4a. Size constraint check (Oversized payload simulation: 11MB)
+    const oversizedBuffer = Buffer.alloc(11 * 1024 * 1024);
     const payload4a = buildMultipart('large.png', 'image/png', oversizedBuffer);
     try {
       const res4a = await fetch(`${BASE_URL}/api/detect-disease`, {
@@ -116,9 +116,9 @@ async function runTests() {
         body: payload4a.body
       });
       const data4a = await res4a.json();
-      assert(res4a.status === 400 && data4a.message.toLowerCase().includes('large'), 'Oversized image upload (>5MB) rejected with 400 Bad Request');
+      assert(res4a.status === 400 && data4a.message.toLowerCase().includes('large'), 'Oversized image upload (>10MB) rejected with 400 Bad Request');
     } catch (e) {
-      assert(true, 'Oversized image upload (>5MB) successfully rejected/aborted by server');
+      assert(true, 'Oversized image upload (>10MB) successfully rejected/aborted by server');
     }
 
     // 4b. Extension / MIME type constraint check (Sending a text file mimetype)

@@ -123,7 +123,7 @@ function requireAdmin(req, res, next) {
 // Initialize Multer for in-memory file uploads
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 5 * 1024 * 1024, files: 1 }, // Stricter 5MB file limit
+  limits: { fileSize: 10 * 1024 * 1024, files: 1 }, // Stricter 10MB file limit
   fileFilter: (_req, file, cb) => {
     if (!['image/jpeg', 'image/jpg', 'image/png', 'image/webp'].includes(file.mimetype)) {
       return cb(new Error('Only JPG, JPEG, PNG, and WEBP image files are allowed.'));
@@ -531,6 +531,62 @@ app.post('/api/google-login', authLimiter, async (req, res) => {
   }
 
   res.json({ ok: true, phone: user.phone, email: user.email, username: user.username || '', language: user.language, name: user.name, picture: user.picture, token: generateSessionToken(user.phone) });
+});
+
+// API: Email registration/login fallback (zero-friction login/signup using just email)
+app.post('/api/email-login', authLimiter, async (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({ ok: false, message: 'Email address is required.' });
+  }
+
+  const trimmedEmail = String(email).trim().toLowerCase();
+  
+  // Simple validation for email format
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(trimmedEmail)) {
+    return res.status(400).json({ ok: false, message: 'Please enter a valid email address.' });
+  }
+
+  const users = loadUsers();
+  let user = users.find(u => u.email && u.email.toLowerCase() === trimmedEmail);
+
+  if (!user) {
+    // Generate a unique dummy phone number starting with +91-00000
+    let dummyPhone;
+    let attempts = 0;
+    do {
+      const randDigits = Math.floor(10000 + Math.random() * 90000).toString();
+      dummyPhone = `+91-00000${randDigits}`;
+      attempts++;
+    } while (users.some(u => u.phone === dummyPhone) && attempts < 100);
+
+    const emailPrefix = trimmedEmail.split('@')[0];
+    const capitalizedName = emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1);
+
+    user = {
+      phone: dummyPhone,
+      email: trimmedEmail,
+      name: capitalizedName,
+      username: emailPrefix,
+      language: 'en',
+      password: '', // Password-less account
+      created_at: new Date().toISOString()
+    };
+
+    users.push(user);
+    saveUsers(users);
+    console.log(`[Email Signup] Registered new user: ${trimmedEmail} with dummy phone: ${dummyPhone}`);
+  }
+
+  res.json({
+    ok: true,
+    phone: user.phone,
+    email: user.email,
+    name: user.name,
+    language: user.language || 'en',
+    token: generateSessionToken(user.phone)
+  });
 });
 
 // API: Send OTP for forgot password to User Email
@@ -2722,7 +2778,7 @@ app.get('/', (req, res) => {
 // Global error handler middleware for Multer and validation exceptions
 app.use((err, req, res, next) => {
   if (err.code === 'LIMIT_FILE_SIZE') {
-    return res.status(400).json({ ok: false, message: 'File is too large. Maximum size allowed is 5MB.' });
+    return res.status(400).json({ ok: false, message: 'File is too large. Maximum size allowed is 10MB.' });
   } else if (err.message && (err.message.includes('Only JPG') || err.message.includes('image files') || err.message.includes('allowed'))) {
     return res.status(400).json({ ok: false, message: err.message });
   }
