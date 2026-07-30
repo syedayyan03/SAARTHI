@@ -344,5 +344,36 @@
     "language": "en",
     "picture": "",
     "createdAt": "2026-07-28T14:59:48.282Z"
+  },
+  {
+    "language": "en",
+    "created_at": "2026-07-30T14:49:25.239Z",
+    "email": "syedayyan382@gmail.com",
+    "phone": "+91-0000075344",
+    "username": "syedayyan382",
+    "name": "Syedayyan382",
+    "passwordHash": "$2a$10$N40304.yRwpGD.l7JSrSSuQ1JzT0405kdJoW6CwPlfkn80yL4uPbS"
+  },
+  {
+    "language": "hi",
+    "created_at": "2026-07-30T14:58:14.230Z",
+    "email": "syedayyan328@gmail.com",
+    "phone": "+91-0000045065",
+    "username": "syedayyan328",
+    "name": "Syed Ayyan",
+    "passwordHash": "$2a$10$fZoVURPy3dsSQjkTAt7yXunZEw5fljf.36jozVuGp77OYMy4aSrJK",
+    "soil": "",
+    "water": "",
+    "acres": "",
+    "profilePic": "",
+    "picture": ""
+  },
+  {
+    "language": "te",
+    "created_at": "2026-07-30T15:13:04.574Z",
+    "phone": "9848834355",
+    "name": "User 4355",
+    "username": "user_4355",
+    "passwordHash": "$2a$10$5Yv0NJL2.xIk42G1y1tGMukS9O0W4iCxyIJTQ1lPajSMeiL3r1F4u"
   }
 ]

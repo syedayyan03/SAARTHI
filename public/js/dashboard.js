@@ -314,7 +314,7 @@ if (saveProfileBtn) {
         farmerName = name;
 
         if (typeof welcomeTitle !== 'undefined' && welcomeTitle) {
-          welcomeTitle.textContent = `Welcome, ${name}`;
+          applyDashboardLanguage();
         }
         setupHeaderAvatar();
 
@@ -413,19 +413,35 @@ if (sidebarChangePasswordBtn) {
 if (closeChangePasswordBtn) closeChangePasswordBtn.onclick = () => toggleModal(changePasswordModal, false);
 if (closeChangePasswordBackdrop) closeChangePasswordBackdrop.onclick = () => toggleModal(changePasswordModal, false);
 
+function syncDashboardLanguageSelect(select, lang) {
+  if (!select) return;
+  select.value = lang;
+
+  const wrapper = document.getElementById(`${select.id}-custom-wrapper`);
+  if (!wrapper) return;
+  const selectedOption = select.options[select.selectedIndex];
+  const triggerText = wrapper.querySelector(".custom-select-trigger span");
+  if (triggerText && selectedOption) triggerText.textContent = selectedOption.textContent;
+  wrapper.querySelectorAll(".custom-select-option").forEach((option) => {
+    option.classList.toggle("selected", option.getAttribute("data-value") === lang);
+  });
+}
+
+function setDashboardLanguage(lang) {
+  farmerLang = lang || "en";
+  localStorage.setItem("uiLang", farmerLang);
+  localStorage.setItem("farmerLang", farmerLang);
+  document.documentElement.lang = farmerLang;
+  syncDashboardLanguageSelect(dashLangSelect, farmerLang);
+  syncDashboardLanguageSelect(drawerLangSelect, farmerLang);
+  applyDashboardLanguage(farmerLang);
+  updateSelectedCropCard();
+}
+
 // Drawer Lang Switcher
 if (drawerLangSelect) {
   drawerLangSelect.addEventListener("change", () => {
-    const newLang = drawerLangSelect.value || "en";
-    farmerLang = newLang;
-    localStorage.setItem("uiLang", newLang);
-    localStorage.setItem("farmerLang", newLang);
-    if (dashLangSelect) {
-      dashLangSelect.value = newLang;
-      dashLangSelect.dispatchEvent(new Event('change'));
-    }
-    applyDashboardLanguage(newLang);
-    updateSelectedCropCard();
+    setDashboardLanguage(drawerLangSelect.value);
   });
 }
 
@@ -703,7 +719,7 @@ const dashTranslations = {
     cardChatTitle: "SAARTHI AI ചാറ്റ്ബോക്സ്",
     cardChatText:
       "ലളിതമായ ഭാഷയിൽ ഞങ്ങളുടെ ബുദ്ധിമാനായ അസിസ്റ്റൻ്റിനോട് കാർഷിക ചോദ്യങ്ങൾ ചോദിക്കുക.",
-    cardDiseaseTitle: "രോഗ നിർണ്ണയം (ഡെമോ)",
+    cardDiseaseTitle: "രോഗ നിർണ്ണയം",
     cardDiseaseText:
       "വിളയുടെയോ ഇലകളുടെയോ ഫോട്ടോ അപ്‌ലോഡ് ചെയ്ത് സാധ്യതയുള്ള രോഗം കാണുക (ഡെമോ ലാജിക്ക്).",
     selectedCropTitle: "നിങ്ങൾ തെരഞ്ഞെടുത്ത വിളയും നിരീക്ഷണവും",
@@ -738,7 +754,7 @@ const dashTranslations = {
   }
 };
 
-function applyDashboardLanguage(lang) {
+function applyDashboardLanguage(lang = farmerLang) {
   const t = dashTranslations[lang] || dashTranslations.en;
   if (dashLogoTitle) dashLogoTitle.textContent = t.dashLogoTitle;
   if (dashLogoSubtitle) dashLogoSubtitle.textContent = t.dashLogoSubtitle;
@@ -773,7 +789,7 @@ function applyDashboardLanguage(lang) {
     const name = farmerName || farmerPhone;
     const username = localStorage.getItem("farmerUsername") || "";
     welcomeTitle.textContent = name
-      ? `${t.welcomeText || 'Welcome'}, ${name}${username ? ` (@${username})` : ""}`
+      ? `${t.welcomeText || 'Welcome'}, ${name}`
       : (t.welcomeDefault || "Welcome to SAARTHI");
   }
 
@@ -835,19 +851,13 @@ function applyDashboardLanguage(lang) {
 }
 
 applyDashboardLanguage(farmerLang);
+document.documentElement.lang = farmerLang;
+document.documentElement.classList.remove("language-loading");
 
 if (dashLangSelect) {
-  dashLangSelect.value = farmerLang;
+  syncDashboardLanguageSelect(dashLangSelect, farmerLang);
   dashLangSelect.addEventListener("change", () => {
-    const newLang = dashLangSelect.value || "en";
-    farmerLang = newLang;
-    localStorage.setItem("uiLang", newLang);
-    localStorage.setItem("farmerLang", newLang);
-    if (drawerLangSelect) {
-      drawerLangSelect.value = newLang;
-      drawerLangSelect.dispatchEvent(new Event('change'));
-    }
-    applyDashboardLanguage(newLang);
+    setDashboardLanguage(dashLangSelect.value);
   });
 }
 
@@ -1856,11 +1866,12 @@ async function fetchUserProfile() {
         if (data.water) localStorage.setItem("farmerWater", data.water);
         if (data.acres) localStorage.setItem("farmerAcres", data.acres);
         if (data.profilePic) localStorage.setItem("farmerProfilePic", data.profilePic);
+
         
         if (typeof populateProfileFields === 'function') populateProfileFields();
         setupHeaderAvatar();
-        if (welcomeTitle && data.name) {
-          welcomeTitle.textContent = `Welcome, ${data.name}`;
+        if (welcomeTitle) {
+          applyDashboardLanguage(farmerLang);
         }
       }
     }

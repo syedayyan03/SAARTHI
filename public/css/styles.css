@@ -806,7 +806,29 @@ a:hover {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 1.4rem;
+  margin-bottom: 1.6rem;
+  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+  padding: 1.25rem 1.5rem;
+  border-radius: 12px;
+  border-left: 5px solid var(--primary);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.dashboard-header h1 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-bottom: 0.25rem;
+  letter-spacing: -0.025em;
+  background: linear-gradient(to right, var(--primary-dark, #15803d), #10b981);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dashboard-header p.muted {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.4;
 }
 
 .dashboard-grid {
@@ -4536,4 +4558,34 @@ a, p, div, span {
 .google-account-option-btn:active {
   background: #e2e8f0 !important;
   transform: translateY(0);
+}
+
+/* Mobile Top Bar UI and Layout Fixes */
+@media (max-width: 768px) {
+  .top-bar {
+    padding: 0.5rem 0.5rem !important;
+    gap: 0.25rem !important;
+  }
+  .logo-area {
+    gap: 0.35rem !important;
+  }
+  .logo-img {
+    height: 32px !important;
+  }
+  #logoTitle {
+    font-size: 0.9rem !important;
+  }
+  #topLanguageSelect {
+    font-size: 0.75rem !important;
+    padding: 0.25rem 0.4rem !important;
+    margin-right: 2px !important;
+    max-width: 110px !important;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  #topLoginBtn {
+    font-size: 0.75rem !important;
+    padding: 0.25rem 0.6rem !important;
+  }
 }

@@ -123,7 +123,7 @@ function requireAdmin(req, res, next) {
 // Initialize Multer for in-memory file uploads
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 10 * 1024 * 1024, files: 1 }, // Stricter 10MB file limit
+  limits: { fileSize: 5 * 1024 * 1024, files: 1 }, // Stricter 5MB file limit
   fileFilter: (_req, file, cb) => {
     if (!['image/jpeg', 'image/jpg', 'image/png', 'image/webp'].includes(file.mimetype)) {
       return cb(new Error('Only JPG, JPEG, PNG, and WEBP image files are allowed.'));
@@ -431,71 +431,14 @@ const userSelections = loadSelections();
 const userChats = loadChats();
 const otpStore = {};
 
-// API: register new user with hashed password using email and password
+
+// API: register new user with hashed password (DISABLED - Google Only)
 app.post('/api/register', async (req, res) => {
-  const { email, password, confirmPassword } = req.body;
-  if (!email || !password || !confirmPassword) {
-    return res.status(400).json({ ok: false, message: 'All fields are required.' });
-  }
-
-  const trimmedEmail = String(email).trim().toLowerCase();
-  
-  // Simple validation for email format
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(trimmedEmail)) {
-    return res.status(400).json({ ok: false, message: 'Please enter a valid email address.' });
-  }
-
-  if (password.length < 6) {
-    return res.status(400).json({ ok: false, message: 'Password must be at least 6 characters long.' });
-  }
-
-  if (password !== confirmPassword) {
-    return res.status(400).json({ ok: false, message: 'Passwords do not match.' });
-  }
-
-  const users = loadUsers();
-  if (users.some(u => u.email && u.email.toLowerCase() === trimmedEmail)) {
-    return res.status(400).json({ ok: false, message: 'An account with this email already exists.' });
-  }
-
-  // Generate a unique dummy phone number starting with +91-00000
-  let dummyPhone;
-  let attempts = 0;
-  do {
-    const randDigits = Math.floor(10000 + Math.random() * 90000).toString();
-    dummyPhone = `+91-00000${randDigits}`;
-    attempts++;
-  } while (users.some(u => u.phone === dummyPhone) && attempts < 100);
-
-  const emailPrefix = trimmedEmail.split('@')[0];
-  const capitalizedName = emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1);
-  const passwordHash = await bcrypt.hash(password, 10);
-
-  const newUser = {
-    phone: dummyPhone,
-    email: trimmedEmail,
-    name: capitalizedName,
-    username: emailPrefix,
-    language: 'en',
-    passwordHash: passwordHash,
-    created_at: new Date().toISOString()
-  };
-
-  users.push(newUser);
-  saveUsers(users);
-  console.log(`[Email Registration] Registered user: ${trimmedEmail} with dummy phone: ${dummyPhone}`);
-
-  res.json({
-    ok: true,
-    phone: newUser.phone,
-    email: newUser.email,
-    name: newUser.name,
-    language: newUser.language || 'en',
-    token: generateSessionToken(newUser.phone)
-  });
+  return res.status(403).json({ ok: false, message: 'Standard registration is disabled. Please sign up using Google Login.' });
 });
 
+
+// API: secure login using stored hash
 app.post('/api/login', authLimiter, async (req, res) => {
   const { phoneOrEmail, password, language } = req.body;
   if (!phoneOrEmail || !password) {
@@ -588,62 +531,6 @@ app.post('/api/google-login', authLimiter, async (req, res) => {
   }
 
   res.json({ ok: true, phone: user.phone, email: user.email, username: user.username || '', language: user.language, name: user.name, picture: user.picture, token: generateSessionToken(user.phone) });
-});
-
-// API: Email registration/login fallback (zero-friction login/signup using just email)
-app.post('/api/email-login', authLimiter, async (req, res) => {
-  const { email } = req.body;
-  if (!email) {
-    return res.status(400).json({ ok: false, message: 'Email address is required.' });
-  }
-
-  const trimmedEmail = String(email).trim().toLowerCase();
-  
-  // Simple validation for email format
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(trimmedEmail)) {
-    return res.status(400).json({ ok: false, message: 'Please enter a valid email address.' });
-  }
-
-  const users = loadUsers();
-  let user = users.find(u => u.email && u.email.toLowerCase() === trimmedEmail);
-
-  if (!user) {
-    // Generate a unique dummy phone number starting with +91-00000
-    let dummyPhone;
-    let attempts = 0;
-    do {
-      const randDigits = Math.floor(10000 + Math.random() * 90000).toString();
-      dummyPhone = `+91-00000${randDigits}`;
-      attempts++;
-    } while (users.some(u => u.phone === dummyPhone) && attempts < 100);
-
-    const emailPrefix = trimmedEmail.split('@')[0];
-    const capitalizedName = emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1);
-
-    user = {
-      phone: dummyPhone,
-      email: trimmedEmail,
-      name: capitalizedName,
-      username: emailPrefix,
-      language: 'en',
-      password: '', // Password-less account
-      created_at: new Date().toISOString()
-    };
-
-    users.push(user);
-    saveUsers(users);
-    console.log(`[Email Signup] Registered new user: ${trimmedEmail} with dummy phone: ${dummyPhone}`);
-  }
-
-  res.json({
-    ok: true,
-    phone: user.phone,
-    email: user.email,
-    name: user.name,
-    language: user.language || 'en',
-    token: generateSessionToken(user.phone)
-  });
 });
 
 // API: Send OTP for forgot password to User Email
@@ -1648,7 +1535,13 @@ const MARKET_COORDINATES = {
   "cuttack": { lat: 20.4625, lon: 85.8830 },
   "patna": { lat: 25.5941, lon: 85.1376 },
   "dehradun": { lat: 30.3165, lon: 78.0322 },
-  "shimla": { lat: 31.1048, lon: 77.1734 }
+  "shimla": { lat: 31.1048, lon: 77.1734 },
+  "kamrup": { lat: 26.1420, lon: 91.7362 },
+  "shivpuri": { lat: 25.4287, lon: 77.6534 },
+  "jabalpur": { lat: 23.1815, lon: 79.9864 },
+  "pune": { lat: 18.5204, lon: 73.8567 },
+  "bengaluru": { lat: 12.9716, lon: 77.5946 },
+  "kolkata": { lat: 22.5726, lon: 88.3639 }
 };
 
 function getHaversineDistance(lat1, lon1, lat2, lon2) {
@@ -1663,13 +1556,27 @@ function getHaversineDistance(lat1, lon1, lat2, lon2) {
   return R * c;
 }
 
-function geocodeLocation(query) {
+async function geocodeLocation(query) {
   if (!query) return null;
   const qLower = query.toLowerCase().trim();
   const coordsMatch = qLower.match(/lat\s*([-\d.]+)\s*,\s*lon\s*([-\d.]+)/i);
   if (coordsMatch) {
     return { lat: parseFloat(coordsMatch[1]), lon: parseFloat(coordsMatch[2]) };
   }
+  
+  try {
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1&countrycodes=in`;
+    const response = await fetch(url, { headers: { 'User-Agent': 'AgriApp/1.0' } });
+    if (response.ok) {
+      const data = await response.json();
+      if (data && data.length > 0) {
+        return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
+      }
+    }
+  } catch (err) {
+    console.warn("Geocoding API failed, using fallback:", err.message);
+  }
+
   const cityCoords = {
     "medchal": { lat: 17.6297, lon: 78.4814 },
     "hyderabad": { lat: 17.3850, lon: 78.4867 },
@@ -1764,7 +1671,7 @@ app.get('/api/market-demand', async (req, res) => {
       const aiText = response.text || '';
       const resultJSON = parseJSONFromText(aiText);
       if (resultJSON && Array.isArray(resultJSON.crops) && resultJSON.crops.length > 0) {
-        const userCoords = geocodeLocation(location);
+        const userCoords = await geocodeLocation(location);
         if (userCoords) {
           resultJSON.crops.forEach(c => {
             const marketNameLower = (c.market || '').toLowerCase();
@@ -1807,8 +1714,8 @@ app.get('/api/market-demand', async (req, res) => {
         fs.createReadStream(csvPath)
           .pipe(csv())
           .on('data', (data) => results.push(data))
-          .on('end', () => {
-            const userCoords = geocodeLocation(location);
+          .on('end', async () => {
+            const userCoords = await geocodeLocation(location);
 
             let scored = results.map(row => {
               let score = 0;
@@ -1826,6 +1733,7 @@ app.get('/api/market-demand', async (req, res) => {
                 score += 10;
               }
 
+              row.distKm = Infinity;
               if (userCoords) {
                 const districtKey = districtName;
                 const marketCoords = MARKET_COORDINATES[districtKey];
@@ -1833,6 +1741,7 @@ app.get('/api/market-demand', async (req, res) => {
                   const distKm = getHaversineDistance(userCoords.lat, userCoords.lon, marketCoords.lat, marketCoords.lon);
                   const distanceScore = Math.max(0, Math.round(300 - distKm));
                   score += distanceScore;
+                  row.distKm = distKm;
                 }
               }
               row.locationScore = score;
@@ -1840,6 +1749,9 @@ app.get('/api/market-demand', async (req, res) => {
             });;
 
             let matched = scored.filter(row => row.locationScore > 0);
+            if (matched.length === 0) {
+              matched = scored;
+            }
             resolve(matched);
           })
           .on('error', () => resolve([]));
@@ -1856,6 +1768,9 @@ app.get('/api/market-demand', async (req, res) => {
         filtered.sort((a, b) => {
           if (b.locationScore !== a.locationScore) {
             return b.locationScore - a.locationScore;
+          }
+          if (a.distKm !== b.distKm && a.distKm !== Infinity && b.distKm !== Infinity) {
+            return a.distKm - b.distKm;
           }
           const score = (d) => d === 'High' ? 3 : d === 'Rising' ? 2 : d === 'Medium' ? 1 : 0;
           return score(b.Demand) - score(a.Demand);
@@ -2620,7 +2535,7 @@ app.post('/api/chat', authenticateToken, chatLimiter, upload.single('image'), as
       model: 'gemini-2.5-flash',
       contents: formattedHistory,
       systemInstruction: systemPrompt,
-      maxOutputTokens: 120
+      maxOutputTokens: 1500
     });
 
     res.json({ ok: true, reply: response.text });
@@ -2645,175 +2560,55 @@ app.post('/api/detect-disease', authenticateToken, diseaseLimiter, upload.single
     const langMap = { en: "English", te: "Telugu", hi: "Hindi", mr: "Marathi", ml: "Malayalam" };
     const requestedLang = langMap[lang] || "English";
 
-    // 1. Try local prediction if model file exists
-    const modelPath = path.join(__dirname, 'models', 'plant_disease_model.pth');
-    const altModelPath = path.join(__dirname, 'plant_disease_model.pth');
-    const modelExists = fs.existsSync(modelPath) || fs.existsSync(path.join(__dirname, 'models', 'best_disease_model.pth')) || fs.existsSync(altModelPath);
-
-    if (modelExists) { // Run local CNN model first
-      console.log("Local CNN Model file found. Running local inference...");
-      
-      // Ensure temp_uploads folder exists
-      const tempDir = path.join(__dirname, 'temp_uploads');
-      if (!fs.existsSync(tempDir)) {
-        fs.mkdirSync(tempDir);
-      }
-
-      const tempFilename = `leaf_${Date.now()}_${Math.floor(Math.random() * 1000)}.jpg`;
-      const tempFilePath = path.join(tempDir, tempFilename);
-
-      // Save buffer to temporary file
-      fs.writeFileSync(tempFilePath, req.file.buffer);
-
-      try {
-        const { exec } = require('child_process');
-        const util = require('util');
-        const execPromise = util.promisify(exec);
-
-        // Run python predict_disease.py <tempFilePath>
-        const predictScript = path.join(__dirname, 'predict_disease.py');
-        const localVenvPython = path.join(__dirname, '..', 'venv', 'Scripts', 'python.exe');
-        const pythonCmd = fs.existsSync(localVenvPython) ? `"${localVenvPython}"` : 'python';
-        const command = `${pythonCmd} "${predictScript}" "${tempFilePath}"`;
-        const { stdout } = await execPromise(command);
-
-        // Clean up temp file immediately
-        try {
-          fs.unlinkSync(tempFilePath);
-        } catch (e) {}
-
-        const result = JSON.parse(stdout.trim());
-        if (result && result.ok) {
-          const rawDisease = result.disease;
-          const confidence = result.confidence;
-
-          // Format disease display name (e.g. Tomato___Early_blight -> Tomato Early blight)
-          const displayDisease = rawDisease.replace(/___/g, ' ').replace(/_/g, ' ');
-
-          // Query Gemini via text to get local language advice & severity for this disease
-          let severity = "N/A";
-          let advice = ['Please consult local agricultural authorities.'];
-
-          if (process.env.GEMINI_API_KEY) {
-            const textPrompt = `Provide typical severity (Mild/Moderate/Severe) and 3 short organic advice items for plant disease "${displayDisease}" in ${requestedLang}. Return ONLY JSON: {"severity":"...","advice":["...","...","..."]}`;
-            let adviceJSON = null;
-            const maxAdviceAttempts = 3;
-
-            for (let attempt = 1; attempt <= maxAdviceAttempts; attempt++) {
-              try {
-                const response = await generateContent({
-                  model: 'gemini-2.5-flash',
-                  contents: textPrompt,
-                  responseMimeType: 'application/json'
-                });
-
-                const aiText = response.text || '';
-                adviceJSON = parseJSONFromText(aiText);
-                if (adviceJSON) {
-                  severity = adviceJSON.severity || 'N/A';
-                  advice = adviceJSON.advice || advice;
-                  break;
-                } else {
-                  console.warn(`Attempt ${attempt} - Failed to parse advice JSON:`, JSON.stringify(aiText));
-                }
-              } catch (geminiError) {
-                console.warn(`Attempt ${attempt} - Failed to get advice:`, geminiError.message);
-              }
-
-              if (attempt < maxAdviceAttempts) {
-                await new Promise(resolve => setTimeout(resolve, 1000));
-              }
-            }
-
-            if (!adviceJSON) {
-              console.warn("Falling back to database advice after multiple failures.");
-              const fallback = getFallbackDiseaseResponse(lang);
-              severity = fallback.severity;
-              advice = fallback.advice;
-            }
-          } else {
-            const fallback = getFallbackDiseaseResponse(lang);
-            severity = fallback.severity;
-            advice = fallback.advice;
-          }
-
-          return res.json({
-            ok: true,
-            disease: displayDisease,
-            confidence: confidence,
-            severity: severity,
-            advice: advice
-          });
-        } else {
-          console.warn("Local prediction python script returned an error:", result ? result.error : "Unknown");
-        }
-      } catch (err) {
-        console.error("Local CNN Prediction failed, falling back to Gemini Vision API:", err.message);
-        // Clean up temp file if it still exists
-        if (fs.existsSync(tempFilePath)) {
-          try {
-            fs.unlinkSync(tempFilePath);
-          } catch (e) {}
-        }
-      }
-    }
-
-    // 2. Fallback: Gemini Vision API image prediction
     if (!process.env.GEMINI_API_KEY) {
-      throw new Error("Server API Key is missing.");
+      throw new Error("Server API Key is missing. Cannot use Gemini Vision.");
     }
 
-    // Convert multer buffer to Gemini inline data
-    const imagePart = {
-      inlineData: {
-        data: req.file.buffer.toString("base64"),
-        mimeType: req.file.mimetype,
-      }
-    };
+    const systemPrompt = `You are a highly experienced plant pathologist and agronomist. 
+Analyze the provided image of a plant/leaf. Identify any diseases, pests, or nutrient deficiencies.
+Return ONLY a strictly valid JSON object with the following structure, with all text in ${requestedLang}. 
+Do NOT wrap the JSON in backticks or markdown blocks. Just output raw JSON.
+{
+  "disease": "Exact name of the detected disease (or 'Healthy' or 'Unrecognized')",
+  "severity": "Mild, Moderate, or Severe",
+  "advice": [
+    "Specific actionable step 1",
+    "Specific actionable step 2",
+    "Specific actionable step 3"
+  ]
+}
+If the image is not a plant or is too blurry to diagnose, return "Unrecognized" for disease.`;
 
-    const prompt = `Leaf pathologist. Analyze leaf image. Return ONLY JSON: {"disease":"name in ${requestedLang}","severity":"Mild/Moderate/Severe","advice":["short step 1","short step 2","short step 3"]}`;
-
-    // Make the inference query (with retry mechanism)
-    let resultJSON = null;
-    let aiText = '';
-    const maxAttempts = 3;
-
-    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-      try {
-        const response = await generateContent({
-          model: 'gemini-2.5-flash',
-          contents: [imagePart, { text: prompt }],
-          responseMimeType: 'application/json'
-        });
-
-        aiText = response.text || '';
-        resultJSON = parseJSONFromText(aiText);
-
-        if (resultJSON) {
-          break; // successfully parsed, break the retry loop
-        } else {
-          console.warn(`Attempt ${attempt} - Raw AI Output failed parsing:`, JSON.stringify(aiText));
-        }
-      } catch (err) {
-        console.warn(`Attempt ${attempt} - Vision API call failed:`, err.message);
-      }
-
-      if (attempt < maxAttempts) {
-        // Wait 1 second before retrying
-        await new Promise(resolve => setTimeout(resolve, 1000));
-      }
-    }
-
-    if (!resultJSON) {
-      throw new Error("Failed to parse valid JSON disease response from AI output after multiple attempts.");
-    }
-
-    res.json({
-      ok: true,
-      disease: resultJSON.disease || 'Unknown',
-      severity: resultJSON.severity || 'N/A',
-      advice: resultJSON.advice || ['Please consult local agricultural authorities.']
+    const response = await generateContent({
+      model: 'gemini-2.5-flash',
+      contents: [{
+        role: 'user',
+        parts: [{
+          inlineData: {
+            data: req.file.buffer.toString("base64"),
+            mimeType: req.file.mimetype
+          }
+        }]
+      }],
+      systemInstruction: systemPrompt,
+      maxOutputTokens: 1000
     });
+
+    try {
+      let jsonStr = response.text.replace(/```json/gi, '').replace(/```/g, '').trim();
+      const parsed = JSON.parse(jsonStr);
+      
+      return res.json({
+        ok: true,
+        disease: parsed.disease || 'Unknown',
+        confidence: 0.95,
+        severity: parsed.severity || 'Unknown',
+        advice: parsed.advice || []
+      });
+    } catch (parseError) {
+      console.error("Failed to parse Gemini JSON output:", response.text);
+      throw new Error("Invalid JSON from Gemini.");
+    }
 
   } catch (error) {
     console.error("Disease Detection Error (Invoking Fallback):", error.message);
@@ -2835,7 +2630,7 @@ app.get('/', (req, res) => {
 // Global error handler middleware for Multer and validation exceptions
 app.use((err, req, res, next) => {
   if (err.code === 'LIMIT_FILE_SIZE') {
-    return res.status(400).json({ ok: false, message: 'File is too large. Maximum size allowed is 10MB.' });
+    return res.status(400).json({ ok: false, message: 'File is too large. Maximum size allowed is 5MB.' });
   } else if (err.message && (err.message.includes('Only JPG') || err.message.includes('image files') || err.message.includes('allowed'))) {
     return res.status(400).json({ ok: false, message: err.message });
   }
@@ -2849,13 +2644,17 @@ function startServer(port) {
   const fetchScript = path.join(__dirname, 'fetch_market_data.py');
   const localVenvPython = path.join(__dirname, '..', 'venv', 'Scripts', 'python.exe');
   const pythonCmd = fs.existsSync(localVenvPython) ? `"${localVenvPython}"` : 'python';
-  exec(`${pythonCmd} "${fetchScript}"`, (err, stdout, stderr) => {
-    if (err) {
-      console.warn("Could not auto-run fetch_market_data.py on startup:", err.message);
-    } else {
-      console.log("Daily mandi market data updated on startup:", stdout.trim());
-    }
-  });
+  const updateMarketData = () => {
+    exec(`${pythonCmd} "${fetchScript}"`, (err, stdout, stderr) => {
+      if (err) {
+        console.warn("Could not auto-run fetch_market_data.py:", err.message);
+      } else {
+        console.log("Daily mandi market data updated:", stdout.trim());
+      }
+    });
+  };
+  updateMarketData();
+  setInterval(updateMarketData, 24 * 60 * 60 * 1000);
   });
   
   server.on('error', (err) => {

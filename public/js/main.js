@@ -12,6 +12,14 @@ function $(id) {
 }
 
 const loginModal = $("loginModal");
+// Login tab toggle tracking variables
+let activeLoginTab = "email";
+const loginTabEmail = document.getElementById("loginTabEmail");
+const loginTabPhone = document.getElementById("loginTabPhone");
+const emailLoginSubSection = document.getElementById("emailLoginSubSection");
+const phoneLoginSubSection = document.getElementById("phoneLoginSubSection");
+const loginEmailInput = document.getElementById("loginEmailInput");
+const loginPhoneInput = document.getElementById("loginPhoneInput");
 const topLoginBtn = $("topLoginBtn");
 const bottomLoginBtn = $("bottomLoginBtn");
 const heroLoginBtn = $("heroLoginBtn");
@@ -19,11 +27,18 @@ const closeLoginModal = $("closeLoginModal");
 const loginSubmitBtn = $("loginSubmitBtn");
 const languageSelect = $("languageSelect");
 const topLanguageSelect = $("topLanguageSelect");
+// The initial English option is only a UI default. It must not overwrite the
+// language already saved for an account when the user signs in.
+let languageWasChangedByUser = false;
 const phoneInput = $("phoneInput");
 const passwordInput = $("passwordInput");
 const loginError = $("loginError");
 const playLoginInstructions = $("playLoginInstructions");
 const loginFormInputs = $("loginFormInputs");
+const signupEmailInput = $("signupEmailInput");
+const signupPhoneInput = $("signupPhoneInput");
+const signupPasswordInput = $("signupPasswordInput");
+const signupConfirmPasswordInput = $("signupConfirmPasswordInput");
 
 function openLogin() {
   loginModal.classList.remove("hidden");
@@ -133,12 +148,17 @@ if (loginSubmitBtn) {
   loginSubmitBtn.addEventListener("click", async () => {
     loginError.textContent = "";
     loginError.style.color = "";
-    const phone = phoneInput.value.trim();
+    let phoneOrEmailVal = "";
+    if (activeLoginTab === "email") {
+      phoneOrEmailVal = loginEmailInput ? loginEmailInput.value.trim() : "";
+    } else {
+      phoneOrEmailVal = loginPhoneInput ? loginPhoneInput.value.trim() : "";
+    }
     const password = passwordInput.value.trim();
     const language = topLanguageSelect ? topLanguageSelect.value : "en";
 
-    if (!phone || !password) {
-      loginError.textContent = "Please enter email/username and password.";
+    if (!phoneOrEmailVal || !password) {
+      loginError.textContent = "Please enter your credentials and password.";
       return;
     }
 
@@ -146,7 +166,11 @@ if (loginSubmitBtn) {
       const res = await fetch("/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phoneOrEmail: phone, password, language }),
+        body: JSON.stringify({
+          phoneOrEmail: phoneOrEmailVal,
+          password,
+          ...(languageWasChangedByUser ? { language } : {})
+        }),
       });
       const data = await res.json();
       if (!data.ok) {
@@ -179,8 +203,9 @@ if (loginSubmitBtn) {
       } else {
         localStorage.removeItem("farmerEmail");
       }
-      localStorage.setItem("farmerLang", language);
-      localStorage.setItem("uiLang", language);
+      const accountLanguage = data.language || language;
+      localStorage.setItem("farmerLang", accountLanguage);
+      localStorage.setItem("uiLang", accountLanguage);
       window.location.href = "dashboard.html";
     } catch (err) {
       loginError.textContent = "Unable to reach server. Check if it is running.";
@@ -246,7 +271,7 @@ const landingTranslations = {
     emailLabel: "Email: saarthiforus2071@gmail.com",
     phoneLabel: "Phone: +91-9618301301",
     footerText: "© 2026 SAARTHI – All rights reserved.",
-    loginTitle: "Select Language & Login",
+    loginTitle: "SAARTHI Login",
     languageLabel: "Language",
     nameLabelLogin: "Your name",
     phoneLabelLogin: "Phone number",
@@ -309,7 +334,7 @@ const landingTranslations = {
     emailLabel: "ఈమెయిల్: saarthiforus2071@gmail.com",
     phoneLabel: "ఫోన్: +91‑XXXXXXXXXX",
     footerText: "© 2026 స్మార్ట్ కృషి అసిస్టు – అన్ని హక్కులుสง",
-    loginTitle: "భాష ఎంచుకుని లాగిన్ అవ్వండి",
+    loginTitle: "సారథి లాగిన్",
     languageLabel: "భాష",
     nameLabelLogin: "మీ పేరు",
     phoneLabelLogin: "ఫోన్ నంబర్",
@@ -372,7 +397,7 @@ const landingTranslations = {
     emailLabel: "ईमेल: saarthiforus2071@gmail.com",
     phoneLabel: "फ़ोन: +91‑XXXXXXXXXX",
     footerText: "© 2026 स्मार्ट कृषि असिस्ट – सर्वाधिकार सुरक्षित।",
-    loginTitle: "भाषा चुनें और लॉगिन करें",
+    loginTitle: "सारथी लॉगिन",
     languageLabel: "भाषा",
     nameLabelLogin: "आपका नाम",
     phoneLabelLogin: "फ़ोन नंबर",
@@ -435,7 +460,7 @@ const landingTranslations = {
     emailLabel: "ईमेल: saarthiforus2071@gmail.com",
     phoneLabel: "फोन: +91‑XXXXXXXXXX",
     footerText: "© 2026 स्मार्ट कृषी असिस्ट – सर्व हक्क राखीव.",
-    loginTitle: "भाषा निवडा आणि लॉगिन करा",
+    loginTitle: "सारथी लॉगिन",
     languageLabel: "भाषा",
     nameLabelLogin: "तुमचे नाव",
     phoneLabelLogin: "फोन नंबर",
@@ -498,7 +523,7 @@ const landingTranslations = {
     emailLabel: "ഇമെയിൽ: saarthiforus2071@gmail.com",
     phoneLabel: "ഫോൺ: +91‑XXXXXXXXXX",
     footerText: "© 2026 സ്മാർട്ട് കൃഷി അസിസ്റ്റ് – എല്ലാ അവകാശങ്ങളും സംരക്ഷിതം.",
-    loginTitle: "ഭാഷ തിരഞ്ഞെടുക്കുക, ലോഗിൻ ചെയ്യുക",
+    loginTitle: "സാരഥി ലോഗിൻ",
     languageLabel: "ഭാഷ",
     nameLabelLogin: "നിങ്ങളുടെ പേര്",
     phoneLabelLogin: "ഫോൺ നമ്പർ",
@@ -605,27 +630,42 @@ if (topLanguageSelect) {
   topLanguageSelect.value = savedLang;
 }
 applyLandingLanguage(savedLang);
+document.documentElement.lang = savedLang;
+document.documentElement.classList.remove("language-loading");
+
+function syncLanguageSelect(select, lang) {
+  if (!select) return;
+  select.value = lang;
+
+  // Keep the project's custom dropdown label in sync without dispatching a
+  // second change event (which would re-enter the other language listener).
+  const wrapper = document.getElementById(`${select.id}-custom-wrapper`);
+  if (!wrapper) return;
+
+  const selectedOption = select.options[select.selectedIndex];
+  const triggerText = wrapper.querySelector(".custom-select-trigger span");
+  if (triggerText && selectedOption) triggerText.textContent = selectedOption.textContent;
+  wrapper.querySelectorAll(".custom-select-option").forEach((option) => {
+    option.classList.toggle("selected", option.getAttribute("data-value") === lang);
+  });
+}
 
 // Update language live when user changes dropdown
 if (languageSelect) {
   languageSelect.addEventListener("change", () => {
     const lang = languageSelect.value;
+    languageWasChangedByUser = true;
     localStorage.setItem("uiLang", lang);
-    if (topLanguageSelect) {
-      topLanguageSelect.value = lang;
-      topLanguageSelect.dispatchEvent(new Event('change'));
-    }
+    syncLanguageSelect(topLanguageSelect, lang);
     applyLandingLanguage(lang);
   });
 }
 if (topLanguageSelect) {
   topLanguageSelect.addEventListener("change", () => {
     const lang = topLanguageSelect.value;
+    languageWasChangedByUser = true;
     localStorage.setItem("uiLang", lang);
-    if (languageSelect) {
-      languageSelect.value = lang;
-      languageSelect.dispatchEvent(new Event('change'));
-    }
+    syncLanguageSelect(languageSelect, lang);
     applyLandingLanguage(lang);
   });
 }
@@ -1014,14 +1054,14 @@ async function setupGoogleSignIn() {
       // Credentials are missing: Show fallback button (opens simulation dialog)
       if (googleBtnContainer) googleBtnContainer.classList.add("hidden");
       if (googleLoginBtn) googleLoginBtn.classList.remove("hidden");
-      if (googleMockFallbackLinkContainer) googleMockFallbackLinkContainer.classList.remove("hidden");
+      if (googleMockFallbackLinkContainer) googleMockFallbackLinkContainer.classList.add("hidden");
     }
   } catch (e) {
     console.warn("Unable to fetch configuration for Google Sign-in:", e);
     // Graceful fallback to mock selector
     if (googleBtnContainer) googleBtnContainer.classList.add("hidden");
     if (googleLoginBtn) googleLoginBtn.classList.remove("hidden");
-    if (googleMockFallbackLinkContainer) googleMockFallbackLinkContainer.classList.remove("hidden");
+    if (googleMockFallbackLinkContainer) googleMockFallbackLinkContainer.classList.add("hidden");
   }
 }
 
@@ -1038,85 +1078,9 @@ if (googleLoginBtn && googleMockModal) {
   });
 }
 
-// Toggle login forms and handle registration
-const showEmailSignupBtn = document.getElementById("showEmailSignupBtn");
-const backToLoginFromSignupBtn = document.getElementById("backToLoginFromSignupBtn");
-const emailSignupSection = document.getElementById("emailSignupSection");
-
-if (showEmailSignupBtn && loginFormInputs && emailSignupSection) {
-  showEmailSignupBtn.addEventListener("click", () => {
-    loginFormInputs.classList.add("hidden");
-    emailSignupSection.classList.remove("hidden");
-    loginError.textContent = "";
-  });
-}
-
-if (backToLoginFromSignupBtn && loginFormInputs && emailSignupSection) {
-  backToLoginFromSignupBtn.addEventListener("click", () => {
-    emailSignupSection.classList.add("hidden");
-    loginFormInputs.classList.remove("hidden");
-    loginError.textContent = "";
-  });
-}
-
-// Email Signup Form Submit Handling
-const signupEmailInput = document.getElementById("signupEmailInput");
-const signupPasswordInput = document.getElementById("signupPasswordInput");
-const signupConfirmPasswordInput = document.getElementById("signupConfirmPasswordInput");
-const emailSignupSubmitBtn = document.getElementById("emailSignupSubmitBtn");
-
-if (emailSignupSubmitBtn && signupEmailInput && signupPasswordInput && signupConfirmPasswordInput) {
-  emailSignupSubmitBtn.addEventListener("click", async () => {
-    const email = signupEmailInput.value.trim();
-    const password = signupPasswordInput.value;
-    const confirmPassword = signupConfirmPasswordInput.value;
-
-    if (!email || !password || !confirmPassword) {
-      loginError.style.color = "red";
-      loginError.textContent = "All fields are required.";
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      loginError.style.color = "red";
-      loginError.textContent = "Passwords do not match.";
-      return;
-    }
-
-    loginError.textContent = "";
-    loginError.style.color = "";
-    emailSignupSubmitBtn.disabled = true;
-    emailSignupSubmitBtn.textContent = "Registering...";
-
-    try {
-      const res = await fetch("/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, confirmPassword })
-      });
-      const data = await res.json();
-      
-      if (!data.ok) {
-        loginError.style.color = "red";
-        loginError.textContent = data.message || "Registration failed.";
-        emailSignupSubmitBtn.disabled = false;
-        emailSignupSubmitBtn.textContent = "Register Account";
-        return;
-      }
-
-      // Successful registration & auto-login
-      localStorage.setItem("sessionToken", data.token);
-      localStorage.setItem("farmerPhone", data.phone);
-      localStorage.setItem("farmerName", data.name);
-      localStorage.setItem("uiLang", data.language || "en");
-      
-      window.location.href = "dashboard.html";
-    } catch (err) {
-      loginError.style.color = "red";
-      loginError.textContent = "Connection error. Please try again.";
-      emailSignupSubmitBtn.disabled = false;
-      emailSignupSubmitBtn.textContent = "Register Account";
-    }
+if (useMockGoogleBtn && googleMockModal) {
+  useMockGoogleBtn.addEventListener("click", () => {
+    googleMockModal.classList.remove("hidden");
   });
 }
 
@@ -1265,3 +1229,192 @@ document.addEventListener('click', () => {
 // Run initialization
 initCustomSelects();
 
+
+
+// -------------------------------------------------------------
+// Unified Login and Signup tab switches and views toggles
+// -------------------------------------------------------------
+
+// Toggle buttons references
+const showSignupBtn = document.getElementById("showSignupBtn");
+const backToLoginFromSignupBtn = document.getElementById("backToLoginFromSignupBtn");
+const signupSection = document.getElementById("signupSection");
+
+if (showSignupBtn && loginFormInputs && signupSection) {
+  showSignupBtn.addEventListener("click", () => {
+    loginFormInputs.classList.add("hidden");
+    signupSection.classList.remove("hidden");
+    const loginTitle = document.getElementById("loginTitle");
+    if (loginTitle) {
+      loginTitle.classList.remove("hidden");
+      loginTitle.textContent = "SAARTHI Create Account";
+    }
+    loginError.textContent = "";
+  });
+}
+
+if (backToLoginFromSignupBtn && loginFormInputs && signupSection) {
+  backToLoginFromSignupBtn.addEventListener("click", () => {
+    signupSection.classList.add("hidden");
+    loginFormInputs.classList.remove("hidden");
+    const loginTitle = document.getElementById("loginTitle");
+    if (loginTitle) {
+      loginTitle.classList.remove("hidden");
+      loginTitle.textContent = "SAARTHI Login";
+    }
+    loginError.textContent = "";
+  });
+}
+
+// 1. Login Form Tab Switching Logic
+if (loginTabEmail && loginTabPhone && emailLoginSubSection && phoneLoginSubSection) {
+  loginTabEmail.addEventListener("click", () => {
+    activeLoginTab = "email";
+    loginTabEmail.style.background = "var(--primary)";
+    loginTabEmail.style.color = "white";
+    loginTabEmail.style.boxShadow = "0 2px 6px rgba(46, 189, 102, 0.25)";
+    loginTabPhone.style.background = "transparent";
+    loginTabPhone.style.color = "#64748b";
+    loginTabPhone.style.boxShadow = "none";
+    emailLoginSubSection.classList.remove("hidden");
+    phoneLoginSubSection.classList.add("hidden");
+  });
+
+  loginTabPhone.addEventListener("click", () => {
+    activeLoginTab = "phone";
+    loginTabPhone.style.background = "var(--primary)";
+    loginTabPhone.style.color = "white";
+    loginTabPhone.style.boxShadow = "0 2px 6px rgba(46, 189, 102, 0.25)";
+    loginTabEmail.style.background = "transparent";
+    loginTabEmail.style.color = "#64748b";
+    loginTabEmail.style.boxShadow = "none";
+    phoneLoginSubSection.classList.remove("hidden");
+    emailLoginSubSection.classList.add("hidden");
+  });
+}
+
+// 2. Signup Form Tab Switching Logic
+const signupTabEmail = document.getElementById("signupTabEmail");
+const signupTabPhone = document.getElementById("signupTabPhone");
+const emailSignupSubSection = document.getElementById("emailSignupSubSection");
+const phoneSignupSubSection = document.getElementById("phoneSignupSubSection");
+let activeSignupTab = "email"; // default
+
+if (signupTabEmail && signupTabPhone && emailSignupSubSection && phoneSignupSubSection) {
+  signupTabEmail.addEventListener("click", () => {
+    activeSignupTab = "email";
+    signupTabEmail.style.background = "var(--primary)";
+    signupTabEmail.style.color = "white";
+    signupTabEmail.style.boxShadow = "0 2px 6px rgba(46, 189, 102, 0.25)";
+    signupTabPhone.style.background = "transparent";
+    signupTabPhone.style.color = "#64748b";
+    signupTabPhone.style.boxShadow = "none";
+    emailSignupSubSection.classList.remove("hidden");
+    phoneSignupSubSection.classList.add("hidden");
+  });
+
+  signupTabPhone.addEventListener("click", () => {
+    activeSignupTab = "phone";
+    signupTabPhone.style.background = "var(--primary)";
+    signupTabPhone.style.color = "white";
+    signupTabPhone.style.boxShadow = "0 2px 6px rgba(46, 189, 102, 0.25)";
+    signupTabEmail.style.background = "transparent";
+    signupTabEmail.style.color = "#64748b";
+    signupTabEmail.style.boxShadow = "none";
+    phoneSignupSubSection.classList.remove("hidden");
+    emailSignupSubSection.classList.add("hidden");
+  });
+}
+
+// 3. Unified Signup Form Submit Handling (with Confirm Password)
+const signupSubmitBtn = document.getElementById("signupSubmitBtn");
+
+if (signupSubmitBtn && signupPasswordInput && signupConfirmPasswordInput) {
+  signupSubmitBtn.addEventListener("click", async () => {
+    const password = signupPasswordInput.value;
+    const confirmPassword = signupConfirmPasswordInput.value;
+
+    let payload = { password, confirmPassword };
+
+    if (activeSignupTab === "email") {
+      const email = signupEmailInput ? signupEmailInput.value.trim() : "";
+      if (!email) {
+        loginError.style.color = "red";
+        loginError.textContent = "Please enter an email address.";
+        return;
+      }
+      payload.email = email;
+    } else {
+      const phone = signupPhoneInput ? signupPhoneInput.value.trim() : "";
+      if (!phone) {
+        loginError.style.color = "red";
+        loginError.textContent = "Please enter a phone number.";
+        return;
+      }
+      payload.phone = phone;
+    }
+
+    if (!password || !confirmPassword) {
+      loginError.style.color = "red";
+      loginError.textContent = "Password fields cannot be empty.";
+      return;
+    }
+
+    if (password.length < 6) {
+      loginError.style.color = "red";
+      loginError.textContent = "Password must be at least 6 characters.";
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      loginError.style.color = "red";
+      loginError.textContent = "Passwords do not match.";
+      return;
+    }
+
+    loginError.textContent = "";
+    loginError.style.color = "";
+    signupSubmitBtn.disabled = true;
+    signupSubmitBtn.textContent = "Registering...";
+
+    try {
+      const res = await fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      
+      if (!data.ok) {
+        loginError.style.color = "red";
+        loginError.textContent = data.message || "Registration failed.";
+        signupSubmitBtn.disabled = false;
+        signupSubmitBtn.textContent = "Register Account";
+        return;
+      }
+
+      // Successful registration & auto-login
+      localStorage.setItem("sessionToken", data.token);
+      localStorage.setItem("farmerPhone", data.phone);
+      localStorage.setItem("farmerName", data.name);
+      localStorage.setItem("uiLang", data.language || "en");
+      
+      window.location.href = "dashboard.html";
+    } catch (err) {
+      loginError.style.color = "red";
+      loginError.textContent = "Connection error. Please try again.";
+      signupSubmitBtn.disabled = false;
+      signupSubmitBtn.textContent = "Register Account";
+    }
+  });
+}
+
+// Clear all inputs on window load to prevent auto-fill values
+window.addEventListener("DOMContentLoaded", () => {
+  const loginEmailInput = document.getElementById("loginEmailInput");
+  const loginPhoneInput = document.getElementById("loginPhoneInput");
+  const passwordInput = document.getElementById("passwordInput");
+  if (loginEmailInput) loginEmailInput.value = "";
+  if (loginPhoneInput) loginPhoneInput.value = "";
+  if (passwordInput) passwordInput.value = "";
+});

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'saarthi-pwa-cache-v2';
+const CACHE_NAME = 'saarthi-pwa-cache-v8';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',

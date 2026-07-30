@@ -292,7 +292,8 @@ if (detectDiseaseBtn) {
       clearInterval(diseaseIntervalId);
       diseaseResult.innerHTML = `<p class="error-text">Error: Unable to reach disease detection service.</p>`;
     }
-  });// Global localization logic for Disease Detector page
+  });
+} // Global localization logic for Disease Detector page
 const diseaseTranslations = {
   en: {
     dashLogoSubtitle: "Disease Detection",
@@ -355,16 +356,6 @@ const diseaseTranslations = {
     navHome: "ഹോം",
     navContactUs: "ബന്ധപ്പെടുക",
     navProfile: "പ്രൊഫൈൽ",
-    diseasePageTitle: "രോഗ നിർണ്ണയം",
-    diseasePageIntro: "താഴെ വിളയുടെയോ ഇലയുടെയോ ഫോട്ടോ അപ്‌ലോഡ് ചെയ്യുക. പുതിയ Gemini AI മോഡൽ രോഗങ്ങൾ കണ്ടെത്തും.",
-    detectDiseaseBtn: "രോഗ നിർണ്ണയം നടത്തുക",
-    analysisResult: "വിശകലന ഫലം:",
-    uploadSubtext: "PNG, JPG, JPEG ഫയലുകൾ സപ്പോർട്ട് ചെയ്യും (പരമാവധി 10MB)",
-    adviceTitle: "ശുപാർശ ചെയ്യുന്ന നടപടികൾ:",
-    selectAlert: "ദയവായി ആദ്യം ഒരു ചിത്ര ഫയൽ തിരഞ്ഞെടുക്കുക.",
-    sizeAlert: "ചിത്രത്തിന്റെ ഫയൽ സൈസ് 10MB പരിധി കവിഞ്ഞു. ദയവായി ചെറിയ ചിത്രം തിരഞ്ഞെടുക്കുക."
-  }
-};ൽ",
     diseasePageTitle: "രോഗ നിർണ്ണയം",
     diseasePageIntro: "താഴെ വിളയുടെയോ ഇലയുടെയോ ഫോട്ടോ അപ്‌ലോഡ് ചെയ്യുക. പുതിയ Gemini AI മോഡൽ രോഗങ്ങൾ കണ്ടെത്തും.",
     detectDiseaseBtn: "രോഗ നിർണ്ണയം നടത്തുക",

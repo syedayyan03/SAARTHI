@@ -48,11 +48,15 @@ def predict(image_path):
         # top_result["class_key"] contains exactly this.
         predicted_class = top_result["class_key"]
         confidence = float(top_result["confidence"])
+        severity = top_result.get("severity", "unknown")
+        treatment = top_result.get("treatment", "Consult a local agricultural officer.")
 
         print(json.dumps({
             "ok": True,
             "disease": predicted_class,
-            "confidence": confidence
+            "confidence": confidence,
+            "severity": severity,
+            "treatment": treatment
         }))
     except Exception as e:
         print(json.dumps({"ok": False, "error": str(e)}))

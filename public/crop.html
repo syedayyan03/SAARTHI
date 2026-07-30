@@ -35,6 +35,13 @@
       </a>
     </div>
     <div class="top-right">
+        <select id="dashLangSelect" class="dash-lang-select" style="margin-right: 10px; font-size: 0.8rem; padding: 0.25rem 0.5rem; border-radius: 20px; border: 1px solid #cbd5e1; background: white; font-weight: 600; cursor: pointer; color: #334155;">
+        <option value="en">English</option>
+        <option value="te">తెలుగు</option>
+        <option value="hi">हिन्दी</option>
+        <option value="mr">मराठी</option>
+        <option value="ml">മലയാളം</option>
+      </select>
             <div id="profileMenu" class="profile-menu">
         <button id="profileButton" class="profile-button">
           <span id="profileInitials" class="profile-avatar">F</span>
@@ -194,6 +201,35 @@
 
   <script src="js/custom-select.js"></script>
   <script src="js/crop.js"></script>
-</body>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const langSelect = document.getElementById("dashLangSelect");
+        if (langSelect) {
+          const curLang = localStorage.getItem("uiLang") || "en";
+          langSelect.value = curLang;
+          langSelect.addEventListener("change", async () => {
+            const selected = langSelect.value;
+            localStorage.setItem("uiLang", selected);
+            localStorage.setItem("farmerLang", selected);
+            
+            // Sync choice with database in real-time
+            try {
+              const token = localStorage.getItem("sessionToken") || "";
+              await fetch("/api/profile/update-language", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ language: selected })
+              });
+            } catch(err) {}
+            
+            window.location.reload();
+          });
+        }
+      });
+    </script></body>
 
 </html>
