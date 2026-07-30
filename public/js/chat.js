@@ -4,8 +4,9 @@ function $(id) {
 
 const farmerPhone = localStorage.getItem("farmerPhone") || "";
 const farmerEmail = localStorage.getItem("farmerEmail") || "";
+const farmerUsername = localStorage.getItem("farmerUsername") || "";
 const farmerLang = localStorage.getItem("uiLang") || localStorage.getItem("farmerLang") || "en";
-if ((!farmerPhone && !farmerEmail) || !localStorage.getItem("sessionToken")) {
+if ((!farmerPhone && !farmerEmail && !farmerUsername) || !localStorage.getItem("sessionToken")) {
   performLogout();
 }
 

@@ -389,5 +389,12 @@
     "passwordHash": "$2a$10$gbZYm4yTZa4peItSwo5wfOZTSyWglvK56OZpqF3EzN1q.Q6f.R/bC",
     "language": "en",
     "name": "New User"
+  },
+  {
+    "phone": "",
+    "email": "syedayyan8074@gmail.com",
+    "passwordHash": "$2a$10$IOz3E80GIH4IPSw3cGdYjOSLnQ8kgYdYyZ4pTQ4SkXV5IWtFV.746",
+    "language": "en",
+    "name": "New User"
   }
 ]

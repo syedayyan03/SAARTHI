@@ -48,5 +48,19 @@
         "createdAt": "2026-07-30T16:30:43.223Z"
       }
     ]
+  },
+  "syedayyan8074@gmail.com": {
+    "selections": [
+      {
+        "crop": "Rice",
+        "acres": 1,
+        "createdAt": "2026-07-30T19:09:58.319Z"
+      },
+      {
+        "crop": "Napier grass (elephant grass)",
+        "acres": 1,
+        "createdAt": "2026-07-30T19:09:59.767Z"
+      }
+    ]
   }
 }

@@ -1,19 +1,11 @@
 State,District,Market,Commodity,Variety,Arrivals,MinPrice,MaxPrice,ModalPrice,Demand,Date
-Assam,Kamrup,Pamohi(Garchuk) APMC,Cucumbar(Kheera),Cucumber-Organic,,2800,3500,3000,Medium,2026-07-31
-Assam,Kamrup,Pamohi(Garchuk) APMC,Garlic,Garlic,,13000,15000,14000,Rising,2026-07-31
-Tamil Nadu,Coimbatore,Kurichi(Uzhavar Sandhai ),Brinjal,Other,,5000,5800,5400,Rising,2026-07-31
-Tamil Nadu,Coimbatore,Kurichi(Uzhavar Sandhai ),Cluster beans,Cluster Beans,,3500,4000,3750,Rising,2026-07-31
-Tamil Nadu,Coimbatore,Kurichi(Uzhavar Sandhai ),Amaranthus,Amaranthus,,4000,5000,4500,Rising,2026-07-31
-Tamil Nadu,Coimbatore,Kurichi(Uzhavar Sandhai ),Green Chilli,Green Chilly,,4500,5000,4750,Rising,2026-07-31
-Tamil Nadu,Coimbatore,Kurichi(Uzhavar Sandhai ),Cucumbar(Kheera),Cucumbar,,4000,4500,4250,Rising,2026-07-31
-Tamil Nadu,Coimbatore,Kurichi(Uzhavar Sandhai ),Onion Green,Onion Green,,5500,5800,5650,Rising,2026-07-31
-Madhya Pradesh,Shivpuri,Barad APMC,Mustard,Mustard,,7540,8150,8050,High,2026-07-31
-Madhya Pradesh,Jabalpur,Paatan APMC,Bengal Gram(Gram)(Whole),Gram,,5275,5275,5275,Medium,2026-07-31
-Maharashtra,Pune,Pune APMC,Tomato,Local,120,1500,2500,2000,High,2026-07-31
-Maharashtra,Pune,Pune APMC,Onion,Red,500,1800,2800,2300,Rising,2026-07-31
-Karnataka,Bengaluru,Yeshwanthpur APMC,Potato,Local,300,2000,3000,2500,High,2026-07-31
-Karnataka,Bengaluru,Yeshwanthpur APMC,Carrot,Ooty,50,4000,6000,5000,Medium,2026-07-31
-Telangana,Hyderabad,Bowenpally,Green Chilli,Local,40,3000,4500,3800,High,2026-07-31
-Telangana,Hyderabad,Bowenpally,Cabbage,Local,80,1000,1500,1200,Medium,2026-07-31
-Delhi,Delhi,Azadpur,Apple,Kashmiri,200,8000,12000,10000,Rising,2026-07-31
-Delhi,Delhi,Azadpur,Mango,Safeda,150,4000,6000,5000,High,2026-07-31
+Chattisgarh,Khairagarh Chhuikhadan Gandai,Kheragarh APMC,Paddy(Common),D.B.,,1900,2100,2000,Rising,30/07/2026
+Tripura,Dhalai,Kulai APMC,Green Chilli,Green Chilly,,17000,18000,17500,Rising,30/07/2026
+Tamil Nadu,Thirupur,Tiruppur (South) (Uzhavar Sandhai ),Cauliflower,Ranchi,,2500,3000,2750,Rising,30/07/2026
+Tamil Nadu,Thirupur,Tiruppur (South) (Uzhavar Sandhai ),Coriander(Leaves),I Sort,,4000,5000,4500,Rising,30/07/2026
+Tamil Nadu,Thirupur,Tiruppur (South) (Uzhavar Sandhai ),Tomato,Local,,1000,1500,1250,Rising,30/07/2026
+Tamil Nadu,Thirupur,Tiruppur (South) (Uzhavar Sandhai ),Amaranthus,Amaranthus,,2500,3000,2750,Rising,30/07/2026
+Tamil Nadu,Thirupur,Tiruppur (South) (Uzhavar Sandhai ),Cowpea(Veg),Cowpea (Veg),,2500,3000,2750,Rising,30/07/2026
+Tamil Nadu,Thirupur,Tiruppur (South) (Uzhavar Sandhai ),Banana - Green,Banana - Green,,2500,3000,2750,Rising,30/07/2026
+Tamil Nadu,Thirupur,Tiruppur (South) (Uzhavar Sandhai ),Coconut,Coconut,,4000,5000,4500,Rising,30/07/2026
+Tamil Nadu,Thirupur,Tiruppur (South) (Uzhavar Sandhai ),Carrot,Pusakesar,,8000,9000,8500,Rising,30/07/2026

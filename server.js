@@ -45,7 +45,7 @@ if (!SESSION_SECRET || SESSION_SECRET.length < 32) {
   if (process.env.NODE_ENV === 'production') throw new Error('SESSION_SECRET must be at least 32 characters in production.');
   console.warn('Using an ephemeral development session secret. Sessions reset on restart.');
 }
-const ACTIVE_SESSION_SECRET = SESSION_SECRET || crypto.randomBytes(32).toString('hex');
+const ACTIVE_SESSION_SECRET = SESSION_SECRET || 'static-development-secret-key-1234567890abcdef1234567890abcdef';
 
 function generateSessionToken(phone, passwordVersion = 0, purpose = 'session') {
   const payload = {
@@ -101,11 +101,16 @@ function authenticateToken(req, res, next) {
     return res.status(403).json({ ok: false, message: 'Invalid or expired Session Token.' });
   }
   
-  const user = loadUsers().find(u => u.phone === payload.phone);
+  const identifier = String(payload.phone || '').trim().toLowerCase();
+  const user = loadUsers().find(u => 
+    u.phone === identifier || 
+    (u.email && u.email.toLowerCase() === identifier) ||
+    (u.username && u.username.toLowerCase() === identifier)
+  );
   if (!user || (user.passwordVersion || 0) !== (payload.passwordVersion || 0)) {
     return res.status(403).json({ ok: false, message: 'Session has been revoked.' });
   }
-  req.userPhone = payload.phone;
+  req.userPhone = identifier;
   req.user = user;
   next();
 }
@@ -1556,6 +1561,17 @@ const MARKET_COORDINATES = {
   "prakasam": { lat: 15.5057, lon: 80.0499 },
   "kurnool": { lat: 15.8281, lon: 78.0373 },
   "hyderabad": { lat: 17.3850, lon: 78.4867 },
+  "secunderabad": { lat: 17.4399, lon: 78.4983 },
+  "nizamabad": { lat: 18.6725, lon: 78.0941 },
+  "karimnagar": { lat: 18.4386, lon: 79.1288 },
+  "mahabubnagar": { lat: 16.7367, lon: 77.9819 },
+  "suryapet": { lat: 17.1500, lon: 79.6167 },
+  "vijayawada": { lat: 16.5062, lon: 80.6480 },
+  "guntur": { lat: 16.3067, lon: 80.4367 },
+  "visakhapatnam": { lat: 17.6868, lon: 83.2185 },
+  "vizag": { lat: 17.6868, lon: 83.2185 },
+  "nellore": { lat: 14.4426, lon: 79.9865 },
+  "tirupati": { lat: 13.6288, lon: 79.4192 },
   "surat": { lat: 21.1702, lon: 72.8311 },
   "delhi": { lat: 28.6139, lon: 77.2090 },
   "nashik": { lat: 19.9975, lon: 73.7898 },
@@ -1577,8 +1593,12 @@ const MARKET_COORDINATES = {
   "shivpuri": { lat: 25.4287, lon: 77.6534 },
   "jabalpur": { lat: 23.1815, lon: 79.9864 },
   "pune": { lat: 18.5204, lon: 73.8567 },
+  "mumbai": { lat: 19.0760, lon: 72.8777 },
+  "gurgaon": { lat: 28.4595, lon: 77.0266 },
+  "noida": { lat: 28.5355, lon: 77.3910 },
   "bengaluru": { lat: 12.9716, lon: 77.5946 },
-  "kolkata": { lat: 22.5726, lon: 88.3639 }
+  "kolkata": { lat: 22.5726, lon: 88.3639 },
+  "medchal": { lat: 17.6297, lon: 78.4814 }
 };
 
 function getHaversineDistance(lat1, lon1, lat2, lon2) {
@@ -1614,54 +1634,7 @@ async function geocodeLocation(query) {
     console.warn("Geocoding API failed, using fallback:", err.message);
   }
 
-  const cityCoords = {
-    "medchal": { lat: 17.6297, lon: 78.4814 },
-    "hyderabad": { lat: 17.3850, lon: 78.4867 },
-    "secunderabad": { lat: 17.4399, lon: 78.4983 },
-    "nizamabad": { lat: 18.6725, lon: 78.0941 },
-    "karimnagar": { lat: 18.4386, lon: 79.1288 },
-    "mahabubnagar": { lat: 16.7367, lon: 77.9819 },
-    "suryapet": { lat: 17.1500, lon: 79.6167 },
-    "vijayawada": { lat: 16.5062, lon: 80.6480 },
-    "guntur": { lat: 16.3067, lon: 80.4367 },
-    "visakhapatnam": { lat: 17.6868, lon: 83.2185 },
-    "vizag": { lat: 17.6868, lon: 83.2185 },
-    "nellore": { lat: 14.4426, lon: 79.9865 },
-    "tirupati": { lat: 13.6288, lon: 79.4192 },
-    "pune": { lat: 18.5204, lon: 73.8567 },
-    "mumbai": { lat: 19.0760, lon: 72.8777 },
-    "gurgaon": { lat: 28.4595, lon: 77.0266 },
-    "noida": { lat: 28.5355, lon: 77.3910 },
-    "kurukshetra": { lat: 29.9697, lon: 76.8783 },
-    "bhatinda": { lat: 30.2076, lon: 74.9454 },
-    "idukki": { lat: 9.8510, lon: 77.0844 },
-    "alluri sitharama raju": { lat: 17.9829, lon: 81.9839 },
-    "shamli": { lat: 29.4481, lon: 77.3094 },
-    "agra": { lat: 27.1767, lon: 78.0081 },
-    "bapatla": { lat: 15.9045, lon: 80.4682 },
-    "palnadu": { lat: 16.3075, lon: 80.1554 },
-    "amreli": { lat: 21.6033, lon: 71.2223 },
-    "prakasam": { lat: 15.5057, lon: 80.0499 },
-    "kurnool": { lat: 15.8281, lon: 78.0373 },
-    "surat": { lat: 21.1702, lon: 72.8311 },
-    "delhi": { lat: 28.6139, lon: 77.2090 },
-    "nashik": { lat: 19.9975, lon: 73.7898 },
-    "bareilly": { lat: 28.3670, lon: 79.4304 },
-    "indore": { lat: 22.7196, lon: 75.8577 },
-    "nalgonda": { lat: 17.0575, lon: 79.2684 },
-    "khammam": { lat: 17.2473, lon: 80.1514 },
-    "warangal": { lat: 17.9784, lon: 79.5941 },
-    "salem": { lat: 11.6643, lon: 78.1460 },
-    "coimbatore": { lat: 11.0168, lon: 76.9558 },
-    "mysore": { lat: 12.2958, lon: 76.6394 },
-    "dharwad": { lat: 15.4589, lon: 74.0078 },
-    "nadia": { lat: 23.4710, lon: 88.5565 },
-    "cuttack": { lat: 20.4625, lon: 85.8830 },
-    "patna": { lat: 25.5941, lon: 85.1376 },
-    "dehradun": { lat: 30.3165, lon: 78.0322 },
-    "shimla": { lat: 31.1048, lon: 77.1734 }
-  };
-  for (const [city, coords] of Object.entries(cityCoords)) {
+  for (const [city, coords] of Object.entries(MARKET_COORDINATES)) {
     if (qLower.includes(city)) {
       return coords;
     }
@@ -2594,58 +2567,58 @@ app.post('/api/detect-disease', authenticateToken, diseaseLimiter, upload.single
       return res.status(400).json({ ok: false, message: 'Please upload an image for detection.' });
     }
 
-    const langMap = { en: "English", te: "Telugu", hi: "Hindi", mr: "Marathi", ml: "Malayalam" };
-    const requestedLang = langMap[lang] || "English";
+    const tempPath = path.join(__dirname, 'temp_disease_' + Date.now() + '.jpg');
+    require('fs').writeFileSync(tempPath, req.file.buffer);
 
-    if (!process.env.GEMINI_API_KEY) {
-      throw new Error("Server API Key is missing. Cannot use Gemini Vision.");
-    }
+    exec(`python predict_disease.py "${tempPath}"`, (error, stdout, stderr) => {
+      try {
+        if (require('fs').existsSync(tempPath)) {
+          require('fs').unlinkSync(tempPath);
+        }
+      } catch (e) {}
 
-    const systemPrompt = `You are a highly experienced plant pathologist and agronomist. 
-Analyze the provided image of a plant/leaf. Identify any diseases, pests, or nutrient deficiencies.
-Return ONLY a strictly valid JSON object with the following structure, with all text in ${requestedLang}. 
-Do NOT wrap the JSON in backticks or markdown blocks. Just output raw JSON.
-{
-  "disease": "Exact name of the detected disease (or 'Healthy' or 'Unrecognized')",
-  "severity": "Mild, Moderate, or Severe",
-  "advice": [
-    "Specific actionable step 1",
-    "Specific actionable step 2",
-    "Specific actionable step 3"
-  ]
-}
-If the image is not a plant or is too blurry to diagnose, return "Unrecognized" for disease.`;
+      if (error) {
+        console.error("Local ML Error:", error.message);
+        const fallbackResponse = getFallbackDiseaseResponse(lang);
+        return res.json({
+          ok: true,
+          disease: fallbackResponse.disease,
+          severity: fallbackResponse.severity,
+          advice: fallbackResponse.advice
+        });
+      }
 
-    const response = await generateContent({
-      model: 'gemini-2.5-flash',
-      contents: [{
-        role: 'user',
-        parts: [{
-          inlineData: {
-            data: req.file.buffer.toString("base64"),
-            mimeType: req.file.mimetype
-          }
-        }]
-      }],
-      systemInstruction: systemPrompt,
-      maxOutputTokens: 1000
+      try {
+        const parsed = JSON.parse(stdout.trim());
+        if (!parsed.ok) {
+           throw new Error(parsed.error || "Unknown ML error");
+        }
+        let adviceArray = [];
+        if (parsed.treatment) {
+          adviceArray = parsed.treatment.split(/(?<=\.)\s+/).filter(s => s.trim().length > 0);
+        }
+        if (adviceArray.length === 0) {
+          adviceArray = ["Consult a local agricultural officer."];
+        }
+
+        return res.json({
+          ok: true,
+          disease: parsed.disease || 'Unknown',
+          confidence: parsed.confidence || 0.95,
+          severity: parsed.severity || 'Unknown',
+          advice: adviceArray
+        });
+      } catch (parseError) {
+        console.error("Failed to parse ML output:", stdout);
+        const fallbackResponse = getFallbackDiseaseResponse(lang);
+        return res.json({
+          ok: true,
+          disease: fallbackResponse.disease,
+          severity: fallbackResponse.severity,
+          advice: fallbackResponse.advice
+        });
+      }
     });
-
-    try {
-      let jsonStr = response.text.replace(/```json/gi, '').replace(/```/g, '').trim();
-      const parsed = JSON.parse(jsonStr);
-      
-      return res.json({
-        ok: true,
-        disease: parsed.disease || 'Unknown',
-        confidence: 0.95,
-        severity: parsed.severity || 'Unknown',
-        advice: parsed.advice || []
-      });
-    } catch (parseError) {
-      console.error("Failed to parse Gemini JSON output:", response.text);
-      throw new Error("Invalid JSON from Gemini.");
-    }
 
   } catch (error) {
     console.error("Disease Detection Error (Invoking Fallback):", error.message);
