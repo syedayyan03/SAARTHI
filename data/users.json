@@ -375,5 +375,19 @@
     "name": "User 4355",
     "username": "user_4355",
     "passwordHash": "$2a$10$5Yv0NJL2.xIk42G1y1tGMukS9O0W4iCxyIJTQ1lPajSMeiL3r1F4u"
+  },
+  {
+    "phone": "",
+    "email": "zentrack.founder@gamil.com",
+    "passwordHash": "$2a$10$jp7caMKe7d5aHGaF1kiOhe0U2UxD8KCFF1MUCyMXX6quRVxO/2G2K",
+    "language": "en",
+    "name": "New User"
+  },
+  {
+    "phone": "",
+    "email": "zentrack.founder@gmail.com",
+    "passwordHash": "$2a$10$gbZYm4yTZa4peItSwo5wfOZTSyWglvK56OZpqF3EzN1q.Q6f.R/bC",
+    "language": "en",
+    "name": "New User"
   }
 ]

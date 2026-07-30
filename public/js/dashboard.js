@@ -163,7 +163,7 @@ const cardSelectedCropBadge = $("cardSelectedCropBadge");
 const cardSelectedCropTitle = $("cardSelectedCropTitle");
 const cardSelectedCropText = $("cardSelectedCropText");
 
-if (!farmerPhone || !localStorage.getItem("sessionToken")) {
+if ((!farmerPhone && !farmerEmail) || !localStorage.getItem("sessionToken")) {
   performLogout();
 }
 

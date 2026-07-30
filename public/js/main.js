@@ -179,7 +179,7 @@ if (loginSubmitBtn) {
       }
 
       const finalName = data.name || "";
-      const finalPhone = data.phone || phone;
+      const finalPhone = data.phone || "";
       const finalUsername = data.username || "";
       const finalEmail = data.email || "";
 
@@ -690,6 +690,8 @@ function setupPasswordToggle(inputEl, btnEl) {
 }
 
 setupPasswordToggle(document.getElementById("passwordInput"), document.getElementById("togglePasswordBtn"));
+setupPasswordToggle(document.getElementById("signupPasswordInput"), document.getElementById("toggleSignupPasswordBtn"));
+setupPasswordToggle(document.getElementById("signupConfirmPasswordInput"), document.getElementById("toggleSignupConfirmPasswordBtn"));
 setupPasswordToggle(document.getElementById("confirmPasswordInput"), document.getElementById("toggleConfirmPasswordBtn"));
 setupPasswordToggle(document.getElementById("forgotNewPasswordInput"), document.getElementById("toggleForgotNewPasswordBtn"));
 setupPasswordToggle(document.getElementById("forgotConfirmPasswordInput"), document.getElementById("toggleForgotConfirmPasswordBtn"));
@@ -1395,8 +1397,9 @@ if (signupSubmitBtn && signupPasswordInput && signupConfirmPasswordInput) {
 
       // Successful registration & auto-login
       localStorage.setItem("sessionToken", data.token);
-      localStorage.setItem("farmerPhone", data.phone);
-      localStorage.setItem("farmerName", data.name);
+      localStorage.setItem("farmerPhone", data.phone || "");
+      localStorage.setItem("farmerEmail", data.email || "");
+      localStorage.setItem("farmerName", data.name || "");
       localStorage.setItem("uiLang", data.language || "en");
       
       window.location.href = "dashboard.html";

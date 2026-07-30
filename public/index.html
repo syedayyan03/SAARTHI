@@ -272,10 +272,28 @@
         </div>
 
         <label class="field-label" for="signupPasswordInput" style="margin-bottom: 0.15rem; font-size: 0.78rem;">Set Password</label>
-        <input id="signupPasswordInput" type="password" class="field-input" placeholder="Set your password" style="margin-bottom: 0.5rem; width: 100%; border-radius: 8px; border: 1px solid #cbd5e1; padding: 0.5rem; font-size: 0.85rem;" />
+        <div class="password-wrapper" style="margin-bottom: 0.5rem;">
+          <input id="signupPasswordInput" type="password" class="field-input" placeholder="Set your password" style="width: 100%; border-radius: 8px; border: 1px solid #cbd5e1; padding: 0.5rem; font-size: 0.85rem;" />
+          <button type="button" class="password-toggle-btn" id="toggleSignupPasswordBtn" tabindex="-1" aria-label="Toggle password visibility">
+            <svg class="eye-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
+              <path class="eye-open" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle class="eye-pupil" cx="12" cy="12" r="3"></circle>
+              <line class="eye-slash hidden" x1="1" y1="1" x2="23" y2="23" stroke="currentColor" stroke-width="2"></line>
+            </svg>
+          </button>
+        </div>
 
         <label class="field-label" for="signupConfirmPasswordInput" style="margin-bottom: 0.15rem; font-size: 0.78rem;">Confirm Password</label>
-        <input id="signupConfirmPasswordInput" type="password" class="field-input" placeholder="Confirm your password" style="margin-bottom: 0.75rem; width: 100%; border-radius: 8px; border: 1px solid #cbd5e1; padding: 0.5rem; font-size: 0.85rem;" />
+        <div class="password-wrapper" style="margin-bottom: 0.75rem;">
+          <input id="signupConfirmPasswordInput" type="password" class="field-input" placeholder="Confirm your password" style="width: 100%; border-radius: 8px; border: 1px solid #cbd5e1; padding: 0.5rem; font-size: 0.85rem;" />
+          <button type="button" class="password-toggle-btn" id="toggleSignupConfirmPasswordBtn" tabindex="-1" aria-label="Toggle password visibility">
+            <svg class="eye-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
+              <path class="eye-open" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle class="eye-pupil" cx="12" cy="12" r="3"></circle>
+              <line class="eye-slash hidden" x1="1" y1="1" x2="23" y2="23" stroke="currentColor" stroke-width="2"></line>
+            </svg>
+          </button>
+        </div>
 
         <button id="signupSubmitBtn" class="btn btn-primary btn-block" style="margin-bottom: 0.5rem; padding: 0.6rem;">Register Account</button>
         <button id="backToLoginFromSignupBtn" type="button" class="btn btn-ghost btn-block" style="font-size: 0.8rem; color: #475569; width: 100%; text-align: center; background: none; border: none; cursor: pointer; text-decoration: underline; margin-bottom: 0.25rem;">Back to Login</button>

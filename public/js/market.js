@@ -3,7 +3,9 @@ function $(id) {
 }
 
 const farmerPhone = localStorage.getItem("farmerPhone") || "";
-if (!farmerPhone || !localStorage.getItem("sessionToken")) {
+const farmerEmail = localStorage.getItem("farmerEmail") || "";
+const farmerLang = localStorage.getItem("uiLang") || localStorage.getItem("farmerLang") || "en";
+if ((!farmerPhone && !farmerEmail) || !localStorage.getItem("sessionToken")) {
   performLogout();
 }
 

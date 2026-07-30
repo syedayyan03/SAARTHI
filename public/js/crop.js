@@ -68,7 +68,11 @@ function getLocalizedCropName(name, lang) {
 
 // Reuse session and simple header logic from dashboard
 const farmerPhone = localStorage.getItem("farmerPhone") || "";
-const farmerLang = localStorage.getItem("uiLang") || "en";
+const farmerEmail = localStorage.getItem("farmerEmail") || "";
+const farmerLang = localStorage.getItem("uiLang") || localStorage.getItem("farmerLang") || "en";
+if ((!farmerPhone && !farmerEmail) || !localStorage.getItem("sessionToken")) {
+  performLogout();
+}
 
 window.currentlySelectedCrops = [];
 async function fetchCurrentlySelectedCrops() {

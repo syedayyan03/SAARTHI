@@ -1,11 +1,19 @@
 State,District,Market,Commodity,Variety,Arrivals,MinPrice,MaxPrice,ModalPrice,Demand,Date
-Maharashtra,Pune,Pune(Moshi) APMC,Methi(Leaves),Other,,10,20,15,Rising,30/07/2026
-Maharashtra,Pune,Pune(Khadiki) APMC,Chilly Capsicum,Other,,1500,1700,1600,Rising,30/07/2026
-Maharashtra,Pune,Pune(Khadiki) APMC,Ridgeguard(Tori),Other,,1300,1700,1500,Rising,30/07/2026
-Maharashtra,Pune,Pune(Khadiki) APMC,Tomato,Local,,800,1300,1050,Rising,30/07/2026
-Maharashtra,Raigad,Karjat(Raigad) APMC,Paddy(Common),Other,,2369,2450,2400,Medium,30/07/2026
-Maharashtra,Raigad,Karjat(Raigad) APMC,Rice,Other,,4000,5600,4900,Rising,30/07/2026
-Uttar Pradesh,Etah,Aliganj APMC,Maize,Other,,1800,2100,1829.77,Medium,30/07/2026
-Maharashtra,Sangli,Islampur APMC,Bhindi(Ladies Finger),Other,,1500,2000,1750,Rising,30/07/2026
-Maharashtra,Pune,Pune(Manjri) APMC,Guar,Other,,5000,9000,6500,Medium,30/07/2026
-Maharashtra,Pune,Pune(Manjri) APMC,Cucumbar(Kheera),Other,,1000,2500,2000,Rising,30/07/2026
+Assam,Kamrup,Pamohi(Garchuk) APMC,Cucumbar(Kheera),Cucumber-Organic,,2800,3500,3000,Medium,2026-07-31
+Assam,Kamrup,Pamohi(Garchuk) APMC,Garlic,Garlic,,13000,15000,14000,Rising,2026-07-31
+Tamil Nadu,Coimbatore,Kurichi(Uzhavar Sandhai ),Brinjal,Other,,5000,5800,5400,Rising,2026-07-31
+Tamil Nadu,Coimbatore,Kurichi(Uzhavar Sandhai ),Cluster beans,Cluster Beans,,3500,4000,3750,Rising,2026-07-31
+Tamil Nadu,Coimbatore,Kurichi(Uzhavar Sandhai ),Amaranthus,Amaranthus,,4000,5000,4500,Rising,2026-07-31
+Tamil Nadu,Coimbatore,Kurichi(Uzhavar Sandhai ),Green Chilli,Green Chilly,,4500,5000,4750,Rising,2026-07-31
+Tamil Nadu,Coimbatore,Kurichi(Uzhavar Sandhai ),Cucumbar(Kheera),Cucumbar,,4000,4500,4250,Rising,2026-07-31
+Tamil Nadu,Coimbatore,Kurichi(Uzhavar Sandhai ),Onion Green,Onion Green,,5500,5800,5650,Rising,2026-07-31
+Madhya Pradesh,Shivpuri,Barad APMC,Mustard,Mustard,,7540,8150,8050,High,2026-07-31
+Madhya Pradesh,Jabalpur,Paatan APMC,Bengal Gram(Gram)(Whole),Gram,,5275,5275,5275,Medium,2026-07-31
+Maharashtra,Pune,Pune APMC,Tomato,Local,120,1500,2500,2000,High,2026-07-31
+Maharashtra,Pune,Pune APMC,Onion,Red,500,1800,2800,2300,Rising,2026-07-31
+Karnataka,Bengaluru,Yeshwanthpur APMC,Potato,Local,300,2000,3000,2500,High,2026-07-31
+Karnataka,Bengaluru,Yeshwanthpur APMC,Carrot,Ooty,50,4000,6000,5000,Medium,2026-07-31
+Telangana,Hyderabad,Bowenpally,Green Chilli,Local,40,3000,4500,3800,High,2026-07-31
+Telangana,Hyderabad,Bowenpally,Cabbage,Local,80,1000,1500,1200,Medium,2026-07-31
+Delhi,Delhi,Azadpur,Apple,Kashmiri,200,8000,12000,10000,Rising,2026-07-31
+Delhi,Delhi,Azadpur,Mango,Safeda,150,4000,6000,5000,High,2026-07-31
