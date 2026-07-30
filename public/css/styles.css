@@ -4589,3 +4589,24 @@ a, p, div, span {
     padding: 0.25rem 0.6rem !important;
   }
 }
+
+@media (max-width: 600px) {
+  .chat-page-body .chat-ui-header {
+    flex-wrap: wrap;
+    padding: 0.5rem;
+  }
+  .chat-page-body .chat-ui-header .header-left, .chat-page-body .chat-ui-header .header-right {
+    width: 100%;
+    justify-content: space-between;
+    margin-bottom: 0.25rem;
+  }
+  .chat-page-body .chat-ui-header .header-right {
+    margin-bottom: 0;
+  }
+  .chat-header-version-badge {
+    display: none;
+  }
+  .chat-header-title-text {
+    font-size: 1.1rem;
+  }
+}

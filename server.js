@@ -475,7 +475,7 @@ app.post('/api/register', async (req, res) => {
     email: newUser.email,
     name: newUser.name,
     language: newUser.language,
-    token: generateSessionToken(newUser.phone || newUser.email)
+    token: generateSessionToken(newUser.phone || newUser.email || newUser.username)
   });
 });
 
@@ -508,7 +508,7 @@ app.post('/api/login', authLimiter, async (req, res) => {
     saveUsers(users);
   }
 
-  res.json({ ok: true, phone: user.phone, email: user.email, username: user.username || '', language: user.language, name: user.name, token: generateSessionToken(user.phone) });
+  res.json({ ok: true, phone: user.phone, email: user.email, username: user.username || '', language: user.language, name: user.name, token: generateSessionToken(user.phone || user.email || user.username) });
 });
 
 // API: get configurations (Google Sign-In Client ID, etc.)
@@ -572,7 +572,7 @@ app.post('/api/google-login', authLimiter, async (req, res) => {
     saveUsers(users);
   }
 
-  res.json({ ok: true, phone: user.phone, email: user.email, username: user.username || '', language: user.language, name: user.name, picture: user.picture, token: generateSessionToken(user.phone) });
+  res.json({ ok: true, phone: user.phone, email: user.email, username: user.username || '', language: user.language, name: user.name, picture: user.picture, token: generateSessionToken(user.phone || user.email || user.username) });
 });
 
 // API: Send OTP for forgot password to User Email
@@ -759,7 +759,7 @@ app.post('/api/google-register', authLimiter, async (req, res) => {
   users.push(user);
   saveUsers(users);
 
-  res.json({ ok: true, phone: user.phone, email: user.email, username: user.username, language: user.language, name: user.name, picture: user.picture, token: generateSessionToken(user.phone) });
+  res.json({ ok: true, phone: user.phone, email: user.email, username: user.username, language: user.language, name: user.name, picture: user.picture, token: generateSessionToken(user.phone || user.email || user.username) });
 });
 
 // API: Verify forgot password OTP code
