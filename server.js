@@ -432,9 +432,46 @@ const userChats = loadChats();
 const otpStore = {};
 
 
-// API: register new user with hashed password (DISABLED - Google Only)
+// API: register new user with hashed password
 app.post('/api/register', async (req, res) => {
-  return res.status(403).json({ ok: false, message: 'Standard registration is disabled. Please sign up using Google Login.' });
+  const { phone, email, password } = req.body;
+  if (!password || (!phone && !email)) {
+    return res.status(400).json({ ok: false, message: 'Phone/email and password are required.' });
+  }
+
+  const users = loadUsers();
+  const identifierPhone = String(phone || '').trim().toLowerCase();
+  const identifierEmail = String(email || '').trim().toLowerCase();
+  
+  if (identifierPhone && users.some(u => u.phone === identifierPhone)) {
+    return res.status(409).json({ ok: false, message: 'Phone number already registered. Please login.' });
+  }
+  if (identifierEmail && users.some(u => (u.email || '').toLowerCase() === identifierEmail)) {
+    return res.status(409).json({ ok: false, message: 'Email already registered. Please login.' });
+  }
+
+  const passwordHash = await bcrypt.hash(password, 10);
+  
+  const newUser = {
+    phone: identifierPhone,
+    email: identifierEmail,
+    passwordHash,
+    language: 'en',
+    name: 'New User'
+  };
+
+  users.push(newUser);
+  saveUsers(users);
+
+  res.json({ 
+    ok: true, 
+    message: 'Registration successful!',
+    phone: newUser.phone,
+    email: newUser.email,
+    name: newUser.name,
+    language: newUser.language,
+    token: generateSessionToken(newUser.phone || newUser.email)
+  });
 });
 
 
